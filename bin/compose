@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
+# `docker compose` against deploy/compose.yaml, with everything it reads and writes placed on the
+# external volume. Every command that reaches the stack's containers goes through here, bin/up
+# and bin/down included (ADR-0004).
+#
+#   bin/compose logs -f ingest-realtime
+set -euo pipefail
+
+# shellcheck source=lib/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/lib/environment.sh"
+
+f1_ensure_runtime_home
+f1_require_vm
+f1_ensure_compose_plugin
+
+export F1_OPENF1_IMAGE F1_OPENF1_CHECKOUT
+exec docker compose \
+  --file "$F1_REPO_ROOT/deploy/compose.yaml" \
+  --project-directory "$F1_REPO_ROOT/deploy" \
+  "$@"

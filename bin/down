@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
+# Stops the stack and the virtual machine it runs in, leaving the data volumes intact. The
+# machine goes down too, so that "down" also means the external volume can be unplugged.
+set -euo pipefail
+
+# shellcheck source=lib/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/lib/environment.sh"
+
+f1_require_external_volume
+
+if f1_vm_is_running; then
+  "$(dirname -- "${BASH_SOURCE[0]}")/compose" down
+fi
+
+f1_stop_vm

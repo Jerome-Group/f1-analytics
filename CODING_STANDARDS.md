@@ -68,10 +68,34 @@ area updates `MAP.md` in the **same** pull request. A stale map is worse than no
 where tests are written, naming or layout rules particular to this codebase, and anything the
 core leaves open. Add them here; they evolve through this repository's normal pull-request flow.
 
-This section is empty because this repository is newly generated. Fill it in with the first
-change that has an opinion worth holding the next one to — the formatter and linter that run in
-CI, where the tests live, and the one or two layout rules a newcomer would otherwise guess
-wrong.
+The application code is not written yet, so what follows covers `bin/`, `deploy/` and `test/`.
+Add to it when a language arrives.
+
+**Tests live in `test/`, one file per unit under test, named `<unit>.test.sh`, and `test/run`
+runs all of them.** They install nothing: a test that needs a package before it can say whether
+`bin/up` places its data correctly is a test that will not be run, and this is the repository
+where placement being wrong is silent.
+
+**Shell.** `bash`, and every path quoted — this repository lives at a path with a space in it,
+and an unquoted expansion is a bug that only shows up here. Executables in `bin/` use
+`set -euo pipefail` and take their name from what they do (`up`, not `start-stack.sh`); test
+files use `set -uo pipefail`, because a failing assertion must report and carry on rather than
+abort the file. Sourced files go in `bin/lib/`, define functions prefixed `f1_` and the values
+those functions need, and **do nothing observable when sourced** — no container started, no file
+written, no network touched.
+
+**The runtime is never invoked directly.** `docker` and `colima` appear only inside `bin/`, which
+sets `COLIMA_HOME` and `DOCKER_CONFIG` first. Anywhere else in this repository — in a script, in
+a test, in a documented command someone is meant to type — invoking them is a Standards finding,
+because it will use the internal disk and appear to work (`docs/adr/0004`). Prose *about* the
+rule naturally names the command it forbids; that is not an invocation.
+
+**`deploy/` owns no upstream source.** It holds configuration this project wrote, and a pinned
+reference to software it did not (`docs/adr/0003`, `docs/adr/0006`). A file copied out of
+upstream is not configuration.
+
+**No bind mounts.** Containers get their configuration from a build context; the virtual machine
+sees no host path at all (`docs/adr/0007`).
 
 ## 6. Evolution — what is rigid, what moves
 

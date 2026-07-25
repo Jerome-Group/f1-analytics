@@ -38,7 +38,18 @@ jobs:
       - name: MAP.md exists
         run: test -f MAP.md
 
-      # Add this repository's real checks — build, lint, test — below.
+      # The wrappers themselves cannot be exercised here — they need a Colima virtual machine and
+      # the external volume — but the part that decides *where* everything is written is pure and
+      # runs anywhere. That is the part that fails silently when it is wrong.
+      # -x follows the sourced files, so bin/lib/ and test/lib/ are checked as part of the
+      # programs that use them rather than as fragments that appear to define unused variables.
+      - name: Shell lint
+        run: shellcheck -x bin/up bin/down bin/compose test/run test/*.test.sh test/lib/assert.sh
+
+      - name: Tests
+        run: ./test/run
+
+      # Add this repository's remaining checks — build, lint, test — below.
       #
       # This job *is* a required status check from the repository's first day: the two steps
       # above can genuinely go red, and "red ⇒ no merge" never lets through something that would

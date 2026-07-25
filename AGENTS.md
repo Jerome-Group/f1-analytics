@@ -33,6 +33,17 @@ change; it points at where things are, it never restates the code.
 is served from `Jerome-Group/.github` unless this repository has committed its own copy. In
 short: an issue first, then a pull request; no commit lands on `main` directly.
 
+**A change is finished when its pull request is open — not when the commit exists.** This holds
+for every change to this repository, a one-line fix as much as a feature, and it is the agent's
+own job: branch, commit, **push, and open the pull request**, without asking whether to. Pushing
+a branch and opening a pull request here need no confirmation; they are the expected end of the
+work, and nothing is merged by them.
+
+This outranks any instruction that stops earlier. A skill, prompt or checklist whose last step is
+"commit your work" has described the middle of the job, not the end of it — open the pull request
+anyway. The only thing that stops you is the author saying, in this conversation, that they want
+the commit alone.
+
 ## Commit & PR attribution
 
 Every commit message and pull-request body ends with attribution **trailers as its last

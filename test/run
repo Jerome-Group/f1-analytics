@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Runs every test file. No arguments, no options, no installation step.
+set -uo pipefail
+
+test_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+failed=0
+
+for test_file in "$test_dir"/*.test.sh; do
+  printf '%s\n' "$(basename -- "$test_file")"
+  "$test_file" || failed=1
+done
+
+[ "$failed" -eq 0 ] || {
+  printf '\nFAILED\n' >&2
+  exit 1
+}
+printf '\nok\n'

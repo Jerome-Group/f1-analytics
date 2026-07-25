@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
+# Brings the self-hosted OpenF1 stack up, from nothing: the compose plugin, the virtual machine,
+# the upstream checkout and the five containers. Everything it creates is on the external volume
+# (ADR-0004).
+set -euo pipefail
+
+# shellcheck source=lib/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/lib/environment.sh"
+
+f1_ensure_runtime_home
+f1_ensure_compose_plugin
+f1_start_vm
+f1_ensure_openf1_checkout
+
+exec "$(dirname -- "${BASH_SOURCE[0]}")/compose" up --build --detach

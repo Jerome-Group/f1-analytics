@@ -1,0 +1,67 @@
+# The self-hosted OpenF1 stack: somebody else's software, run here and owned by nobody in this
+# repository. The three upstream services are one image built from the pinned checkout in
+# upstream.env; MongoDB and Mosquitto are stock (ADR-0003).
+#
+# Reached only through bin/ — a bare `docker compose` here writes to the internal disk (ADR-0004).
+name: f1-live-analytics
+
+x-openf1: &openf1
+  image: ${F1_OPENF1_IMAGE:?}
+  build:
+    context: ${F1_OPENF1_CHECKOUT:?}
+
+x-openf1-environment: &openf1-environment
+  MONGO_CONNECTION_STRING: mongodb://mongo:27017
+  OPENF1_BASE_URL: http://api:8000/
+
+services:
+  api:
+    <<: *openf1
+    environment:
+      <<: *openf1-environment
+      ROLE: api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+      - mqtt
+
+  ingest-realtime:
+    <<: *openf1
+    environment:
+      <<: *openf1-environment
+      ROLE: ingest-realtime
+      OPENF1_MQTT_URL: mqtt
+      OPENF1_MQTT_PORT: 1883
+      # No username or password: the broker allows anonymous connections, because a credential
+      # this project invented is still a credential to store and keep out of a commit (ADR-0002).
+      OPENF1_MQTT_NO_TLS: "true"
+    depends_on:
+      - api
+
+  ingest-historical:
+    <<: *openf1
+    environment:
+      <<: *openf1-environment
+      ROLE: ingest-historical
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:8
+    volumes:
+      - mongo-data:/data/db
+
+  mqtt:
+    build:
+      context: ./mqtt
+    ports:
+      - "1883:1883"
+    volumes:
+      - mqtt-data:/mosquitto/data
+
+# Named, so the data lives inside the virtual machine's disk and inherits its placement on the
+# external volume rather than needing a second rule of its own.
+volumes:
+  mongo-data:
+  mqtt-data:

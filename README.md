@@ -11,8 +11,9 @@ work is done here.
 
 ## Status
 
-🌱 **Designed, not built.** The decisions are recorded in [`docs/adr/`](docs/adr/) and the
-vocabulary in [`CONTEXT.md`](CONTEXT.md); no application code exists yet.
+🌱 **The pipeline comes up; nothing reads from it yet.** `bin/up` runs the self-hosted OpenF1
+stack, and no application code exists above it. The decisions are recorded in
+[`docs/adr/`](docs/adr/) and the vocabulary in [`CONTEXT.md`](CONTEXT.md).
 
 ## What it is
 
@@ -43,12 +44,13 @@ OpenF1 (self-hosted)  →  MQTT  →  server/  →  one WebSocket  →  web/
 
 | Directory | What lives there |
 |---|---|
-| `deploy/` | The self-hosted OpenF1 stack — compose override, environment, backfill. Runs upstream software; owns none of it. |
+| `deploy/` | The self-hosted OpenF1 stack — the compose file, the upstream pin, the broker's configuration. Runs upstream software; owns none of it. |
 | `server/` | The backend. Subscribes to MQTT, holds canonical session state, serves it to the browser. |
 | `web/` | The timing screen. |
 | `domain/` | The canonical types, shared by `server/` and `web/` so the boundary is enforced by the compiler. |
 | `analysis/` | Deferred. Offline FastF1 work; the dashboard never calls it. |
 | `bin/` | Wrappers. Every container command goes through these — see below. |
+| `test/` | The tests, and the script that runs them. |
 
 Data is split by **update frequency, not category**: per-lap data (laps, sectors, stints, pit,
 race control, weather) is cheap enough to render for all twenty drivers continuously, and
@@ -56,13 +58,23 @@ per-second data (car telemetry, live intervals) is rendered only for a driver yo
 
 ## Getting started
 
-Nothing to run yet.
+The pipeline runs; the dashboard does not exist yet.
 
-When there is, one rule applies from the first commit: **never invoke the container runtime
-directly.** Everything goes through `bin/`, which places the runtime, its virtual machine and all
-data on the external volume. A bare `docker compose up` will silently use the wrong disk and
-appear to work — see
+```
+bin/up      # api, both ingestors, MongoDB and Mosquitto — building whatever is missing first
+bin/down    # and the virtual machine with them, so the volume can be unplugged
+```
+
+The first run clones and builds the upstream Ingestor and takes a few minutes; later runs take
+about thirty seconds. The API is then on `localhost:8000` and the broker on `localhost:1883`.
+
+One rule applies from the first commit: **never invoke the container runtime directly.**
+Everything goes through `bin/`, which places the runtime, its virtual machine and all data on the
+external volume. A bare `docker compose up` will silently use the wrong disk and appear to work —
+see
 [ADR-0004](docs/adr/0004-the-container-toolchain-lives-on-the-raid0-and-is-reached-through-bin.md).
+
+Tests are `test/run`, and need nothing installed.
 
 ## What this licence does not cover
 

@@ -11,6 +11,7 @@
 
 import { readSession } from './openf1/rest-feed.ts';
 import { servePage } from './dashboard.ts';
+import { sessionSource } from './session.ts';
 import { serveSessionState } from './websocket/server.ts';
 
 const DEFAULT_API = 'http://localhost:8000';
@@ -29,9 +30,12 @@ if (key === undefined || !/^\d+$/.test(key) || process.argv.length > 3) {
 const api = new URL(process.env['F1_OPENF1_URL'] ?? DEFAULT_API);
 const sessionKey = Number(key);
 
-const state = await readSession(api, sessionKey);
+// Read once and never updated: a finished Session does not move, so a browser gets one snapshot and
+// no changes. The source is here rather than the bare state so the live and Replay feeds (#15, #17)
+// have the thing to call `update` on without the socket or this program changing shape.
+const source = sessionSource(await readSession(api, sessionKey));
 const server = await serveSessionState(
-  state,
+  source,
   Number(process.env['F1_PORT'] ?? DEFAULT_PORT),
   servePage,
 );
@@ -39,7 +43,7 @@ const server = await serveSessionState(
 // One line, and the port is in it: the caller may have asked for an ephemeral one, and a test
 // harness has nothing else to wait for. The viewer wants the other address on the same line.
 process.stdout.write(
-  `${server.url} is serving Session ${sessionKey}, ${state.drivers.length} Drivers` +
+  `${server.url} is serving Session ${sessionKey}, ${source.state.drivers.length} Drivers` +
     ` — watch it at ${server.page}\n`,
 );
 

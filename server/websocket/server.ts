@@ -9,7 +9,8 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
 import type { Duplex } from 'node:stream';
-import type { SessionState, SessionStateMessage } from '../../domain/index.ts';
+import type { SessionChangeMessage, SessionStateMessage } from '../../domain/index.ts';
+import type { SessionSource } from '../session.ts';
 import { closeFrame, isClose, textFrame } from './frame.ts';
 import { acceptance } from './handshake.ts';
 
@@ -28,18 +29,27 @@ export interface SessionStateServer {
 export type Page = (request: IncomingMessage, response: ServerResponse) => void | Promise<void>;
 
 /**
- * Serves one Session's state to every browser that connects, and the dashboard that renders it.
- * The state is encoded once: a finished Session does not change, and a field is the same bytes
- * for every viewer.
+ * Serves one Session's evolving state to every browser that connects, and the dashboard that renders
+ * it. A connecting browser is sent the whole Session as it stands (a snapshot); thereafter every
+ * browser is sent only what changed, encoded once and written to all of them. That single encode
+ * fanned out to many sockets is the whole reason `server/` and `web/` are separate processes (#3):
+ * a browser opening its own upstream connection could never be one of many.
+ *
+ * A finished Session never changes, so the finished-Session path sends a snapshot and nothing after
+ * it; the live and Replay feeds drive `source.update`, and this needs no change to carry them.
  */
 export async function serveSessionState(
-  state: SessionState,
+  source: SessionSource,
   port: number,
   page: Page,
 ): Promise<SessionStateServer> {
-  const message: SessionStateMessage = { type: 'session-state', state };
-  const snapshot = textFrame(JSON.stringify(message));
   const open = new Set<Duplex>();
+
+  const unsubscribe = source.subscribe((change) => {
+    const message: SessionChangeMessage = { type: 'session-change', change };
+    const frame = textFrame(JSON.stringify(message));
+    for (const socket of open) socket.write(frame);
+  });
 
   const http = createServer((request, response) => {
     void page(request, response);
@@ -59,8 +69,12 @@ export async function serveSessionState(
       if (isClose(chunk)) socket.end(closeFrame());
     });
 
+    // Encoded per connection, not once at startup: a browser connecting mid-Session — the reload
+    // this protocol exists to make cheap — must be sent the Session as it stands now, not as it
+    // stood when the server began.
+    const snapshot: SessionStateMessage = { type: 'session-state', state: source.state };
     socket.write(head);
-    socket.write(snapshot);
+    socket.write(textFrame(JSON.stringify(snapshot)));
   });
 
   http.listen(port, '127.0.0.1');
@@ -71,6 +85,7 @@ export async function serveSessionState(
     url: `ws://127.0.0.1:${listening.port}`,
     page: `http://127.0.0.1:${listening.port}/`,
     async close() {
+      unsubscribe();
       for (const socket of open) socket.destroy();
       http.close();
       await once(http, 'close');

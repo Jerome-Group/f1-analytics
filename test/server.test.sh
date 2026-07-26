@@ -177,4 +177,19 @@ EOF
   )" \
   "$(as_a_timing_screen <<<"$gated")"
 
+# --- A reload mid-Session costs nothing (#14) ----------------------------------------------
+# A browser that drops and reconnects is sent the whole Session again, not a reduced view of it —
+# which is what makes a stray refresh cheap instead of catastrophic. Two connections to the same
+# server; what the second is sent must match the first to the byte, and must be a snapshot.
+
+reconnect="$(node "$here/lib/seam1-reconnect.ts" 2025-dutch-race)"
+first_connect="$(sed -n '1p' <<<"$reconnect")"
+second_connect="$(sed -n '2p' <<<"$reconnect")"
+
+assert_equals "a reconnecting browser is sent the whole Session, identical to the first time" \
+  "$first_connect" "$second_connect"
+
+assert_equals "and it is a whole-Session snapshot on reconnect, not a change to fold onto nothing" \
+  "session-state 9920" "$(envelope <<<"$second_connect")"
+
 finish

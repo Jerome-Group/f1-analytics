@@ -4,7 +4,11 @@
    and the screen all lay out against the same track list or they do not line up.
 
    The grid is twenty-two, not twenty: Audi and Cadillac joined for 2026. The row is 57 px
-   rather than the 60 the brief assumed, which is what twenty-two of them cost. */
+   rather than the 60 the brief assumed, which is what twenty-two of them cost.
+
+   The 1440 is the panel's, not a window's. A windowed browser on this display gives about
+   1330 CSS px once its tab strip and address bar are taken, which loses the last two rows
+   with nothing on screen to say they are missing. The Timing screen is run fullscreen. */
 
 :root {
   --screen-width: 2560px;

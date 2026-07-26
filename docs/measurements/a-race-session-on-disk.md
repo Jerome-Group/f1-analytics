@@ -92,7 +92,9 @@ Two things the estimate did not carry:
 
 ## Is the telemetry-excluded backfill worth having?
 
-No. It should not be built.
+Not for one Session, which is the question this measurement was taken to answer. At the scale of a
+whole backfilled archive it is a different question and a live one — 26 GB against roughly 1 GB —
+and it is asked properly in #27.
 
 Telemetry is a **larger** share than the estimate's ~90%: `car_data` and `location` are 97.7% of
 the records and 96% of the disk. Everything else — laps, sectors, Stints, pit, intervals,
@@ -110,6 +112,12 @@ indicator and per-Driver telemetry — precisely the things
 [ADR-0002](../adr/0002-live-data-is-the-free-subset-only.md) accepts losing during a live Session
 *because Replay has them*. A backfill without them makes Replay the reduced view as well, which
 removes the reason for the decision. A flag nobody should set is not worth the branch.
+
+**That last argument expires once an Archive exists** (#26). The Archive keeps the telemetry
+whether or not the Stores hold it, so excluding it stops meaning "this Session has no telemetry"
+and starts meaning "this Session has no telemetry *loaded yet*" — a rendering decision rather than
+a loss, and re-derivable from local disk. Which is why #27 gets to ask the question again and may
+well answer it differently.
 
 ## Two caveats worth knowing
 

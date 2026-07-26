@@ -22,6 +22,7 @@ import type {
   Tyre,
 } from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
+import { escapeText } from './escape.ts';
 
 /** The markup inside the timing table: one row per Driver, and no row that is not a Driver. */
 export function timingScreen(state: SessionState): string {
@@ -39,7 +40,7 @@ function driverRow(driver: Driver): string {
     '<span class="team-bar"></span>',
     figure('car-number', driver.number),
     `<span class="driver-name">${tla(driver.code)}</span>`,
-    stateCell(driver.state),
+    stateCell(state),
     gapCell('gap', driver.gap),
     '<span class="cell"></span>',
     gapCell('interval', driver.interval),
@@ -87,8 +88,8 @@ const STATE_CHIP: Record<Exclude<DriverState, 'on-track'>, string> = {
  * data-state carries the rest of the treatment; this cell is only the worded chip that repeats it
  * for anyone the row colour does not reach.
  */
-function stateCell(state: DriverState | undefined): string {
-  if (state === undefined || state === 'on-track') return '<span class="cell"></span>';
+function stateCell(state: DriverState): string {
+  if (state === 'on-track') return '<span class="cell"></span>';
   return `<span class="cell"><span class="state-chip" data-state="${state}">${STATE_CHIP[state]}</span></span>`;
 }
 
@@ -196,7 +197,7 @@ function clock(millis: number): string {
 function tla(code: string | undefined): string {
   return code === undefined
     ? '<span class="driver-name__tla absent">&mdash;</span>'
-    : `<span class="driver-name__tla">${text(code)}</span>`;
+    : `<span class="driver-name__tla">${escapeText(code)}</span>`;
 }
 
 /** A number the feed gave, or the mark for one it did not. Never a nought standing in. */
@@ -205,15 +206,3 @@ function figure(column: string, value: number | undefined): string {
     ? absent(column)
     : `<span class="${column}">${value}</span>`;
 }
-
-/** Upstream's text, drawn as text. A driver code is not markup, whatever arrives in it. */
-function text(value: string): string {
-  return value.replace(/[&<>"]/g, (character) => ENTITIES[character] ?? character);
-}
-
-const ENTITIES: Record<string, string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-};

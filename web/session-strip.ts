@@ -8,12 +8,14 @@
 
 import type {
   Flag,
+  Mode,
   RaceControlMessage,
   SessionClock,
   SessionIdentity,
   SessionState,
   Weather,
 } from '../domain/index.ts';
+import { escapeText } from './escape.ts';
 
 /** The whole strip, drawn from the Session-global part of the state. */
 export function sessionStrip(state: SessionState): string {
@@ -40,10 +42,10 @@ function identityBlock(
     `<div class="session-identity__meeting">${meeting(identity)}</div>`,
     `<div class="session-identity__session">${sessionAndCircuit(identity)}</div>`,
     '<div class="session-clock">',
-    `<span class="session-clock__remaining">${value(clock?.remaining)}</span>`,
+    `<span class="session-clock__remaining">${stripValue(clock?.remaining)}</span>`,
     `<span class="session-clock__laps">${lapCount(clock)}</span>`,
     '</div>',
-    `<div><span class="strip-label">Status</span> ${value(status)}</div>`,
+    `<div><span class="strip-label">Status</span> ${stripValue(status)}</div>`,
     `<span class="flag-state">${flagText(flag)}</span>`,
     '</div>',
   ].join('');
@@ -53,7 +55,7 @@ function identityBlock(
 function raceControlBlock(messages: readonly RaceControlMessage[] | undefined): string {
   const lines =
     messages === undefined || messages.length === 0
-      ? `<div class="race-control__message">${value(undefined)}</div>`
+      ? `<div class="race-control__message">${stripValue(undefined)}</div>`
       : messages.map(raceControlMessage).join('');
   return `<div class="race-control"><div class="strip-label">Race control</div>${lines}</div>`;
 }
@@ -62,8 +64,8 @@ function raceControlMessage(message: RaceControlMessage): string {
   const time =
     message.time === undefined
       ? ''
-      : `<span class="race-control__time">${text(message.time)}</span>`;
-  return `<div class="race-control__message">${time}<span>${text(message.text)}</span></div>`;
+      : `<span class="race-control__time">${escapeText(message.time)}</span>`;
+  return `<div class="race-control__message">${time}<span>${escapeText(message.text)}</span></div>`;
 }
 
 /** Track and air temperature, humidity, wind and rainfall — the five readings, always in the strip. */
@@ -88,7 +90,7 @@ function reading(label: string, drawn: string): string {
  * because a silently empty stream reads as broken (#3). Once a Session has finished nothing is
  * Gated, so in Replay they are simply gone.
  */
-function modeBlock(mode: SessionState['mode']): string {
+function modeBlock(mode: Mode | undefined): string {
   if (mode === undefined) return '<div class="session-mode"></div>';
   const badge = `<span class="mode-badge" data-mode="${mode}">${mode === 'live' ? 'Live' : 'Replay'}</span>`;
   return `<div class="session-mode">${badge}${mode === 'live' ? gatedStreams() : ''}</div>`;
@@ -106,14 +108,14 @@ function gatedStreams(): string {
 function meeting(identity: SessionIdentity | undefined): string {
   return identity?.meeting === undefined
     ? '<span class="absent">&mdash;</span>'
-    : text(identity.meeting);
+    : escapeText(identity.meeting);
 }
 
 /** "Race &middot; Circuit", each half shown only where the feed gave it. */
 function sessionAndCircuit(identity: SessionIdentity | undefined): string {
   const parts = [identity?.session, identity?.circuit]
     .filter((part): part is string => part !== undefined)
-    .map(text);
+    .map(escapeText);
   return parts.length === 0 ? '<span class="absent">&mdash;</span>' : parts.join(' &middot; ');
 }
 
@@ -155,22 +157,12 @@ function rainfall(raining: boolean | undefined): string {
 }
 
 /** A strip value the feed gave, or the absent mark wearing the same class. */
-function value(shown: string | undefined): string {
-  return shown === undefined ? absentValue() : `<span class="strip-value">${text(shown)}</span>`;
+function stripValue(shown: string | undefined): string {
+  return shown === undefined
+    ? absentValue()
+    : `<span class="strip-value">${escapeText(shown)}</span>`;
 }
 
 function absentValue(): string {
   return '<span class="strip-value absent">&mdash;</span>';
 }
-
-/** Upstream's text, drawn as text. A circuit name or a race control message is not markup. */
-function text(value: string): string {
-  return value.replace(/[&<>"]/g, (character) => ENTITIES[character] ?? character);
-}
-
-const ENTITIES: Record<string, string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-};

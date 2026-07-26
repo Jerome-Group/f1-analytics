@@ -7,6 +7,28 @@
 // Absence arrives as `null` here, and stays absence all the way through — never a zero, never an
 // empty string standing in for a code nobody sent.
 
+/**
+ * One Meeting — a Grand Prix weekend — from `/v1/meetings`. Written by the catalogue, a season at a
+ * time (ADR-0009), so it exists for Sessions nobody has backfilled: naming a Session does not need
+ * its data on disk.
+ */
+export interface MeetingRecord {
+  meeting_key: number;
+  meeting_name: string | null;
+  circuit_short_name: string | null;
+  country_name: string | null;
+}
+
+/** One Session within a Meeting, from `/v1/sessions`. The catalogue's half of what a Session *is*,
+ * as opposed to what happened in it — enough to list it and to say when it ran. */
+export interface SessionRecord {
+  session_key: number;
+  meeting_key: number;
+  session_name: string | null;
+  /** ISO 8601, when the Session is scheduled to start — the order a weekend's Sessions list in. */
+  date_start: string | null;
+}
+
 /** One Driver's identity for a Session, from `/v1/drivers`. */
 export interface DriverRecord {
   driver_number: number;
@@ -51,4 +73,11 @@ export interface LapRecord {
   lap_number: number;
   /** The lap's duration in seconds, `null` while the lap is still in progress. */
   lap_duration: number | null;
+  /**
+   * When the lap began, ISO 8601, so a Replay can know the wall-clock moment it *completed*
+   * (`date_start` plus `lap_duration`) and count it only once the clock has passed that (#15). A
+   * whole-Session read never needs it — every lap is complete by the end — so it is absent from the
+   * recordings cut for those tests, and the timeline treats an absent one as always-already run.
+   */
+  date_start?: string | null;
 }

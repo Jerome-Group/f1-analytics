@@ -37,8 +37,50 @@ export interface SessionChangeMessage {
   change: SessionChange;
 }
 
-/** Everything the socket carries. Tagged, so the browser branches on `type` and never on shape. */
+/** Everything the socket carries *to* the browser. Tagged, so it branches on `type`, never shape. */
 export type WireMessage = SessionStateMessage | SessionChangeMessage;
+
+/**
+ * What the browser sends *back* up the same socket: a viewer moving the Replay's Session clock (#15).
+ * The only messages that travel this direction — a Live Session has no controls — so the server can
+ * treat anything else on the socket as the close it already knows how to answer.
+ *
+ * `scrub` names an absolute position on the clock's own millisecond axis rather than a delta, so a
+ * scrub is idempotent and a dropped message costs nothing: the next one still says exactly where the
+ * handle is, not how far it moved. `speed` is Session-seconds per wall-clock second.
+ */
+export type ReplayControl =
+  | { type: 'replay-control'; action: 'play' }
+  | { type: 'replay-control'; action: 'pause' }
+  | { type: 'replay-control'; action: 'scrub'; position: number }
+  | { type: 'replay-control'; action: 'speed'; speed: number };
+
+/**
+ * Read a control off an inbound frame's text, or `undefined` when it is not one this server acts on.
+ * Defined here beside the type it guards so the shape is stated once: the server parses, the browser
+ * builds, and neither restates what a control is.
+ */
+export function replayControl(text: string): ReplayControl | undefined {
+  let message: unknown;
+  try {
+    message = JSON.parse(text);
+  } catch {
+    return undefined;
+  }
+  if (typeof message !== 'object' || message === null) return undefined;
+  const control = message as { type?: unknown; action?: unknown; position?: unknown; speed?: unknown };
+  if (control.type !== 'replay-control') return undefined;
+  if (control.action === 'play' || control.action === 'pause') {
+    return { type: 'replay-control', action: control.action };
+  }
+  if (control.action === 'scrub' && typeof control.position === 'number') {
+    return { type: 'replay-control', action: 'scrub', position: control.position };
+  }
+  if (control.action === 'speed' && typeof control.speed === 'number' && control.speed > 0) {
+    return { type: 'replay-control', action: 'speed', speed: control.speed };
+  }
+  return undefined;
+}
 
 /**
  * Fold a change into the Session a browser holds. Session-global fields overwrite; changed Drivers

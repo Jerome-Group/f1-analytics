@@ -38,6 +38,11 @@
   --state-out-lap: #8fa0b8;
   --state-retired: #ff4d4d;
 
+  /* Replay chrome — the mode badge, the controls and the picker — reads as one system by sharing
+     one accent. It is the out-lap slate deliberately: a colour already spoken for by a state no
+     Driver row shows at rest, so it never competes with a livery. */
+  --replay-accent: var(--state-out-lap);
+
   /* Session-global flag conditions. */
   --flag-green: #00d46a;
   --flag-yellow: #f5d000;

@@ -1,0 +1,142 @@
+@import url("../../tokens/palette.css");
+@import url("../../tokens/type.css");
+@import url("../../tokens/layout.css");
+
+/* The picker (#15): a season's Meetings and Sessions, and the choice of which to Replay. Not part of
+   the density budget the Timing screen spends to the pixel — this is a page a viewer reads at rest,
+   before a Session is on screen — so it lays out for reading rather than for cramming twenty-two rows
+   into a fixed panel. The Replay accent is the out-lap slate the mode badge and the controls wear, so
+   the three pieces of Replay chrome read as one system. */
+
+.picker-page {
+  box-sizing: border-box;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px var(--screen-pad);
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+}
+
+.picker-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.picker-title {
+  margin: 0;
+  font-size: var(--type-clock-size);
+  line-height: var(--type-clock-line);
+  font-weight: 700;
+}
+
+.picker-seasons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: var(--type-strip-size);
+  font-variant-numeric: var(--figures);
+}
+
+.picker-seasons a {
+  color: var(--replay-accent);
+  text-decoration: none;
+}
+
+.picker-season {
+  min-width: 4ch;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.picker {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.picker__meeting {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.picker__meeting-name {
+  font-size: var(--type-strip-size);
+  line-height: var(--type-strip-line);
+  font-weight: 600;
+}
+
+.picker__meeting-where {
+  margin-top: 2px;
+  font-size: var(--type-secondary-size);
+  line-height: var(--type-secondary-line);
+  color: var(--text-tertiary);
+}
+
+.picker__sessions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+/* A Backfilled Session invites the click; the accent border and the hover fill say it is the way in. */
+.picker__replay {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid var(--replay-accent);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--type-secondary-size);
+  text-decoration: none;
+}
+
+.picker__replay:hover {
+  background: var(--replay-accent);
+  color: var(--surface-screen);
+}
+
+/* Known but not here: shown so the gap is visible, drawn back so it is plainly not a choice — dimmed,
+   hatched the way an unavailable stream is, and carrying the reason in words. */
+.picker__unavailable {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 4px;
+  background: var(--hatch-unavailable);
+  color: var(--text-absent);
+  font-size: var(--type-secondary-size);
+  cursor: not-allowed;
+}
+
+.picker__note {
+  font-size: var(--type-label-size);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+}
+
+.picker__absent {
+  color: var(--text-absent);
+}
+
+.picker__empty {
+  padding: 40px 0;
+  color: var(--text-secondary);
+  font-size: var(--type-primary-size);
+  line-height: var(--type-primary-line);
+}
+
+.picker__empty code {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--surface-row);
+  color: var(--text-primary);
+}

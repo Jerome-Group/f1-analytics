@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Choose a Session</title>
+    <link rel="stylesheet" href="design-system/components/picker/picker.css" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--surface-screen);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="picker-page">
+      <header class="picker-header">
+        <h1 class="picker-title">Replay a Session</h1>
+        <nav class="picker-seasons">
+          <a class="picker-previous" href="?year=2024">&larr;</a>
+          <span class="picker-season">2025</span>
+          <a class="picker-following" href="?year=2026">&rarr;</a>
+        </nav>
+      </header>
+      <div class="picker-mount"></div>
+    </main>
+    <script type="module" src="picker-main.ts"></script>
+  </body>
+</html>

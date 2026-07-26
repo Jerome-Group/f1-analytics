@@ -1,0 +1,125 @@
+@import url("../../tokens/palette.css");
+@import url("../../tokens/type.css");
+@import url("../../tokens/layout.css");
+
+/* The Replay controls (#15). Present only when a past Session is being watched, so the bar itself
+   is the plainest statement that this is a Replay and not a Live Session — a Live one has no clock
+   to move and draws nothing here. It is fixed to the foot of the screen like the connection status
+   is fixed to the corner: chrome laid over the screen, not a row in the density budget the table
+   spends to the last pixel (tokens/layout.css). The Replay accent is the same out-lap slate the
+   mode badge wears, so the two pieces of Replay chrome read as one. */
+
+.replay-controls {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-sizing: border-box;
+  width: min(1200px, calc(100% - 2 * var(--screen-pad)));
+  padding: 12px 20px;
+  border: 1px solid var(--replay-accent);
+  border-radius: 6px;
+  background: var(--surface-strip);
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+}
+
+/* Play and pause are one button that always names what pressing it does, so it is wide enough for
+   the longer of the two words and never resizes as the state flips. */
+.replay-controls__play {
+  flex: none;
+  width: 84px;
+  padding: 8px 0;
+  border: 1px solid var(--replay-accent);
+  border-radius: 4px;
+  background: var(--replay-accent);
+  color: var(--surface-screen);
+  font-family: inherit;
+  font-size: var(--type-secondary-size);
+  font-weight: 700;
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* While playing the button is the outlined, quieter of the two: the loud fill is the invitation to
+   start, and once running the invitation is to stop. */
+.replay-controls__play[aria-pressed="true"] {
+  background: transparent;
+  color: var(--replay-accent);
+}
+
+.replay-controls__scrub {
+  flex: 1;
+  height: 6px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 3px;
+  background: var(--rule-strong);
+  cursor: pointer;
+}
+
+.replay-controls__scrub::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--replay-accent);
+  cursor: pointer;
+}
+
+.replay-controls__scrub::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: var(--replay-accent);
+  cursor: pointer;
+}
+
+/* The clock readout: tabular so the digits do not jitter as the seconds turn, and wide enough for
+   the longest form it will hold — a three-hour Session's "1:28:33 / 2:59:59". */
+.replay-controls__time {
+  flex: none;
+  min-width: 150px;
+  font-size: var(--type-strip-size);
+  line-height: var(--type-strip-line);
+  font-variant-numeric: var(--figures);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.replay-controls__speeds {
+  flex: none;
+  display: flex;
+  gap: 4px;
+}
+
+.replay-controls__speed {
+  min-width: 44px;
+  padding: 6px 8px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: var(--type-secondary-size);
+  font-variant-numeric: var(--figures);
+  cursor: pointer;
+}
+
+/* The speed that is running is filled so the current rate is readable at a glance, not inferred
+   from which button was last pressed. */
+.replay-controls__speed[aria-pressed="true"] {
+  border-color: var(--replay-accent);
+  background: var(--replay-accent);
+  color: var(--surface-screen);
+  font-weight: 700;
+}

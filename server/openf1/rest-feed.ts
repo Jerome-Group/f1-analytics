@@ -43,32 +43,25 @@ export async function loadTimeline(api: URL, sessionKey: number): Promise<Timeli
  * asking each Session whether it has any Drivers: a Session nobody Backfilled has none.
  */
 export async function readCatalogue(api: URL, year: number): Promise<Catalogue> {
-  const [meetings, sessions] = await Promise.all([
+  const [meetings, sessions, backfilled] = await Promise.all([
     collection<MeetingRecord>(api, 'meetings', { year }),
     collection<SessionRecord>(api, 'sessions', { year }),
+    backfilledKeys(api),
   ]);
-  return catalogueFrom(meetings, sessions, await backfilledKeys(api, sessions));
+  return catalogueFrom(meetings, sessions, backfilled);
 }
 
 /**
- * Which of the season's Sessions are in the Stores. Asked one Session at a time — `/v1/drivers` is a
- * few rows for a Backfilled Session and empty for one that is only catalogued — so a season's worth
- * of Sessions is a season's worth of small requests, run a few at a time rather than all at once so a
- * hundred-odd of them do not open a hundred-odd sockets in the same instant.
+ * Which Sessions are in the Stores, in one request. `/v1/drivers` carries a row per Driver of every
+ * Backfilled Session — around twenty each, and none at all for a Session only catalogued — so its
+ * distinct Session keys are the Sessions on disk, and the collection stays small because it grows
+ * only by a Backfill. A request per catalogued Session would be a hundred-odd of them, which the
+ * self-hosted API answers with 429s; this asks once. Keys from other seasons are harmless — the
+ * catalogue only ever checks its own Sessions against the set.
  */
-async function backfilledKeys(api: URL, sessions: readonly SessionRecord[]): Promise<Set<number>> {
-  const keys = [...new Set(sessions.map((session) => session.session_key))];
-  const here = new Set<number>();
-  const AT_ONCE = 8;
-  for (let from = 0; from < keys.length; from += AT_ONCE) {
-    await Promise.all(
-      keys.slice(from, from + AT_ONCE).map(async (key) => {
-        const drivers = await collection<DriverRecord>(api, 'drivers', { session_key: key });
-        if (drivers.length > 0) here.add(key);
-      }),
-    );
-  }
-  return here;
+async function backfilledKeys(api: URL): Promise<Set<number>> {
+  const rows = await collection<{ session_key: number }>(api, 'drivers', {});
+  return new Set(rows.map((row) => row.session_key));
 }
 
 async function collection<Row>(api: URL, name: string, where: Record<string, number>): Promise<Row[]> {

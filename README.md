@@ -71,7 +71,7 @@ bin/archive 2025              # mirror a season's raw files; 2025 1267 9920 for 
 bin/backfill 2025 1267 9920   # one past session into the stores, whole
 bin/catalogue 2025            # what that season's meetings and sessions are — names and clocks
 
-node server/main.ts 9920      # serve that session, and the screen showing it, on :8080
+node server/main.ts 9920      # serve the picker and replay backfilled sessions, on :8080
 bin/fixture                   # re-cut the committed test recording from the running stores
 ```
 
@@ -89,6 +89,11 @@ rather than the livetiming archive
 ([ADR-0009](docs/adr/0009-the-catalogue-is-a-season-at-a-time.md)). It costs
 [88 KB and half a minute](docs/measurements/a-season-in-the-catalogue.md), and running it again
 updates the season in place.
+
+`server/main.ts` opens on the picker: the catalogued season, with every Session that has been
+backfilled a link into the Timing screen and the rest listed but plainly not here. A chosen Session
+plays back through the identical views, paused at the end, with a Session clock to scrub, pause and
+speed up — Live and Replay differ only in that chrome, never in a Driver row.
 
 `bin/archive` is the layer beneath all of that: this project's own copy of the raw files, which
 both OpenF1 and FastF1 read. It is the only data here that cannot be rebuilt — Formula 1 has

@@ -9,9 +9,10 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
 import type { Duplex } from 'node:stream';
-import type { SessionChangeMessage, SessionStateMessage } from '../../domain/index.ts';
+import type { ReplayControl, SessionChangeMessage, SessionStateMessage } from '../../domain/index.ts';
+import { replayControl } from '../../domain/index.ts';
 import type { SessionSource } from '../session.ts';
-import { closeFrame, isClose, textFrame } from './frame.ts';
+import { clientText, closeFrame, isClose, textFrame } from './frame.ts';
 import { acceptance } from './handshake.ts';
 
 export interface SessionStateServer {
@@ -28,6 +29,15 @@ export interface SessionStateServer {
 /** What a browser gets when it asks this port for a page instead of upgrading to a socket. */
 export type Page = (request: IncomingMessage, response: ServerResponse) => void | Promise<void>;
 
+/** A control a browser sent back up the socket — a viewer moving the Replay clock (#15). A Live
+ * Session has none, so the default does nothing and the finished-Session path can leave it out. */
+export type OnControl = (control: ReplayControl) => void;
+
+/** Given a connecting browser's request, make ready whatever it asked for before it is sent the
+ * snapshot — the Session named in its URL, in Replay (#15). Runs before the socket joins the fan-out
+ * so it never sees a change it has no snapshot to fold; the default readies nothing. */
+export type Prepare = (request: IncomingMessage) => void | Promise<void>;
+
 /**
  * Serves one Session's evolving state to every browser that connects, and the dashboard that renders
  * it. A connecting browser is sent the whole Session as it stands (a snapshot); thereafter every
@@ -42,6 +52,8 @@ export async function serveSessionState(
   source: SessionSource,
   port: number,
   page: Page,
+  onControl: OnControl = () => {},
+  prepare: Prepare = () => {},
 ): Promise<SessionStateServer> {
   const open = new Set<Duplex>();
 
@@ -56,17 +68,35 @@ export async function serveSessionState(
   });
 
   http.on('upgrade', (request, socket) => {
+    void accept(request, socket);
+  });
+
+  async function accept(request: IncomingMessage, socket: Duplex): Promise<void> {
     const head = acceptance(request.headers);
     if (head === undefined) {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
       return;
     }
+    // An error handler before anything can throw, so a socket that drops during `prepare` is
+    // destroyed rather than left to reject unheard.
+    socket.on('error', () => socket.destroy());
+
+    // Ready the Session this browser asked for *before* it joins the fan-out, so the snapshot it is
+    // sent is that Session and it never receives a change it has no snapshot to fold onto.
+    await prepare(request);
 
     open.add(socket);
     socket.on('close', () => open.delete(socket));
-    socket.on('error', () => socket.destroy());
     socket.on('data', (chunk) => {
-      if (isClose(chunk)) socket.end(closeFrame());
+      if (isClose(chunk)) {
+        socket.end(closeFrame());
+        return;
+      }
+      // The only other thing a browser sends is a Replay control; anything the guard does not
+      // recognise is left alone, exactly as an unasked-for frame always has been.
+      const text = clientText(chunk);
+      const control = text === undefined ? undefined : replayControl(text);
+      if (control !== undefined) onControl(control);
     });
 
     // Encoded per connection, not once at startup: a browser connecting mid-Session — the reload
@@ -75,7 +105,7 @@ export async function serveSessionState(
     const snapshot: SessionStateMessage = { type: 'session-state', state: source.state };
     socket.write(head);
     socket.write(textFrame(JSON.stringify(snapshot)));
-  });
+  }
 
   http.listen(port, '127.0.0.1');
   await once(http, 'listening');

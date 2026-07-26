@@ -131,6 +131,28 @@ export interface Driver {
 export type Mode = 'live' | 'replay';
 
 /**
+ * Where a Replay's Session clock stands, so the controls can be drawn (#15). Every field is chrome:
+ * the scrub bar and the play button read it, and no Driver view ever does — which is the whole of
+ * "no view branches on which mode is active, only the chrome differs".
+ *
+ * The bounds and the position are milliseconds since the epoch — Session wall-clock, the same axis
+ * the feed's records carry — so the controls can place the handle without a second time system to
+ * keep in step. A Live Session has no such clock, so this is absent there and present in Replay.
+ */
+export interface ReplayClock {
+  /** The Session's first recorded moment: the far-left of the scrub bar. */
+  start: number;
+  /** The Session's last recorded moment: the far-right, and where a Replay opens (#15). */
+  end: number;
+  /** Where the clock stands now, between `start` and `end`. */
+  position: number;
+  /** Whether the clock is running. A Replay opens paused at `end`, so nothing moves until asked. */
+  playing: boolean;
+  /** How many Session-seconds pass per wall-clock second while playing — 1 is real time. */
+  speed: number;
+}
+
+/**
  * The track's condition, drawn as a band across the whole strip because it is the one thing that
  * must read without looking at anything (#13). Safety car is a flag here rather than a separate
  * field, because on the strip it is one of the conditions the band shows.
@@ -199,4 +221,6 @@ export interface SessionState {
   weather?: Weather;
   /** Live or Replay, for the strip's chrome. The one field the two modes may differ in (#3). */
   mode?: Mode;
+  /** Where the Replay's Session clock stands, for the controls. Absent in a Live Session (#15). */
+  replay?: ReplayClock;
 }

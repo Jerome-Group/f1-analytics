@@ -1,0 +1,14 @@
+{
+  "name": "f1-live-analytics",
+  "private": true,
+  "type": "module",
+  "description": "A dashboard for watching a live Formula 1 session. Nothing is published from here.",
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.1",
+    "typescript": "7.0.2"
+  }
+}

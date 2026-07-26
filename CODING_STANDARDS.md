@@ -68,13 +68,43 @@ area updates `MAP.md` in the **same** pull request. A stale map is worse than no
 where tests are written, naming or layout rules particular to this codebase, and anything the
 core leaves open. Add them here; they evolve through this repository's normal pull-request flow.
 
-The application code is not written yet, so what follows covers `bin/`, `deploy/` and `test/`.
-Add to it when a language arrives.
-
 **Tests live in `test/`, one file per unit under test, named `<unit>.test.sh`, and `test/run`
 runs all of them.** They install nothing: a test that needs a package before it can say whether
 `bin/up` places its data correctly is a test that will not be run, and this is the repository
-where placement being wrong is silent.
+where placement being wrong is silent. A test written in another language is driven from its
+`.test.sh` and reports through `test/lib/assert.sh` with everything else, so one run reads as one
+list.
+
+**Tests assert at a seam, and there are two** (#3). Seam 1 is `server/`: a recorded input goes in
+and the Session state that comes out of the WebSocket is asserted, with the process a black box.
+Seam 2 is `web/`: Session state goes in and what is on screen is asserted. Nothing is asserted
+between them — not the Adapter's intermediate shapes, not how Session state is held, not a
+component's internals. A test that would break on a rewrite that changed no behaviour is a bad
+test, and deleting it is the fix.
+
+**A recording is cut by a committed script and is minutes, not a Session.** `bin/fixture` writes
+everything under `test/fixtures/`, byte-stably, so a recording is regenerated and reviewed rather
+than being an opaque blob that quietly stops representing the feed. None of it is a whole
+Session: the data is Formula 1's (`docs/adr/0002`, #26), and what makes a recording worth having
+is the curation, not its completeness.
+
+**TypeScript is run by Node, not built** (`docs/adr/0011`). `server/`, `domain/` and, when it
+arrives, `web/`. There is no emitted JavaScript and no runtime dependency; `npm run typecheck` is
+a check like `shellcheck`, never a step before something works. Practically: every relative
+import names the file it imports including its `.ts`, and nothing is written that type-stripping
+cannot erase — `erasableSyntaxOnly` in `tsconfig.json` makes that a type error rather than a
+crash.
+
+**Upstream field names live under `server/openf1/` and nowhere else.** That directory is the
+Adapter (`CONTEXT.md`), and ADR-0003's whole claim — that the data source can be changed without
+reaching the views — is this rule and nothing else. Upstream speaks `snake_case` and this project
+speaks `camelCase`, so `test/adapter.test.sh` checks the spelling of every TypeScript file above
+the boundary. Prose naming a field is not carrying one, as with `docker` below.
+
+**A value the feed did not give is absent.** Optional in `domain/` means the key is missing from
+the object and missing from the wire — never `null`, never `0`, never what it was last time
+(story 38). Building a domain value by spreading an upstream record, or by defaulting with `??`,
+is how a zero gets in.
 
 **Shell.** `bash`, and every path quoted — this repository lives at a path with a space in it,
 and an unquoted expansion is a bug that only shows up here. Executables in `bin/` use

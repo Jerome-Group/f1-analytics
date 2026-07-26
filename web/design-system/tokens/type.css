@@ -1,5 +1,5 @@
 /* Type for a table of figures. Every size is in px because the target is one fixed
-   2560 x 1440 panel, and every figure is tabular so a column of lap times is a column
+   window on one known display, and every figure is tabular so a column of lap times is a column
    and not a ragged edge. No webfont: the system UI stack ships true tabular figures,
    and a font download is a dependency this repository would rather not have. */
 

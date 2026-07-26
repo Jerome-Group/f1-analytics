@@ -1,21 +1,22 @@
 /* The density budget, written down once. Twenty-five data columns and the whole field have
-   to land inside 2560 x 1440 with nothing scrolled and nothing reflowed, so the column
+   to land inside the viewport with nothing scrolled and nothing reflowed, so the column
    template is a token rather than a property of any one component: the header, the rows
    and the screen all lay out against the same track list or they do not line up.
 
-   The grid is twenty-two, not twenty: Audi and Cadillac joined for 2026. The row is 57 px
-   rather than the 60 the brief assumed, which is what twenty-two of them cost.
+   The height is 1300, not the panel's 1440. The target is a browser window on a 2560 x 1440
+   display, and a tab strip and an address bar take about 140 px before any of this is drawn.
+   Budgeting the panel instead would put the last two Drivers below the fold with nothing on
+   screen to say they were missing, which is the worst way for a timing screen to fail.
 
-   The 1440 is the panel's, not a window's. A windowed browser on this display gives about
-   1330 CSS px once its tab strip and address bar are taken, which loses the last two rows
-   with nothing on screen to say they are missing. The Timing screen is run fullscreen. */
+   The grid is twenty-two, not twenty: Audi and Cadillac joined for 2026. Twenty-two rows in
+   1300 is what sets the row at 50 px rather than the 60 the brief assumed. */
 
 :root {
   --screen-width: 2560px;
-  --screen-height: 1440px;
+  --screen-height: 1300px;
   --screen-pad: 24px;
 
-  --row-height: 57px;
+  --row-height: 50px;
   --row-count: 22;
   --header-height: 34px;
   --strip-height: 142px;

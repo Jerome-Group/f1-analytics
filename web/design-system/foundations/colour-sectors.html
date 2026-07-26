@@ -1,0 +1,59 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sector status system</title>
+    <link rel="stylesheet" href="../preview.css" />
+    <link rel="stylesheet" href="../components/sector-time/sector-time.css" />
+  </head>
+  <body>
+    <section class="specimen">
+      <h1 class="specimen__title">Sector status</h1>
+      <div class="swatches" style="grid-template-columns: repeat(5, 160px)">
+        <div>
+          <span class="sector-time" data-status="session-best">28.114</span>
+          <p class="specimen__note">Session best</p>
+        </div>
+        <div>
+          <span class="sector-time" data-status="personal-best">28.402</span>
+          <p class="specimen__note">Personal best</p>
+        </div>
+        <div>
+          <span class="sector-time" data-status="set">28.771</span>
+          <p class="specimen__note">Set, neither best</p>
+        </div>
+        <div>
+          <span class="sector-time" data-status="absent">&ndash;&ndash;.&ndash;&ndash;&ndash;</span>
+          <p class="specimen__note">Not yet sent</p>
+        </div>
+        <div>
+          <span class="sector-time" data-status="unavailable">&ndash;&ndash;.&ndash;&ndash;&ndash;</span>
+          <p class="specimen__note">Gated this Session</p>
+        </div>
+      </div>
+      <p class="specimen__note">
+        Purple, green and yellow carry the meaning everyone watching already knows. The
+        mark under the time carries it a second time as weight — 6 px, 4 px, 2 px, then a
+        dotted hairline — so the ranking survives for a viewer who cannot separate the
+        hues, and so the best sectors on screen are findable by scanning thickness alone.
+        That is what makes the system legible without a legend.
+      </p>
+    </section>
+
+    <section class="specimen">
+      <h1 class="specimen__title">A column of sectors</h1>
+      <div style="display: grid; grid-template-columns: 120px; gap: 6px">
+        <span class="sector-time" data-status="set">28.771</span>
+        <span class="sector-time" data-status="session-best">28.114</span>
+        <span class="sector-time" data-status="personal-best">28.402</span>
+        <span class="sector-time" data-status="set">29.008</span>
+        <span class="sector-time" data-status="absent">&ndash;&ndash;.&ndash;&ndash;&ndash;</span>
+      </div>
+      <p class="specimen__note">
+        Tabular figures and a right edge: the decimal points line up, so the column can be
+        read as a shape before any single value is read as a number.
+      </p>
+    </section>
+  </body>
+</html>

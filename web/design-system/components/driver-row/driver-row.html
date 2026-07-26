@@ -1,0 +1,234 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Driver row</title>
+    <link rel="stylesheet" href="../../preview.css" />
+    <link rel="stylesheet" href="driver-row.css" />
+    <link rel="stylesheet" href="../sector-time/sector-time.css" />
+    <link rel="stylesheet" href="../tyre-badge/tyre-badge.css" />
+    <link rel="stylesheet" href="../sparkline/sparkline.css" />
+  </head>
+  <body style="padding: 0">
+    <div style="width: 2560px">
+      <div class="driver-row-header">
+        <span>Pos</span>
+        <span></span>
+        <span></span>
+        <span>No</span>
+        <span>Driver</span>
+        <span>State</span>
+        <span style="text-align: right">Gap</span>
+        <span>Gap trend</span>
+        <span style="text-align: right">Int</span>
+        <span style="text-align: right">Last</span>
+        <span>Lap trend</span>
+        <span style="text-align: right">Best</span>
+        <span style="text-align: right">S1</span>
+        <span style="text-align: right">Best</span>
+        <span style="text-align: right">S2</span>
+        <span style="text-align: right">Best</span>
+        <span style="text-align: right">S3</span>
+        <span style="text-align: right">Best</span>
+        <span style="text-align: right">Trap</span>
+        <span class="cell--centred">Tyre</span>
+        <span style="text-align: right">Age</span>
+        <span style="text-align: right">St</span>
+        <span style="text-align: right">Pit</span>
+        <span>Deg trend</span>
+        <span style="text-align: right">Laps</span>
+      </div>
+
+      <!-- On track: the ordinary state, and therefore the quiet one. -->
+      <div class="driver-row" data-state="on-track" style="--team-colour: var(--team-mclaren)">
+        <span class="position">1</span>
+        <span class="position-change" data-direction="none">&middot;</span>
+        <span class="team-bar"></span>
+        <span class="car-number">4</span>
+        <span class="driver-name"><span class="driver-name__tla">NOR</span><span class="driver-name__surname">Norris</span></span>
+        <span class="cell"></span>
+        <span class="cell--figure absent">&mdash;</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,20 17.8,19 31.6,18 45.5,18 59.3,17 73.1,16 86.9,16 100.7,15 114.5,15 128.4,14 142.2,14 156,13" /><circle class="sparkline__now" cx="156" cy="13" r="3" /></svg></span>
+        <span class="cell--figure absent">&mdash;</span>
+        <span class="cell--figure">1:29.117</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,26 17.8,22 31.6,18 45.5,14 59.3,12 73.1,11 86.9,13 100.7,12 114.5,10 128.4,11 142.2,9 156,8" /><circle class="sparkline__now" cx="156" cy="8" r="3" /></svg></span>
+        <span class="cell--figure">1:29.117</span>
+        <span class="sector-time" data-status="personal-best">28.402</span>
+        <span class="cell--figure-secondary">28.402</span>
+        <span class="sector-time" data-status="session-best">31.114</span>
+        <span class="cell--figure-secondary">31.114</span>
+        <span class="sector-time" data-status="set">29.601</span>
+        <span class="cell--figure-secondary">29.480</span>
+        <span class="cell--figure">327</span>
+        <span class="cell--centred"><span class="tyre-badge" data-compound="medium">M</span></span>
+        <span class="cell--figure tyre-age">14</span>
+        <span class="cell--figure">2</span>
+        <span class="cell--figure">1</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><polyline class="sparkline__run" points="4,10 17.8,11 31.6,11 45.5,13 59.3,14 73.1,15 86.9,17 100.7,18 114.5,20 128.4,21 142.2,23 156,24" /><circle class="sparkline__now" cx="156" cy="24" r="3" /></svg></span>
+        <span class="cell--figure">32</span>
+      </div>
+
+      <div class="driver-row" data-state="on-track" style="--team-colour: var(--team-red-bull)">
+        <span class="position">2</span>
+        <span class="position-change" data-direction="gain">+1</span>
+        <span class="team-bar"></span>
+        <span class="car-number">1</span>
+        <span class="driver-name"><span class="driver-name__tla">VER</span><span class="driver-name__surname">Verstappen</span></span>
+        <span class="cell"></span>
+        <span class="cell--figure">+2.418</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,10 17.8,12 31.6,13 45.5,15 59.3,16 73.1,18 86.9,19 100.7,21 114.5,22 128.4,24 142.2,25 156,27" /><circle class="sparkline__now" cx="156" cy="27" r="3" /></svg></span>
+        <span class="cell--figure">+2.418</span>
+        <span class="cell--figure">1:29.663</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,22 17.8,19 31.6,17 45.5,15 59.3,14 73.1,13 86.9,14 100.7,16 114.5,17 128.4,18 142.2,19 156,20" /><circle class="sparkline__now" cx="156" cy="20" r="3" /></svg></span>
+        <span class="cell--figure">1:29.402</span>
+        <span class="sector-time" data-status="set">28.611</span>
+        <span class="cell--figure-secondary">28.508</span>
+        <span class="sector-time" data-status="personal-best">31.240</span>
+        <span class="cell--figure-secondary">31.240</span>
+        <span class="sector-time" data-status="set">29.812</span>
+        <span class="cell--figure-secondary">29.654</span>
+        <span class="cell--figure">331</span>
+        <span class="cell--centred"><span class="tyre-badge" data-compound="hard">H</span></span>
+        <span class="cell--figure tyre-age" data-fitted-used="true">21</span>
+        <span class="cell--figure">2</span>
+        <span class="cell--figure">1</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><polyline class="sparkline__run" points="4,12 17.8,12 31.6,13 45.5,14 59.3,15 73.1,16 86.9,17 100.7,19 114.5,20 128.4,21 142.2,22 156,23" /><circle class="sparkline__now" cx="156" cy="23" r="3" /></svg></span>
+        <span class="cell--figure">32</span>
+      </div>
+
+      <!-- Out lap: the times stay on screen and stop claiming to be pace. -->
+      <div class="driver-row" data-state="out-lap" style="--team-colour: var(--team-ferrari)">
+        <span class="position">8</span>
+        <span class="position-change" data-direction="loss">&minus;3</span>
+        <span class="team-bar"></span>
+        <span class="car-number">16</span>
+        <span class="driver-name"><span class="driver-name__tla">LEC</span><span class="driver-name__surname">Leclerc</span></span>
+        <span class="cell"><span class="state-chip" data-state="out-lap">Out</span></span>
+        <span class="cell--figure">+41.208</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,14 17.8,15 31.6,15 45.5,16 59.3,17 73.1,18" /><path class="sparkline__missing" d="M73.1 33 H100.7" /><polyline class="sparkline__run" points="100.7,26 114.5,27 128.4,28 142.2,29 156,30" /><circle class="sparkline__now" cx="156" cy="30" r="3" /></svg></span>
+        <span class="cell--figure">+3.902</span>
+        <span class="cell--figure">1:44.882</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,18 17.8,17 31.6,16 45.5,16 59.3,15 73.1,14 86.9,15 100.7,16" /><path class="sparkline__missing" d="M100.7 33 H142.2" /><polyline class="sparkline__run" points="142.2,30 156,31" /><circle class="sparkline__now" cx="156" cy="31" r="3" /></svg></span>
+        <span class="cell--figure">1:29.880</span>
+        <span class="sector-time" data-status="set">33.104</span>
+        <span class="cell--figure-secondary">28.702</span>
+        <span class="sector-time" data-status="set">36.550</span>
+        <span class="cell--figure-secondary">31.402</span>
+        <span class="sector-time" data-status="absent">&mdash;</span>
+        <span class="cell--figure-secondary">29.776</span>
+        <span class="cell--figure absent">&mdash;</span>
+        <span class="cell--centred"><span class="tyre-badge" data-compound="soft">S</span></span>
+        <span class="cell--figure tyre-age">1</span>
+        <span class="cell--figure">3</span>
+        <span class="cell--figure">2</span>
+        <span class="cell"><div class="sparkline-absent">&mdash;</div></span>
+        <span class="cell--figure">31</span>
+      </div>
+
+      <!-- Pit lane: moving, but not racing. -->
+      <div class="driver-row" data-state="pit-lane" style="--team-colour: var(--team-aston-martin)">
+        <span class="position">11</span>
+        <span class="position-change" data-direction="loss">&minus;5</span>
+        <span class="team-bar"></span>
+        <span class="car-number">14</span>
+        <span class="driver-name"><span class="driver-name__tla">ALO</span><span class="driver-name__surname">Alonso</span></span>
+        <span class="cell"><span class="state-chip" data-state="pit-lane">Pit</span></span>
+        <span class="cell--figure">+58.114</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,12 17.8,13 31.6,15 45.5,16 59.3,18 73.1,19 86.9,21 100.7,22 114.5,24 128.4,25 142.2,27 156,29" /><circle class="sparkline__now" cx="156" cy="29" r="3" /></svg></span>
+        <span class="cell--figure">+2.007</span>
+        <span class="cell--figure">1:31.902</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,20 17.8,19 31.6,18 45.5,18 59.3,19 73.1,20 86.9,21 100.7,22 114.5,22 128.4,23 142.2,24 156,25" /><circle class="sparkline__now" cx="156" cy="25" r="3" /></svg></span>
+        <span class="cell--figure">1:30.441</span>
+        <span class="sector-time" data-status="set">29.114</span>
+        <span class="cell--figure-secondary">28.902</span>
+        <span class="sector-time" data-status="set">31.880</span>
+        <span class="cell--figure-secondary">31.550</span>
+        <span class="sector-time" data-status="absent">&mdash;</span>
+        <span class="cell--figure-secondary">29.988</span>
+        <span class="cell--figure">318</span>
+        <span class="cell--centred"><span class="tyre-badge" data-compound="hard">H</span></span>
+        <span class="cell--figure tyre-age">18</span>
+        <span class="cell--figure">2</span>
+        <span class="cell--figure">1</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><polyline class="sparkline__run" points="4,11 17.8,12 31.6,14 45.5,15 59.3,17 73.1,18 86.9,20 100.7,21 114.5,22 128.4,24 142.2,25 156,26" /><circle class="sparkline__now" cx="156" cy="26" r="3" /></svg></span>
+        <span class="cell--figure">30</span>
+      </div>
+
+      <!-- In box: stationary. The stripe is caught before the row is read. -->
+      <div class="driver-row" data-state="in-box" style="--team-colour: var(--team-mercedes)">
+        <span class="position">12</span>
+        <span class="position-change" data-direction="loss">&minus;7</span>
+        <span class="team-bar"></span>
+        <span class="car-number">63</span>
+        <span class="driver-name"><span class="driver-name__tla">RUS</span><span class="driver-name__surname">Russell</span></span>
+        <span class="cell"><span class="state-chip" data-state="in-box">Box</span></span>
+        <span class="cell--figure">+1:02.550</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,13 17.8,14 31.6,15 45.5,17 59.3,18 73.1,20 86.9,21 100.7,23 114.5,24 128.4,26 142.2,27 156,29" /><circle class="sparkline__now" cx="156" cy="29" r="3" /></svg></span>
+        <span class="cell--figure">+4.436</span>
+        <span class="cell--figure">1:30.774</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,19 17.8,18 31.6,18 45.5,17 59.3,18 73.1,19 86.9,19 100.7,20 114.5,21 128.4,22 142.2,22 156,23" /><circle class="sparkline__now" cx="156" cy="23" r="3" /></svg></span>
+        <span class="cell--figure">1:30.108</span>
+        <span class="sector-time" data-status="set">28.994</span>
+        <span class="cell--figure-secondary">28.812</span>
+        <span class="sector-time" data-status="set">31.702</span>
+        <span class="cell--figure-secondary">31.488</span>
+        <span class="sector-time" data-status="absent">&mdash;</span>
+        <span class="cell--figure-secondary">29.808</span>
+        <span class="cell--figure">312</span>
+        <span class="cell--centred"><span class="tyre-badge" data-compound="soft">S</span></span>
+        <span class="cell--figure tyre-age">22</span>
+        <span class="cell--figure">2</span>
+        <span class="cell--figure">1</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><polyline class="sparkline__run" points="4,10 17.8,12 31.6,13 45.5,15 59.3,16 73.1,18 86.9,19 100.7,21 114.5,22 128.4,24 142.2,25 156,27" /><circle class="sparkline__now" cx="156" cy="27" r="3" /></svg></span>
+        <span class="cell--figure">30</span>
+      </div>
+
+      <!-- Retired: still on screen, plainly out of the Session. -->
+      <div class="driver-row" data-state="retired" style="--team-colour: var(--team-williams)">
+        <span class="position absent">&mdash;</span>
+        <span class="position-change" data-direction="none">&middot;</span>
+        <span class="team-bar"></span>
+        <span class="car-number">55</span>
+        <span class="driver-name"><span class="driver-name__tla">SAI</span><span class="driver-name__surname">Sainz</span></span>
+        <span class="cell"><span class="state-chip" data-state="retired">Ret</span></span>
+        <span class="cell--figure absent">&mdash;</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><polyline class="sparkline__run" points="4,14 17.8,15 31.6,16 45.5,17 59.3,19 73.1,20 86.9,22" /><path class="sparkline__missing" d="M86.9 33 H156" /></svg></span>
+        <span class="cell--figure absent">&mdash;</span>
+        <span class="cell--figure">1:33.220</span>
+        <span class="cell"><svg class="sparkline" viewBox="0 0 160 36"><line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" /><polyline class="sparkline__run" points="4,18 17.8,17 31.6,18 45.5,19 59.3,20 73.1,22 86.9,25" /><path class="sparkline__missing" d="M86.9 33 H156" /></svg></span>
+        <span class="cell--figure">1:31.004</span>
+        <span class="sector-time" data-status="absent">&mdash;</span>
+        <span class="cell--figure-secondary">29.114</span>
+        <span class="sector-time" data-status="absent">&mdash;</span>
+        <span class="cell--figure-secondary">31.994</span>
+        <span class="sector-time" data-status="absent">&mdash;</span>
+        <span class="cell--figure-secondary">30.220</span>
+        <span class="cell--figure absent">&mdash;</span>
+        <span class="cell--centred"><span class="tyre-badge" data-compound="medium">M</span></span>
+        <span class="cell--figure tyre-age">9</span>
+        <span class="cell--figure">2</span>
+        <span class="cell--figure">1</span>
+        <span class="cell"><div class="sparkline-absent">&mdash;</div></span>
+        <span class="cell--figure">18</span>
+      </div>
+    </div>
+
+    <div style="padding: 32px">
+      <p class="specimen__note">
+        Twenty-five columns and sixty pixels. The team colour is a bar rather than a row
+        tint, which leaves the row's background free to carry state: pit lane and box are
+        a lighter slate, box adds a stripe the eye catches before it reads, an out lap
+        greys the times so they stop claiming to be pace, and a retired Driver stays in
+        the table with the light taken out of them. On track wears no chip at all &mdash;
+        it is nineteen rows in twenty, and a screen that shouts the ordinary state has
+        nothing left to shout the exceptional one with.
+      </p>
+      <p class="specimen__note">
+        Gap is to the leader, Interval is to the car ahead, and they are two columns apart
+        with the Gap trend between them so a transposition is visible rather than
+        plausible. The leader's own Gap and Interval are absent, not zero.
+      </p>
+    </div>
+  </body>
+</html>

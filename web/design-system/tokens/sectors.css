@@ -1,0 +1,15 @@
+/* Sector status. Colour carries the meaning everyone already knows; weight carries it
+   again for anyone who cannot separate the hues, so the system survives without a legend:
+   the better the sector, the heavier the mark under it. */
+
+:root {
+  --sector-session-best: #b14ee8;
+  --sector-personal-best: #00d46a;
+  --sector-set: #f5d000;
+
+  --sector-session-best-fill: #3a1450;
+  --sector-session-best-text: #f3ddff;
+  --sector-mark-session-best: 6px;
+  --sector-mark-personal-best: 4px;
+  --sector-mark-set: 2px;
+}

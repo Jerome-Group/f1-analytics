@@ -1,0 +1,49 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tyre compound tokens</title>
+    <link rel="stylesheet" href="../preview.css" />
+    <link rel="stylesheet" href="../components/tyre-badge/tyre-badge.css" />
+  </head>
+  <body>
+    <section class="specimen">
+      <h1 class="specimen__title">Compound</h1>
+      <div class="swatches" style="grid-template-columns: repeat(6, 140px)">
+        <div class="swatch"><span class="tyre-badge" data-compound="soft">S</span><span class="swatch__name">Soft</span></div>
+        <div class="swatch"><span class="tyre-badge" data-compound="medium">M</span><span class="swatch__name">Medium</span></div>
+        <div class="swatch"><span class="tyre-badge" data-compound="hard">H</span><span class="swatch__name">Hard</span></div>
+        <div class="swatch"><span class="tyre-badge" data-compound="intermediate">I</span><span class="swatch__name">Inter</span></div>
+        <div class="swatch"><span class="tyre-badge" data-compound="wet">W</span><span class="swatch__name">Wet</span></div>
+        <div class="swatch"><span class="tyre-badge" data-compound="unknown">?</span><span class="swatch__name">Unknown</span></div>
+      </div>
+      <p class="specimen__note">
+        Pirelli's own colours, drawn the way the sidewall is marked: a ring with the
+        compound letter inside. The letter is the second channel — hard white and an
+        unknown grey are close at 32 px, and the ring alone would not separate them.
+      </p>
+    </section>
+
+    <section class="specimen">
+      <h1 class="specimen__title">Tyre age</h1>
+      <div class="swatches" style="grid-template-columns: repeat(2, 240px)">
+        <div class="swatch">
+          <span class="tyre-badge" data-compound="medium">M</span>
+          <span class="tyre-age">14</span>
+          <span class="swatch__value">fresh when fitted</span>
+        </div>
+        <div class="swatch">
+          <span class="tyre-badge" data-compound="hard">H</span>
+          <span class="tyre-age" data-fitted-used="true">21</span>
+          <span class="swatch__value">fitted with laps on it</span>
+        </div>
+      </div>
+      <p class="specimen__note">
+        Age is the tyre's, in laps, and it is not the number of laps run in the Stint. A
+        set fitted with laps already on it is marked, because the two numbers diverging is
+        exactly the case where a single number would mislead.
+      </p>
+    </section>
+  </body>
+</html>

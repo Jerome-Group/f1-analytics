@@ -1,0 +1,186 @@
+@import url("../../tokens/palette.css");
+@import url("../../tokens/teams.css");
+@import url("../../tokens/type.css");
+@import url("../../tokens/layout.css");
+
+/* One Driver, twenty-five columns, sixty pixels. The header and every row lay out against
+   the same track list in --row-columns, so a column is a column down the whole screen. */
+
+.driver-row,
+.driver-row-header {
+  display: grid;
+  grid-template-columns: var(--row-columns);
+  column-gap: var(--column-gap);
+  align-items: center;
+  padding: 0 var(--screen-pad);
+  font-family: var(--font-ui);
+  box-sizing: border-box;
+}
+
+.driver-row-header {
+  height: var(--header-height);
+  background: var(--surface-header);
+  border-bottom: 1px solid var(--rule-strong);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.driver-row {
+  height: var(--row-height);
+  background: var(--surface-row);
+  border-bottom: 1px solid var(--rule);
+  color: var(--text-primary);
+}
+
+.driver-row:nth-child(even) {
+  background: var(--surface-row-alt);
+}
+
+.cell {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cell--figure {
+  font-variant-numeric: var(--figures);
+  font-size: var(--type-primary-size);
+  line-height: var(--type-primary-line);
+  text-align: right;
+}
+
+.cell--figure-secondary {
+  font-variant-numeric: var(--figures);
+  font-size: var(--type-secondary-size);
+  line-height: var(--type-secondary-line);
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.cell--centred {
+  text-align: center;
+}
+
+/* A value the feed has not sent. Never a zero, never the last one that arrived. */
+.absent {
+  color: var(--text-absent);
+}
+
+.position {
+  font-size: var(--type-position-size);
+  line-height: var(--type-position-line);
+  font-weight: 700;
+  font-variant-numeric: var(--figures);
+  text-align: right;
+}
+
+.position-change {
+  font-size: var(--type-secondary-size);
+  line-height: var(--type-secondary-line);
+  font-variant-numeric: var(--figures);
+  text-align: right;
+}
+
+.position-change[data-direction="gain"] { color: var(--gain); }
+.position-change[data-direction="loss"] { color: var(--loss); }
+.position-change[data-direction="none"] { color: var(--text-tertiary); }
+
+.team-bar {
+  width: 6px;
+  height: 40px;
+  background: var(--team-colour);
+  border-radius: 1px;
+}
+
+.car-number {
+  font-size: var(--type-tla-size);
+  line-height: var(--type-tla-line);
+  font-weight: 700;
+  font-variant-numeric: var(--figures);
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.driver-name {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.driver-name__tla {
+  font-size: var(--type-tla-size);
+  line-height: var(--type-tla-line);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.driver-name__surname {
+  font-size: var(--type-secondary-size);
+  line-height: var(--type-secondary-line);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* On track carries no chip. It is nineteen rows out of twenty, and a screen that shouts
+   the ordinary state has nothing left to shout the exceptional one with. */
+.state-chip {
+  display: inline-block;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 3px 5px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+}
+
+.state-chip[data-state="pit-lane"] { color: var(--state-pit); }
+.state-chip[data-state="out-lap"] { color: var(--state-out-lap); }
+.state-chip[data-state="retired"] { color: var(--state-retired); }
+
+.state-chip[data-state="in-box"] {
+  color: var(--surface-screen);
+  background: var(--state-pit);
+  border-color: var(--state-pit);
+}
+
+.driver-row[data-state="pit-lane"],
+.driver-row[data-state="in-box"] {
+  background: var(--surface-row-pit);
+}
+
+/* Stopped, not merely slow: the row grows a stripe the eye catches before it reads. */
+.driver-row[data-state="in-box"] {
+  box-shadow: inset 4px 0 0 0 var(--state-pit);
+}
+
+/* An out lap is not a lap. The times stay on screen and stop claiming to be pace. */
+.driver-row[data-state="out-lap"] .cell--figure,
+.driver-row[data-state="out-lap"] .sector-time {
+  color: var(--text-secondary);
+}
+
+.driver-row[data-state="retired"] {
+  background: var(--surface-row-retired);
+  color: var(--text-tertiary);
+}
+
+.driver-row[data-state="retired"] .team-bar {
+  opacity: 0.35;
+}
+
+.driver-row[data-state="retired"] .cell--figure,
+.driver-row[data-state="retired"] .cell--figure-secondary,
+.driver-row[data-state="retired"] .driver-name__tla,
+.driver-row[data-state="retired"] .position {
+  color: var(--text-tertiary);
+}
+
+.driver-row[data-state="retired"] .sparkline__run,
+.driver-row[data-state="retired"] .sparkline__missing {
+  stroke: var(--text-absent);
+}

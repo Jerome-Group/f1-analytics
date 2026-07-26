@@ -10,7 +10,7 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 | The Archive | Mirrors what Formula 1 publishes, raw. Depends on nothing else here, and is the only data that cannot be rebuilt | `archive/`, `bin/archive` |
 | The pipeline | The self-hosted OpenF1 stack. Upstream software, run here and never vendored | `deploy/` |
 | The backend | MQTT subscriber, canonical session state, the WebSocket the browser reads | `server/` |
-| The dashboard | The timing screen | `web/` |
+| The dashboard | The timing screen, and the design system it is built from — tokens, components, and the full-screen assembly that proves the density budget | `web/`, `web/design-system/` |
 | Shared types | The canonical model, imported by both `server/` and `web/` | `domain/` |
 | Analysis mode | Deferred. Offline FastF1 work; the dashboard never calls it | `analysis/` |
 | Running anything | Wrappers that place the container runtime and its data on the external volume. **The runtime is never invoked directly** | `bin/up`, `bin/down`, `bin/compose`, `bin/backfill`, `bin/catalogue` |
@@ -23,7 +23,7 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | Automation | The workflows that run on a pull request, and dependency updates | `.github/` |
 
-`archive/`, `bin/`, `deploy/` and `test/` exist. The rest do not yet — they are where the code
+`archive/`, `bin/`, `deploy/`, `test/` and `web/design-system/` exist. The rest do not yet — they are where the code
 goes, recorded here so the first pull request that creates one is placing it rather than
 inventing it.
 

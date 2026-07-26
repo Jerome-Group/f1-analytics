@@ -1,0 +1,41 @@
+/* The density budget, written down once. Twenty-five data columns and twenty rows have
+   to land inside 2560 x 1440 with nothing scrolled and nothing reflowed, so the column
+   template is a token rather than a property of any one component: the header, the rows
+   and the screen all lay out against the same track list or they do not line up. */
+
+:root {
+  --screen-width: 2560px;
+  --screen-height: 1440px;
+  --screen-pad: 24px;
+
+  --row-height: 60px;
+  --row-count: 20;
+  --header-height: 34px;
+  --strip-height: 142px;
+
+  --column-gap: 12px;
+
+  --row-columns:
+    56px    /* position */
+    44px    /* position change against grid */
+    6px     /* team colour */
+    52px    /* car number */
+    200px   /* driver */
+    64px    /* state */
+    96px    /* gap to leader */
+    160px   /* gap trend */
+    96px    /* interval to car ahead */
+    108px   /* last lap */
+    160px   /* last lap trend */
+    108px   /* best lap */
+    88px 76px   /* sector 1, sector 1 personal best */
+    88px 76px   /* sector 2, sector 2 personal best */
+    88px 76px   /* sector 3, sector 3 personal best */
+    84px    /* speed trap */
+    56px    /* tyre */
+    60px    /* tyre age */
+    48px    /* stint */
+    48px    /* pit stops */
+    170px   /* degradation trend */
+    56px;   /* laps */
+}

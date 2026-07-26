@@ -1,0 +1,14 @@
+/* Pirelli's own compound colours. Drawn as the sidewall marking is drawn — a ring with
+   the compound letter inside — so the badge reads as a tyre and not as a coloured dot. */
+
+:root {
+  --tyre-soft: #da291c;
+  --tyre-medium: #ffd12e;
+  --tyre-hard: #f0f0ec;
+  --tyre-intermediate: #43b02a;
+  --tyre-wet: #0067ad;
+  --tyre-unknown: #46505e;
+
+  /* Marks a set that was fitted with laps already on it. */
+  --tyre-fitted-used: #ffd12e;
+}

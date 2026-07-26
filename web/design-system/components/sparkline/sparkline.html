@@ -1,0 +1,77 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sparkline</title>
+    <link rel="stylesheet" href="../../preview.css" />
+    <link rel="stylesheet" href="sparkline.css" />
+  </head>
+  <body style="--team-colour: var(--team-mclaren)">
+    <section class="specimen">
+      <h1 class="specimen__title">Complete run &mdash; last twelve laps</h1>
+      <div style="width: 160px; background: var(--surface-row); padding: 6px">
+        <svg class="sparkline" viewBox="0 0 160 36" role="img" aria-label="Lap times, last twelve laps">
+          <line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" />
+          <polyline
+            class="sparkline__run"
+            points="4,26 17.8,22 31.6,18 45.5,14 59.3,12 73.1,11 86.9,13 100.7,16 114.5,19 128.4,22 142.2,25 156,28"
+          />
+          <circle class="sparkline__now" cx="156" cy="28" r="3" />
+        </svg>
+      </div>
+      <p class="specimen__note">
+        The dotted rule is the Driver's own best, so the shape is read against something.
+        The head of the run is marked in the team colour, which is the only place the team
+        colour appears inside a cell &mdash; it says which row you are looking at without a
+        second glance leftwards.
+      </p>
+    </section>
+
+    <section class="specimen">
+      <h1 class="specimen__title">Laps the feed never sent</h1>
+      <div style="width: 160px; background: var(--surface-row); padding: 6px">
+        <svg class="sparkline" viewBox="0 0 160 36" role="img" aria-label="Lap times with three laps missing">
+          <line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" />
+          <polyline class="sparkline__run" points="4,26 17.8,22 31.6,18 45.5,14 59.3,12" />
+          <path class="sparkline__missing" d="M59.3 33 H114.5" />
+          <polyline class="sparkline__run" points="114.5,19 128.4,22 142.2,25 156,28" />
+          <circle class="sparkline__now" cx="156" cy="28" r="3" />
+        </svg>
+      </div>
+      <p class="specimen__note">
+        The x axis is the lap number, never the laps that happen to have data. So three
+        missing laps keep their width, the run breaks rather than interpolating across
+        them, and the absence is drawn on the floor as a dotted stub. Joining the two ends
+        would invent a value; leaving the space out would quietly rewrite the race.
+      </p>
+    </section>
+
+    <section class="specimen">
+      <h1 class="specimen__title">Not enough laps, and not available at all</h1>
+      <div style="display: flex; gap: 24px">
+        <div style="width: 160px; background: var(--surface-row); padding: 6px">
+          <div class="sparkline-absent">&mdash;</div>
+        </div>
+        <div style="width: 160px; background: var(--surface-row); padding: 6px">
+          <div class="sparkline-unavailable">Gated</div>
+        </div>
+      </div>
+      <p class="specimen__note">
+        One lap is not a trend, and a Gated stream is not an empty chart. Neither draws an
+        empty box: the first says there is nothing to show yet, the second says this will
+        not arrive until the Session ends.
+      </p>
+    </section>
+
+    <section class="specimen">
+      <h1 class="specimen__title">What may be drawn here</h1>
+      <p class="specimen__note">
+        Per-lap values only &mdash; lap time, Gap, and pace against tyre age. A per-second
+        trace redraws several times a second for every one of twenty Drivers, which is the
+        cost the frequency tiering exists to avoid. An opened Driver is the one place a
+        live trace is affordable, because there is only one of them.
+      </p>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,201 @@
+@import url("../../tokens/palette.css");
+@import url("../../tokens/type.css");
+@import url("../../tokens/layout.css");
+
+/* Everything true of the Session rather than of a Driver, kept out of the rows so the
+   rows stay a table. The flag condition is a band across the whole width because it is
+   the one thing that must be readable without looking at anything. */
+
+.session-strip {
+  --flag: var(--flag-green);
+
+  display: grid;
+  grid-template-columns: 640px 1fr 720px 300px;
+  column-gap: 32px;
+  align-items: start;
+  box-sizing: border-box;
+  height: var(--strip-height);
+  padding: 18px var(--screen-pad) 0;
+  background: var(--surface-strip);
+  border-top: 6px solid var(--flag);
+  border-bottom: 1px solid var(--rule-strong);
+  font-family: var(--font-ui);
+  color: var(--text-primary);
+}
+
+.session-strip[data-flag="green"] { --flag: var(--flag-green); }
+.session-strip[data-flag="yellow"] { --flag: var(--flag-yellow); }
+.session-strip[data-flag="red"] { --flag: var(--flag-red); }
+.session-strip[data-flag="safety-car"] { --flag: var(--flag-safety-car); }
+.session-strip[data-flag="chequered"] { --flag: var(--flag-chequered); }
+
+.strip-label {
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.strip-value {
+  font-size: var(--type-strip-size);
+  line-height: var(--type-strip-line);
+  font-variant-numeric: var(--figures);
+}
+
+.session-identity__meeting {
+  font-size: var(--type-strip-size);
+  line-height: var(--type-strip-line);
+  font-weight: 600;
+}
+
+.session-identity__session {
+  font-size: var(--type-secondary-size);
+  line-height: var(--type-secondary-line);
+  color: var(--text-secondary);
+}
+
+.session-clock {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.session-clock__remaining {
+  font-size: var(--type-clock-size);
+  line-height: var(--type-clock-line);
+  font-weight: 600;
+  font-variant-numeric: var(--figures);
+}
+
+.session-clock__laps {
+  font-size: var(--type-strip-size);
+  line-height: var(--type-strip-line);
+  font-variant-numeric: var(--figures);
+  color: var(--text-secondary);
+}
+
+.flag-state {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  background: var(--flag);
+  color: var(--surface-screen);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Newest first: what just happened explains what is on the screen now. */
+.race-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.race-control__message {
+  display: flex;
+  gap: 10px;
+  font-size: var(--type-secondary-size);
+  line-height: var(--type-secondary-line);
+  color: var(--text-secondary);
+}
+
+.race-control__message:first-of-type {
+  color: var(--text-primary);
+}
+
+.race-control__time {
+  font-variant-numeric: var(--figures);
+  color: var(--text-tertiary);
+}
+
+.weather {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 16px;
+}
+
+.weather__reading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.session-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* Live and Replay must never be mistaken for one another, so they differ in fill and not
+   only in wording. */
+.mode-badge {
+  padding: 5px 12px;
+  border-radius: 3px;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.mode-badge[data-mode="live"] {
+  background: var(--flag-red);
+  color: var(--text-primary);
+}
+
+.mode-badge[data-mode="replay"] {
+  background: transparent;
+  border: 1px solid var(--state-out-lap);
+  color: var(--state-out-lap);
+}
+
+/* A frozen screen is either a red flag or a dropped connection, and the viewer must be
+   able to tell which without waiting to find out. */
+.connection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+}
+
+.connection::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.connection[data-connection="connected"] { color: var(--gain); }
+.connection[data-connection="reconnecting"] { color: var(--state-pit); }
+.connection[data-connection="lost"] { color: var(--loss); }
+
+/* Gated during the Live window, free once the Session ends. Visibly unavailable, because
+   silently empty reads as broken. */
+.gated-streams {
+  display: flex;
+  gap: 6px;
+  font-size: var(--type-micro-size);
+  line-height: var(--type-micro-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--text-absent);
+}
+
+.gated-streams__stream {
+  padding: 2px 4px;
+  background: var(--hatch-unavailable);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}

@@ -1,0 +1,49 @@
+@import url("../../tokens/palette.css");
+@import url("../../tokens/tyres.css");
+@import url("../../tokens/type.css");
+
+.tyre-badge {
+  --tyre-colour: var(--tyre-unknown);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--tyre-colour);
+  border-radius: 50%;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--tyre-colour);
+}
+
+.tyre-badge[data-compound="soft"] { --tyre-colour: var(--tyre-soft); }
+.tyre-badge[data-compound="medium"] { --tyre-colour: var(--tyre-medium); }
+.tyre-badge[data-compound="hard"] { --tyre-colour: var(--tyre-hard); }
+.tyre-badge[data-compound="intermediate"] { --tyre-colour: var(--tyre-intermediate); }
+.tyre-badge[data-compound="wet"] { --tyre-colour: var(--tyre-wet); }
+
+.tyre-badge[data-compound="unknown"] {
+  border-style: dashed;
+  color: var(--text-absent);
+}
+
+/* Age of the tyre in laps, which is not the number of laps run in the Stint: a set can
+   be fitted with laps already on it, so the two are never drawn as one number. */
+.tyre-age {
+  font-family: var(--font-ui);
+  font-variant-numeric: var(--figures);
+  font-size: var(--type-primary-size);
+  line-height: var(--type-primary-line);
+  color: var(--text-primary);
+}
+
+.tyre-age[data-fitted-used="true"]::after {
+  content: "\2022";
+  margin-left: 3px;
+  font-size: var(--type-micro-size);
+  vertical-align: super;
+  color: var(--tyre-fitted-used);
+}

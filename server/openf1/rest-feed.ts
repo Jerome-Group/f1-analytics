@@ -7,14 +7,16 @@
 
 import type { SessionState } from '../../domain/index.ts';
 import { sessionStateFrom } from './adapter.ts';
-import type { DriverRecord, PositionRecord } from './records.ts';
+import type { DriverRecord, IntervalRecord, LapRecord, PositionRecord } from './records.ts';
 
 export async function readSession(api: URL, sessionKey: number): Promise<SessionState> {
-  const [drivers, positions] = await Promise.all([
+  const [drivers, positions, intervals, laps] = await Promise.all([
     collection<DriverRecord>(api, 'drivers', sessionKey),
     collection<PositionRecord>(api, 'position', sessionKey),
+    collection<IntervalRecord>(api, 'intervals', sessionKey),
+    collection<LapRecord>(api, 'laps', sessionKey),
   ]);
-  return sessionStateFrom(sessionKey, drivers, positions);
+  return sessionStateFrom(sessionKey, drivers, positions, intervals, laps);
 }
 
 async function collection<Record>(api: URL, name: string, sessionKey: number): Promise<Record[]> {

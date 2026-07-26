@@ -1,0 +1,122 @@
+[
+  {
+    "date": "2025-08-31T13:29:46.812000+00:00",
+    "driver_number": 81,
+    "gap_to_leader": 0.0,
+    "interval": 0.0
+  },
+  {
+    "date": "2025-08-31T13:29:55.264000+00:00",
+    "driver_number": 5,
+    "gap_to_leader": 47.734,
+    "interval": 1.148
+  },
+  {
+    "date": "2025-08-31T13:29:56.069000+00:00",
+    "driver_number": 30,
+    "gap_to_leader": 29.569,
+    "interval": 6.467
+  },
+  {
+    "date": "2025-08-31T13:29:56.224000+00:00",
+    "driver_number": 87,
+    "gap_to_leader": 48.669,
+    "interval": 0.935
+  },
+  {
+    "date": "2025-08-31T13:29:56.349000+00:00",
+    "driver_number": 12,
+    "gap_to_leader": 38.12,
+    "interval": 5.146
+  },
+  {
+    "date": "2025-08-31T13:29:56.958000+00:00",
+    "driver_number": 14,
+    "gap_to_leader": 52.45,
+    "interval": 2.768
+  },
+  {
+    "date": "2025-08-31T13:29:57.260000+00:00",
+    "driver_number": 55,
+    "gap_to_leader": 30.918,
+    "interval": 1.349
+  },
+  {
+    "date": "2025-08-31T13:29:57.386000+00:00",
+    "driver_number": 18,
+    "gap_to_leader": 49.796,
+    "interval": 1.127
+  },
+  {
+    "date": "2025-08-31T13:29:57.447000+00:00",
+    "driver_number": 10,
+    "gap_to_leader": 42.392,
+    "interval": 4.255
+  },
+  {
+    "date": "2025-08-31T13:29:57.529000+00:00",
+    "driver_number": 22,
+    "gap_to_leader": 56.768,
+    "interval": 4.419
+  },
+  {
+    "date": "2025-08-31T13:29:57.712000+00:00",
+    "driver_number": 43,
+    "gap_to_leader": 60.19,
+    "interval": 3.475
+  },
+  {
+    "date": "2025-08-31T13:29:57.758000+00:00",
+    "driver_number": 63,
+    "gap_to_leader": 22.497,
+    "interval": 2.241
+  },
+  {
+    "date": "2025-08-31T13:29:58.311000+00:00",
+    "driver_number": 6,
+    "gap_to_leader": 19.097,
+    "interval": 2.264
+  },
+  {
+    "date": "2025-08-31T13:29:58.533000+00:00",
+    "driver_number": 44,
+    "gap_to_leader": 23.282,
+    "interval": 0.785
+  },
+  {
+    "date": "2025-08-31T13:29:58.858000+00:00",
+    "driver_number": 31,
+    "gap_to_leader": 46.635,
+    "interval": 4.294
+  },
+  {
+    "date": "2025-08-31T13:29:59.217000+00:00",
+    "driver_number": 27,
+    "gap_to_leader": 62.881,
+    "interval": 2.673
+  },
+  {
+    "date": "2025-08-31T13:29:59.439000+00:00",
+    "driver_number": 23,
+    "gap_to_leader": 33.081,
+    "interval": 2.163
+  },
+  {
+    "date": "2025-08-31T13:29:59.457000+00:00",
+    "driver_number": 1,
+    "gap_to_leader": 16.844,
+    "interval": 13.279
+  },
+  {
+    "date": "2025-08-31T13:29:59.483000+00:00",
+    "driver_number": 4,
+    "gap_to_leader": 3.571,
+    "interval": 3.571
+  },
+  {
+    "date": "2025-08-31T13:29:59.501000+00:00",
+    "driver_number": 16,
+    "gap_to_leader": 20.289,
+    "interval": 1.192
+  }
+]

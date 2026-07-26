@@ -12,8 +12,9 @@
 #
 #   2025-dutch-race         the Session as the Stores hold it. A finished Session has nothing
 #                           Gated left in it, so this is the complete picture (ADR-0002)
-#   2025-dutch-race-gated   the same window with car positions withheld, which is what those
-#                           five minutes would have looked like inside the Live window
+#   2025-dutch-race-gated   the same window with the timed streams withheld — car positions,
+#                           separations, laps — which is what those five minutes would have looked
+#                           like inside the Live window before the feed had placed the field
 #
 # The second is not a mutilation of the first. It is the case the Timing screen has to survive
 # without inventing a value, and there is no live Session to record it from on a Tuesday.
@@ -29,9 +30,12 @@ repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 recording="$(mktemp -d)"
 trap 'rm -rf -- "$recording"' EXIT
 
-# `drivers` is identity and has no time in it, so it is taken whole. `position` is a change log,
-# so a window of it alone would leave most of the field unplaced: the standing at the window's
-# first instant is fetched with it, and the two together are what a reader of the window sees.
+# `drivers` is identity and has no time in it, so it is taken whole. `position` and `intervals` are
+# change logs, so a window of position alone would leave most of the field unplaced: the standing at
+# the window's first instant is fetched with it, and the two together are what a reader of the window
+# sees. `intervals` is taken from inside the window, where the readings already reflect the current
+# order. `laps` is discrete, and both the last lap and the best of the Session need every lap run
+# before the window ends, not only those inside it, so it is taken up to the window's close.
 fetch() {
   local collection="$1" into="$2"
   shift 2
@@ -57,13 +61,17 @@ fetch drivers drivers.json
 fetch position standing.json --data-urlencode "date<=$window_from"
 fetch position changes.json --data-urlencode "date>$window_from" \
   --data-urlencode "date<=$window_to"
+fetch intervals intervals.json --data-urlencode "date>$window_from" \
+  --data-urlencode "date<=$window_to"
+fetch laps laps.json --data-urlencode "date_start<=$window_to"
 
 python3 - "$recording" "$repo_root/test/fixtures" "$session_key" "$window_from" "$window_to" <<'PY'
-"""Turns three recorded responses into the two fixtures, byte-stable across runs."""
+"""Turns the recorded responses into the two fixtures, byte-stable across runs."""
 
 import json
 import pathlib
 import sys
+from datetime import datetime, timedelta
 
 recording, fixtures, session_key, window_from, window_to = sys.argv[1:]
 recording, fixtures = pathlib.Path(recording), pathlib.Path(fixtures)
@@ -73,6 +81,8 @@ recording, fixtures = pathlib.Path(recording), pathlib.Path(fixtures)
 KEPT = {
     "drivers": ("driver_number", "name_acronym", "team_name"),
     "position": ("driver_number", "date", "position"),
+    "intervals": ("driver_number", "date", "gap_to_leader", "interval"),
+    "laps": ("driver_number", "lap_number", "lap_duration"),
 }
 
 
@@ -86,6 +96,16 @@ def latest_per_driver(records):
     for record in sorted(records, key=lambda r: (r["driver_number"], r["date"])):
         standing[record["driver_number"]] = record
     return list(standing.values())
+
+
+def completed_by(record, instant):
+    """A lap is completed once it has both started and had time to finish. A lap still running at
+    the window's close — or finishing after it — is not yet a lap the Timing screen has a time for."""
+    duration = record["lap_duration"]
+    if duration is None:
+        return False
+    finished = datetime.fromisoformat(record["date_start"]) + timedelta(seconds=duration)
+    return finished <= datetime.fromisoformat(instant)
 
 
 def write(name, collections):
@@ -102,10 +122,26 @@ position = sorted(
     latest_per_driver(read("standing.json", "position")) + read("changes.json", "position"),
     key=lambda r: (r["date"], r["driver_number"]),
 )
+intervals = sorted(
+    latest_per_driver(read("intervals.json", "intervals")),
+    key=lambda r: (r["date"], r["driver_number"]),
+)
+laps = sorted(
+    (
+        {field: record[field] for field in KEPT["laps"]}
+        for record in json.loads((recording / "laps.json").read_text())
+        if completed_by(record, window_to)
+    ),
+    key=lambda r: (r["driver_number"], r["lap_number"]),
+)
 
 print(f"\nThe window, whole — {window_from} to {window_to}")
-write("2025-dutch-race", {"drivers": drivers, "position": position})
+write("2025-dutch-race", {
+    "drivers": drivers, "position": position, "intervals": intervals, "laps": laps,
+})
 
-print("\nThe same window with car positions Gated")
-write("2025-dutch-race-gated", {"drivers": drivers, "position": []})
+print("\nThe same window with the timed streams Gated")
+write("2025-dutch-race-gated", {
+    "drivers": drivers, "position": [], "intervals": [], "laps": [],
+})
 PY

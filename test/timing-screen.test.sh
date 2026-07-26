@@ -150,4 +150,98 @@ assert_equals "a constructor with no livery of its own is grey, not blank" \
       {"number":7,"code":"SEV","team":"A Constructor Nobody Has Drawn","position":1}]}}' | render
   ))"
 
+# --- The core timing columns (#9): Gap, Interval, last lap, best lap --------------------------
+
+# A Session state built here rather than from a recording: the numbers have to differ between the
+# columns on purpose, and a recording is a place where they might happen to agree.
+a_screen() {
+  python3 -c '
+import json, sys
+print(json.dumps({"type": "session-state",
+                  "state": {"sessionKey": 9920, "drivers": json.loads(sys.argv[1])}}))
+' "$1"
+}
+
+# The four timing figures read off each row, in column order, the way a viewer would read across
+# it — a value the feed gave, "-" for one it did not, and "." for a column that is not on the row
+# at all. Keyed by the column's own class, so a value drawn under the wrong column is read as being
+# under the wrong column, which is the whole point of the transposition it is guarding against.
+columns() {
+  python3 -c '
+import re, sys
+
+def figure(row, column):
+    for span in re.finditer(r"<span class=\"([^\"]*)\">([^<]*)</span>", row):
+        classes = span.group(1).split()
+        if column in classes:
+            return "-" if "absent" in classes else span.group(2)
+    return "."
+
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    print(figure(row, "gap"), figure(row, "interval"),
+          figure(row, "last-lap"), figure(row, "best-lap"))
+'
+}
+
+# The timing columns in the left-to-right order they appear on the row. A transposition that
+# swapped the columns rather than their values would read correct off `columns` and wrong here.
+column_order() {
+  python3 -c '
+import re, sys
+
+row = re.search(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S).group(0)
+order = [column
+         for span in re.finditer(r"<span class=\"([^\"]*)\"", row)
+         for column in ("gap", "interval", "last-lap", "best-lap")
+         if column in span.group(1).split()]
+print(" ".join(order))
+'
+}
+
+field='[
+  {"number":81,"code":"PIA","team":"McLaren","position":1,"lastLap":89117,"bestLap":88402},
+  {"number":1,"code":"VER","team":"Red Bull","position":2,"gap":{"millis":2418},"interval":{"millis":2418},"lastLap":89663,"bestLap":89402},
+  {"number":16,"code":"LEC","team":"Ferrari","position":3,"gap":{"millis":12345},"interval":{"millis":9927},"lastLap":89880,"bestLap":89601},
+  {"number":63,"code":"RUS","team":"Mercedes","position":4,"gap":{"millis":62550},"interval":{"millis":50205},"lastLap":90774,"bestLap":90108},
+  {"number":22,"code":"TSU","team":"Red Bull","position":19,"gap":{"laps":1},"interval":{"millis":30500}},
+  {"number":27,"code":"HUL","team":"Kick Sauber","position":20,"gap":{"laps":2},"interval":{"laps":1}}
+]'
+
+screen="$(a_screen "$field" | render)"
+
+# Every acceptance criterion about what these columns show, read off the screen at once: the leader
+# with no Gap or Interval, a same-lap car in seconds, a gap that crosses a minute, and the cars a
+# lap or more down showing laps rather than a two-minute time.
+assert_equals "Gap, Interval, last and best render per Driver, and a lap down is a lap not a time" \
+  "$(
+    cat <<'EOF'
+- - 1:29.117 1:28.402
++2.418 +2.418 1:29.663 1:29.402
++12.345 +9.927 1:29.880 1:29.601
++1:02.550 +50.205 1:30.774 1:30.108
++1 LAP +30.500 - -
++2 LAPS +1 LAP - -
+EOF
+  )" \
+  "$(columns <<<"$screen")"
+
+# The one this ticket exists for. LEC's Gap and Interval genuinely differ, so drawing either where
+# the other belongs is visible here rather than plausible.
+transposed='[{"number":16,"code":"LEC","team":"Ferrari","position":3,"gap":{"millis":12345},"interval":{"millis":9927}}]'
+one="$(a_screen "$transposed" | render)"
+
+assert_equals "Gap holds the gap and Interval the interval — the two are not transposed" \
+  "+12.345 +9.927" \
+  "$(columns <<<"$one" | awk '{print $1, $2}')"
+
+assert_equals "Gap sits left of Interval, in the order the header names the columns" \
+  "gap interval last-lap best-lap" \
+  "$(column_order <<<"$one")"
+
+# The leader is not zero seconds behind themselves and their cell is not empty: it carries the same
+# absent mark every unsent value does, which reads as "leader" and never as "+0.000".
+assert_contains "the leader's Gap is the absent mark, not a zero and not an empty cell" \
+  '<span class="gap cell--figure absent">&mdash;</span>' \
+  "$screen"
+
 finish

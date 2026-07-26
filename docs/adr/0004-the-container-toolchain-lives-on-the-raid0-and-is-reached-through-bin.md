@@ -34,6 +34,13 @@ reservation.
 - **`bin/` is a required interface, not a convenience.** Any command that reaches the runtime
   belongs there. Documentation that tells a reader to run `docker` directly is wrong and should be
   treated as such in review.
+- **A bare `colima` or `docker` command sees none of this and reports empty.** They read
+  `~/.colima` and `~/.docker`; the instance and its config live under the RAID0 `COLIMA_HOME` and
+  `DOCKER_CONFIG`. So `colima list` printing "no instance found", or `docker ps` printing nothing,
+  is *not* evidence the stack is down — it is evidence the query skipped the wrapper that sets the
+  variables. This false negative is the read-side twin of the silent-wrong-disk bug above, and it
+  is how a reader talks themselves into a needless `bin/up`. The honest status check is
+  `bin/compose ps`.
 - **The existing `torrent` profile is untouched and stays on the internal disk.** Fixing it is out
   of scope here; a different `COLIMA_HOME` gives a wholly separate set of profiles, so the two
   cannot collide.

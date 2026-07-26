@@ -16,6 +16,11 @@ heading above before the first pull request.)*
 - Default branch: `main`.
 - Domain glossary lives in `CONTEXT.md`; decisions are recorded as ADRs in `docs/adr/`.
 - Keep secrets out of the repo. **Never commit a token.**
+- **The container stack is invisible to bare `colima`/`docker`.** Its Colima instance keeps
+  `COLIMA_HOME` and `DOCKER_CONFIG` on the RAID0, set by the `bin/` wrappers (ADR-0004), so a plain
+  `colima list`, `docker ps` or `docker compose ps` reads `~/.colima`/`~/.docker` and shows
+  nothing. **An empty result never means the stack is down** — it means the query skipped the
+  wrapper. Check the real state with `bin/compose ps`; the stack may well already be up.
 
 ## Code standards
 

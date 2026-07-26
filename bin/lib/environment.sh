@@ -14,3 +14,5 @@ source "$f1_lib/colima.sh"
 source "$f1_lib/compose-plugin.sh"
 # shellcheck source=openf1-source.sh
 source "$f1_lib/openf1-source.sh"
+# shellcheck source=mongo.sh
+source "$f1_lib/mongo.sh"

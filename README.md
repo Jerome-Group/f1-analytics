@@ -61,12 +61,19 @@ per-second data (car telemetry, live intervals) is rendered only for a driver yo
 The pipeline runs; the dashboard does not exist yet.
 
 ```
-bin/up      # api, both ingestors, MongoDB and Mosquitto — building whatever is missing first
+bin/up      # api, the live ingestor, MongoDB and Mosquitto — building whatever is missing first
 bin/down    # and the virtual machine with them, so the volume can be unplugged
+
+bin/backfill 2025 1267 9920   # one past session into the stores, whole
 ```
 
 The first run clones and builds the upstream Ingestor and takes a few minutes; later runs take
 about thirty seconds. The API is then on `localhost:8000` and the broker on `localhost:1883`.
+
+`bin/up` imports nothing. Past sessions are backfilled on purpose, one at a time, by
+`bin/backfill` — running it again for the same session replaces it rather than storing it twice
+([ADR-0008](docs/adr/0008-backfilling-a-session-is-a-command-that-replaces-it.md)). A race session
+costs about 80 MB, [measured](docs/measurements/a-race-session-on-disk.md).
 
 One rule applies from the first commit: **never invoke the container runtime directly.**
 Everything goes through `bin/`, which places the runtime, its virtual machine and all data on the

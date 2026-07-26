@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck source-path=SCRIPTDIR
 # Brings the self-hosted OpenF1 stack up, from nothing: the compose plugin, the virtual machine,
-# the upstream checkout and the five containers. Everything it creates is on the external volume
-# (ADR-0004).
+# the upstream checkout and the four containers. Everything it creates is on the external volume
+# (ADR-0004). It imports nothing — a past Session gets in through bin/backfill (ADR-0008).
 set -euo pipefail
 
 # shellcheck source=lib/environment.sh

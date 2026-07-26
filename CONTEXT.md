@@ -95,6 +95,13 @@ Session clock. Replay is not a reduced view of live — because no stream is Gat
 finished, it is the *complete* one.
 _Avoid_: historical, playback, archive, rewind
 
+**Backfill**:
+Fetching one finished Session from Formula 1's archive and writing it into the stores, so that it
+can be Replayed. A deliberate one-Session command, not a background import, and re-running it for
+the same Session replaces that Session rather than adding a second copy (ADR-0008). It is what
+puts a Session there; Replay is what looks at it.
+_Avoid_: import, sync, ingest, load
+
 **Analysis mode**:
 The separate, offline path over completed Sessions — telemetry, degradation, results. It has its
 own source and its own shapes, and the Timing screen never calls it (ADR-0003). Deferred; not built.

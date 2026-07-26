@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
+# Populates the stores with one past Session, whole. A finished Session has no Gated stream left
+# in it, so this is the complete picture and the live path's is the reduced one (ADR-0002).
+#
+#   bin/backfill 2025 1267 9920
+#
+# A job, run once and on purpose, and safe to run again: the Session is replaced rather than
+# added to (ADR-0008).
+set -euo pipefail
+
+# shellcheck source=lib/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/lib/environment.sh"
+
+usage() {
+  cat >&2 <<'EOF'
+usage: bin/backfill <year> <meeting-key> <session-key>
+
+Backfills one past Session into the running stack. Bring the stack up with bin/up first.
+
+The three keys are upstream's. To see the Meetings and Sessions of a year:
+
+  bin/compose run --rm --entrypoint python backfill \
+    -m openf1.services.ingestor_livetiming.historical.main get-schedule 2025
+EOF
+}
+
+[ "$#" -eq 3 ] || {
+  usage
+  exit 64
+}
+
+for key in "$@"; do
+  case "$key" in
+    *[!0-9]*)
+      printf '"%s" is not a key — the year, the Meeting and the Session are all numbers.\n\n' \
+        "$key" >&2
+      usage
+      exit 64
+      ;;
+  esac
+done
+
+year="$1"
+meeting_key="$2"
+session_key="$3"
+
+f1_ensure_runtime_home
+f1_require_vm
+f1_ensure_compose_plugin
+f1_require_stores
+
+# Before the discard rather than after the ingest: the same index that makes a Session readable is
+# what keeps a re-run's delete from scanning both telemetry collections end to end.
+f1_index_telemetry
+
+printf 'Discarding whatever the stores already hold for Session %s\n' "$session_key"
+discarded="$(f1_discard_session "$session_key")"
+printf '%s records discarded\n' "$discarded"
+
+printf 'Ingesting Session %s of Meeting %s, %s\n' "$session_key" "$meeting_key" "$year"
+"$F1_REPO_ROOT/bin/compose" run --rm --entrypoint python backfill \
+  -m openf1.services.ingestor_livetiming.historical.main \
+  ingest-session "$year" "$meeting_key" "$session_key"
+
+printf '\nSession %s in the stores\n\n' "$session_key"
+printf '  %-22s %12s %12s\n' collection records 'on disk'
+f1_session_records "$session_key" | awk -F'\t' '
+  {
+    records += $2
+    bytes += $3
+    printf "  %-22s %12d %9.1f MB\n", $1, $2, $3 / 1048576
+  }
+  END {
+    printf "  %-22s %12d %9.1f MB\n", "total", records, bytes / 1048576
+  }
+'
+printf '\n  Records are this Session; on disk is the whole collection.\n'

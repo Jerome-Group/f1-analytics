@@ -12,12 +12,13 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 | The dashboard | The timing screen | `web/` |
 | Shared types | The canonical model, imported by both `server/` and `web/` | `domain/` |
 | Analysis mode | Deferred. Offline FastF1 work; the dashboard never calls it | `analysis/` |
-| Running anything | Wrappers that place the container runtime and its data on the external volume. **The runtime is never invoked directly** | `bin/up`, `bin/down`, `bin/compose` |
+| Running anything | Wrappers that place the container runtime and its data on the external volume. **The runtime is never invoked directly** | `bin/up`, `bin/down`, `bin/compose`, `bin/backfill` |
 | Tests | One file per unit under test, run by a script with no dependencies to install | `test/run` |
 | Working here | Agent + contributor conventions, commit/attribution rules | `AGENTS.md` (= `CLAUDE.md`) |
 | Code standards | How code is written and reviewed | `CODING_STANDARDS.md` |
 | Domain language | The glossary — this repository's ubiquitous language | `CONTEXT.md` |
 | Decisions | Architecture decision records | `docs/adr/` |
+| Measurements | What the running system costs, measured rather than estimated | `docs/measurements/` |
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | Automation | The workflows that run on a pull request, and dependency updates | `.github/` |
 

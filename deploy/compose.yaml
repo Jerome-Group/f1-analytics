@@ -39,11 +39,16 @@ services:
     depends_on:
       - api
 
-  ingest-historical:
+  # A job rather than a service, and so it carries a profile: `bin/compose up` leaves it alone and
+  # bin/backfill is the only thing that runs it. Its ROLE is unset because the entrypoint that
+  # reads ROLE is what makes it a service — that path ingests a whole season and exits, which is
+  # not what anyone asks for when they bring the stack up (ADR-0008).
+  backfill:
     <<: *openf1
+    profiles:
+      - backfill
     environment:
       <<: *openf1-environment
-      ROLE: ingest-historical
     depends_on:
       - mongo
 

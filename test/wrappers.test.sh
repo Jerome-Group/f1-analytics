@@ -12,20 +12,27 @@ bin="$here/../bin"
 unmounted="F1_RUNTIME_HOME=/Volumes/NotMounted/.runtime"
 
 refusal() {
-  env "$unmounted" "$1" 2>&1
+  env "$unmounted" "$@" 2>&1
 }
 
-refuses() {
-  env "$unmounted" "$1" >/dev/null 2>&1
-}
+# Each wrapper is invoked the way it is meant to be invoked — bin/backfill answers a usage error
+# from its arguments alone, so an argument-less call would never reach the placement check.
+refuses_before_reaching_the_runtime() {
+  local wrapper="$bin/$1"
+  shift
 
-for wrapper in up down compose; do
-  assert_fails "bin/$wrapper refuses when the external volume is not mounted" \
-    refuses "$bin/$wrapper"
+  assert_fails "bin/$(basename -- "$wrapper") refuses when the external volume is not mounted" \
+    refusal "$wrapper" "$@"
 
-  assert_contains "bin/$wrapper names the volume rather than reporting a container error" \
+  assert_contains \
+    "bin/$(basename -- "$wrapper") names the volume rather than reporting a container error" \
     "/Volumes/NotMounted is not mounted" \
-    "$(refusal "$bin/$wrapper")"
-done
+    "$(refusal "$wrapper" "$@")"
+}
+
+refuses_before_reaching_the_runtime up
+refuses_before_reaching_the_runtime down
+refuses_before_reaching_the_runtime compose
+refuses_before_reaching_the_runtime backfill 2025 1267 9920
 
 finish

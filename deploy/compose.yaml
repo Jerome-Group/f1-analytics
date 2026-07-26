@@ -52,6 +52,19 @@ services:
     depends_on:
       - mongo
 
+  # The other job, run by bin/catalogue. Upstream never wires this role into a service at all — the
+  # collections it writes are populated by a scraper of formula1.com that has no place in the live
+  # path — so it is a job here for the same reason backfill is one, and its own so that each
+  # command starts the container named after it (ADR-0009).
+  catalogue:
+    <<: *openf1
+    profiles:
+      - catalogue
+    environment:
+      <<: *openf1-environment
+    depends_on:
+      - mongo
+
   mongo:
     image: mongo:8
     volumes:

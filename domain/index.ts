@@ -20,4 +20,6 @@ export type {
   Tyre,
   Weather,
 } from './session-state.ts';
-export type { SessionStateMessage } from './wire.ts';
+export { byPosition } from './ordering.ts';
+export { applyChange } from './wire.ts';
+export type { SessionChange, SessionChangeMessage, SessionStateMessage, WireMessage } from './wire.ts';

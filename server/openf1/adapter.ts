@@ -5,6 +5,7 @@
 // never branch on which one it is looking at (ADR-0003).
 
 import type { Driver, Separation, SessionState } from '../../domain/index.ts';
+import { byPosition } from '../../domain/index.ts';
 import type { DriverRecord, IntervalRecord, LapRecord, PositionRecord } from './records.ts';
 
 export function sessionStateFrom(
@@ -119,13 +120,4 @@ function separationOf(value: number | string | null | undefined): Separation | u
 /** OpenF1 measures time in seconds; the model measures it in whole milliseconds. */
 function seconds(value: number): number {
   return Math.round(value * 1000);
-}
-
-/** Position order is the order the race reads in (story 2); an unplaced Driver sorts last. */
-function byPosition(one: Driver, other: Driver): number {
-  if (one.position === undefined || other.position === undefined) {
-    if (one.position !== other.position) return one.position === undefined ? 1 : -1;
-    return one.number - other.number;
-  }
-  return one.position - other.position;
 }

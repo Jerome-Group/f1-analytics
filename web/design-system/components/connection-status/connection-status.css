@@ -1,0 +1,33 @@
+@import url("../../tokens/palette.css");
+@import url("../../tokens/type.css");
+@import url("../../tokens/layout.css");
+
+/* Whether the screen is still being fed. A frozen Timing screen and a red-flagged one look the
+   same, so a dropped pipeline says so plainly rather than letting the stillness speak for it
+   (story 39). While it is live it says nothing — an always-on "connected" badge is noise on a
+   screen that is connected all but a few seconds of a Session. */
+
+.connection-status {
+  position: fixed;
+  top: 10px;
+  right: var(--screen-pad);
+  z-index: 10;
+  padding: 4px 10px;
+  border-radius: 3px;
+  background: var(--flag-red);
+  color: var(--surface-screen);
+  font-family: var(--font-ui);
+  font-size: var(--type-label-size);
+  font-weight: 600;
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+}
+
+.connection-status::before {
+  content: "Connection lost";
+}
+
+/* Live, or not yet dropped: gone from the screen entirely. */
+.connection-status[data-state="live"] {
+  display: none;
+}

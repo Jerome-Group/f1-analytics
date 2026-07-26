@@ -13,6 +13,7 @@
 import type {
   Compound,
   Driver,
+  DriverState,
   Sector,
   SectorBests,
   Sectors,
@@ -28,19 +29,17 @@ export function timingScreen(state: SessionState): string {
 }
 
 function driverRow(driver: Driver): string {
+  // The row wears its state, so pit lane, box, out lap and retired change the whole row and not
+  // only a chip (#12). On track is the ordinary state and the default, drawn quietly.
+  const state = driver.state ?? 'on-track';
   return [
-    `<div class="driver-row" style="--team-colour: ${teamColour(driver.team)}">`,
+    `<div class="driver-row" data-state="${state}" style="--team-colour: ${teamColour(driver.team)}">`,
     figure('position', driver.position),
-    // Position change against the grid is #12. The cell is here because the row lays out against
-    // the whole track list: drop it and every column to its right moves one place left.
-    '<span class="cell"></span>',
+    positionChangeCell(driver.gridPosition, driver.position),
     '<span class="team-bar"></span>',
     figure('car-number', driver.number),
     `<span class="driver-name">${tla(driver.code)}</span>`,
-    // State chip is #13, the two trend sparklines are #11. Each is an empty cell for the same
-    // reason the position-change cell above is: the columns they hold have to stay held, or Gap,
-    // Interval, Last and Best all slide one place left of the header that names them.
-    '<span class="cell"></span>',
+    stateCell(driver.state),
     gapCell('gap', driver.gap),
     '<span class="cell"></span>',
     gapCell('interval', driver.interval),
@@ -57,6 +56,40 @@ function driverRow(driver: Driver): string {
     figure('cell--figure pit-stops', driver.pitStops),
     '</div>',
   ].join('');
+}
+
+/**
+ * A Driver's change against their grid slot, with direction (#12) — what says who is having a good
+ * afternoon. Places gained is the grid slot minus the current position: a lower position than the
+ * slot is a gain. A Driver the feed has not placed, or has no grid slot for, has no change to draw
+ * and reads as level rather than as a spurious jump.
+ */
+function positionChangeCell(grid: number | undefined, position: number | undefined): string {
+  const level = '<span class="position-change" data-direction="none">&middot;</span>';
+  if (grid === undefined || position === undefined) return level;
+  const places = grid - position;
+  if (places === 0) return level;
+  if (places > 0) return `<span class="position-change" data-direction="gain">+${places}</span>`;
+  return `<span class="position-change" data-direction="loss">&minus;${-places}</span>`;
+}
+
+/** The worded chip for each state that is not on track. */
+const STATE_CHIP: Record<Exclude<DriverState, 'on-track'>, string> = {
+  'pit-lane': 'Pit',
+  'in-box': 'Box',
+  'out-lap': 'Out',
+  retired: 'Ret',
+};
+
+/**
+ * The state chip — for every state except on track, which is nineteen rows in twenty and carries no
+ * chip, so the screen keeps something to mark the exceptional state with (#12). The row's own
+ * data-state carries the rest of the treatment; this cell is only the worded chip that repeats it
+ * for anyone the row colour does not reach.
+ */
+function stateCell(state: DriverState | undefined): string {
+  if (state === undefined || state === 'on-track') return '<span class="cell"></span>';
+  return `<span class="cell"><span class="state-chip" data-state="${state}">${STATE_CHIP[state]}</span></span>`;
 }
 
 /**

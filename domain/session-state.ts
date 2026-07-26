@@ -68,6 +68,13 @@ export interface Tyre {
   ageInLaps: number;
 }
 
+/**
+ * Where a Driver is, so that a stationary car is never misread as a slow one (story 14). On track
+ * is the ordinary state and carries no chip; the other four are the exceptions worth marking. A
+ * Driver who has retired stays in the field, plainly out of it, rather than freezing in place.
+ */
+export type DriverState = 'on-track' | 'pit-lane' | 'in-box' | 'out-lap' | 'retired';
+
 export interface Driver {
   number: DriverNumber;
   /** The three-letter code the Timing screen shows — `VER`, `NOR`. */
@@ -109,6 +116,15 @@ export interface Driver {
   /** How many times the Driver has pitted this Session. Zero before their first stop, absent
    * before the feed has said. */
   pitStops?: number;
+  /** Where the Driver is now. Absent means on track — the ordinary state, drawn without a chip. */
+  state?: DriverState;
+  /**
+   * The grid slot the Driver started from, one-based (#12). The change against their current
+   * position is what says who is having a good afternoon. Its source is the timing feed's position
+   * at lights out rather than a scrape of formula1.com, recorded in docs/adr/0012; absent until
+   * that position has been settled, and for a Driver who started from the pit lane.
+   */
+  gridPosition?: number;
 }
 
 export interface SessionState {

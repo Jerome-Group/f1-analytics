@@ -5,6 +5,7 @@ export type {
   Compound,
   Driver,
   DriverNumber,
+  DriverState,
   Sector,
   SectorBests,
   SectorStatus,

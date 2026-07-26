@@ -120,10 +120,31 @@ assert_equals "a position the feed withheld reads as absent, never as a nought" 
 assert_equals "every row on the screen has the same cells" "1" \
   "$(python3 -c '
 import re, sys
+from html.parser import HTMLParser
 
-screen = sys.stdin.read()
-rows = re.findall(r"<div class=\"driver-row\".*?</div>", screen, re.S)
-print(len({len(re.findall(r"<span\b", row)) for row in rows}))
+# A column is a direct child of the row, whatever it holds — a bare cell, a chip inside a cell, a
+# tyre inside a cell. Counting every <span> would call a chip an extra column; counting the direct
+# children counts columns, which is the track list every row has to lay out against.
+class Columns(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.depth = 0
+        self.columns = 0
+
+    def handle_starttag(self, tag, attrs):
+        if self.depth == 1:
+            self.columns += 1
+        self.depth += 1
+
+    def handle_endtag(self, tag):
+        self.depth -= 1
+
+widths = set()
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    counter = Columns()
+    counter.feed(row)
+    widths.add(counter.columns)
+print(len(widths))
 ' <<<"$whole")"
 
 # --- Liveries come from the design system, and are never nothing -------------------------------
@@ -391,6 +412,98 @@ assert_equals "a compound change is reflected on the next state, without a reloa
     printf '%s %s' \
       "$(tyres < <(a_screen "$before" | render) | awk '{print $1}')" \
       "$(tyres < <(a_screen "$after" | render) | awk '{print $1}')"
+  )"
+
+# --- Driver state and position change against the grid (#12) ----------------------------------
+
+# Each row's state read two ways: the row's own data-state, which carries the whole treatment, and
+# the worded chip, which repeats it — "-" for on track, the state that wears no chip.
+row_states() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    state = re.search(r"<div class=\"driver-row\" data-state=\"([a-z-]+)\"", row).group(1)
+    chip = re.search(r"<span class=\"state-chip\" data-state=\"[a-z-]+\">([^<]*)</span>", row)
+    print(state, chip.group(1) if chip else "-")
+'
+}
+
+# The change against the grid slot, with its direction: the direction the colour is drawn from and
+# the places themselves, with the level mark read as ".".
+position_change() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    found = re.search(r"<span class=\"position-change\" data-direction=\"([a-z]+)\">([^<]*)</span>", row)
+    print(found.group(1), found.group(2).replace("&middot;", ".").replace("&minus;", "-"))
+'
+}
+
+# Built here on purpose: one Driver in each state, and grid slots chosen so the change is a gain, a
+# loss and level — SAI has retired and the feed no longer places them, so there is no change to draw.
+state_field='[
+  {"number":81,"code":"PIA","position":1,"gridPosition":1},
+  {"number":1,"code":"VER","position":2,"gridPosition":3},
+  {"number":16,"code":"LEC","position":8,"gridPosition":5,"state":"out-lap"},
+  {"number":14,"code":"ALO","position":11,"gridPosition":6,"state":"pit-lane"},
+  {"number":63,"code":"RUS","position":12,"gridPosition":5,"state":"in-box"},
+  {"number":55,"code":"SAI","gridPosition":9,"state":"retired"}
+]'
+
+state_screen="$(a_screen "$state_field" | render)"
+
+# Every state the spec names is distinguishable: on track quietly, the four exceptions chipped, so a
+# stationary car in the box is never read as a slow one on track.
+assert_equals "each Driver state is drawn distinctly, on track carrying no chip" \
+  "$(
+    cat <<'EOF'
+on-track -
+on-track -
+out-lap Out
+pit-lane Pit
+in-box Box
+retired Ret
+EOF
+  )" \
+  "$(row_states <<<"$state_screen")"
+
+# Position change against the grid, with direction: a gain, two column of losses, and the level mark
+# where there is no change to draw.
+assert_equals "position change is drawn against the grid slot, with its direction" \
+  "$(
+    cat <<'EOF'
+none .
+gain +1
+loss -3
+loss -5
+loss -7
+none .
+EOF
+  )" \
+  "$(position_change <<<"$state_screen")"
+
+# A retired Driver is unmistakable and does not read as merely slow: the row wears the retired state
+# and the feed no longer places them, so the position is the absent mark rather than a last-known
+# number that would read as a car still running, only slowly.
+assert_contains "a retired Driver's row is marked retired, not left looking slow" \
+  '<div class="driver-row" data-state="retired"' \
+  "$state_screen"
+
+assert_contains "a retired Driver is no longer placed, so their position reads as absent" \
+  '<span class="position absent">&mdash;</span>' \
+  "$state_screen"
+
+# A Driver who retires mid-Session transitions rather than freezing: the same Driver rendered from a
+# running state and then a retired one changes state, because the row is a function of the state.
+running='[{"number":55,"code":"SAI","position":9,"gridPosition":9}]'
+gone='[{"number":55,"code":"SAI","state":"retired","gridPosition":9}]'
+
+assert_equals "a Driver who retires mid-Session transitions rather than freezing in place" \
+  "on-track retired" \
+  "$(
+    printf '%s %s' \
+      "$(row_states < <(a_screen "$running" | render) | awk '{print $1}')" \
+      "$(row_states < <(a_screen "$gone" | render) | awk '{print $1}')"
   )"
 
 finish

@@ -44,7 +44,9 @@ jobs:
       # -x follows the sourced files, so bin/lib/ and test/lib/ are checked as part of the
       # programs that use them rather than as fragments that appear to define unused variables.
       - name: Shell lint
-        run: shellcheck -x bin/up bin/down bin/compose test/run test/*.test.sh test/lib/assert.sh
+        run: |
+          shellcheck -x bin/up bin/down bin/compose bin/backfill \
+            test/run test/*.test.sh test/lib/assert.sh
 
       - name: Tests
         run: ./test/run

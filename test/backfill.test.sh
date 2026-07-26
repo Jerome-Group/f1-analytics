@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
+# Backfilling names a Session, and a Session is three keys. Getting one of them wrong has to be
+# an argument error at the prompt, not an hour of ingesting the wrong Session.
+set -uo pipefail
+
+here="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/assert.sh
+source "$here/lib/assert.sh"
+
+backfill="$here/../bin/backfill"
+
+# The volume is deliberately absent: a usage error is answered from the arguments alone, before
+# anything asks where the runtime lives.
+misuse() {
+  env F1_RUNTIME_HOME=/Volumes/NotMounted/.runtime "$backfill" "$@" 2>&1
+}
+
+fails() {
+  misuse "$@" >/dev/null 2>&1
+}
+
+assert_fails "bin/backfill with no arguments" fails
+assert_fails "bin/backfill with a Meeting but no Session" fails 2025 1277
+assert_fails "bin/backfill with a Session key that is not a key" fails 2025 1277 monza
+assert_fails "bin/backfill with more than a Session" fails 2025 1277 9693 laps
+
+assert_contains "bin/backfill with no arguments says what it takes" \
+  "bin/backfill <year> <meeting-key> <session-key>" \
+  "$(misuse)"
+
+assert_contains "bin/backfill names the argument that is wrong" \
+  "monza" \
+  "$(misuse 2025 1277 monza)"
+
+finish

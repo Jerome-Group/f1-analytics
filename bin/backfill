@@ -18,7 +18,12 @@ usage: bin/backfill <year> <meeting-key> <session-key>
 
 Backfills one past Session into the running stack. Bring the stack up with bin/up first.
 
-The three keys are upstream's. To see the Meetings and Sessions of a year:
+The three keys are upstream's. Once a season has been catalogued with bin/catalogue, they are a
+query away:
+
+  curl 'localhost:8000/v1/sessions?year=2025&country_name=Netherlands'
+
+Before that, the livetiming archive lists them itself:
 
   bin/compose run --rm --entrypoint python backfill \
     -m openf1.services.ingestor_livetiming.historical.main get-schedule 2025
@@ -32,7 +37,7 @@ EOF
 
 for key in "$@"; do
   case "$key" in
-    *[!0-9]*)
+    '' | *[!0-9]*)
       printf '"%s" is not a key — the year, the Meeting and the Session are all numbers.\n\n' \
         "$key" >&2
       usage

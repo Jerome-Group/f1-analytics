@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# shellcheck source-path=SCRIPTDIR
+# Populates the stores with what a season's Meetings and Sessions *are* — names, circuits,
+# countries and clocks — so that a backfilled Session can be named rather than only keyed.
+#
+#   bin/catalogue 2025
+#
+# A whole season at a time, because that is what the source publishes, and safe to run again:
+# upstream matches on `_key` and updates in place (ADR-0009).
+set -euo pipefail
+
+# shellcheck source=lib/environment.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/lib/environment.sh"
+
+usage() {
+  cat >&2 <<'EOF'
+usage: bin/catalogue <year>
+
+Catalogues one season into the running stack. Bring the stack up with bin/up first.
+
+A season, never a Session: this reads Formula 1's event listing rather than the livetiming
+archive bin/backfill reads, and one request answers for the whole calendar.
+EOF
+}
+
+[ "$#" -eq 1 ] || {
+  usage
+  exit 64
+}
+
+case "$1" in
+  '' | *[!0-9]*)
+    printf '"%s" is not a year.\n\n' "$1" >&2
+    usage
+    exit 64
+    ;;
+esac
+
+year="$1"
+
+f1_ensure_runtime_home
+f1_require_vm
+f1_ensure_compose_plugin
+f1_require_stores
+
+for collection in meetings sessions; do
+  printf 'Scraping the %s season into %s\n' "$year" "$collection"
+  "$F1_REPO_ROOT/bin/compose" run --rm --entrypoint python catalogue \
+    -m openf1.services.f1_scraping.schedule \
+    "ingest-$collection" --year "$year"
+done
+
+printf '\nThe %s season in the stores\n\n' "$year"
+printf '  %-22s %12s\n' collection records
+f1_catalogue_records "$year" | awk -F'\t' '{ printf "  %-22s %12d\n", $1, $2 }'

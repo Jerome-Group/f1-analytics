@@ -34,5 +34,6 @@ refuses_before_reaching_the_runtime up
 refuses_before_reaching_the_runtime down
 refuses_before_reaching_the_runtime compose
 refuses_before_reaching_the_runtime backfill 2025 1267 9920
+refuses_before_reaching_the_runtime catalogue 2025
 
 finish

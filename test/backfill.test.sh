@@ -21,6 +21,13 @@ assert_fails "bin/backfill with a Meeting but no Session" misuse 2025 1267
 assert_fails "bin/backfill with a Session key that is not a key" misuse 2025 1267 monza
 assert_fails "bin/backfill with more than a Session" misuse 2025 1267 9920 laps
 
+# `*[!0-9]*` does not match an empty argument, and the Session key reaches MongoDB as an
+# interpolated literal. A usage error is the only failure here that does not depend on the volume
+# being absent, so it is what the assertion looks for.
+assert_contains "bin/backfill refuses an empty Session key as a usage error" \
+  "is not a key" \
+  "$(misuse 2025 1267 "")"
+
 assert_contains "bin/backfill with no arguments says what it takes" \
   "bin/backfill <year> <meeting-key> <session-key>" \
   "$(misuse)"

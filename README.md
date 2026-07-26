@@ -67,6 +67,7 @@ bin/down    # and the virtual machine with them, so the volume can be unplugged
 
 bin/archive 2025              # mirror a season's raw files; 2025 1267 9920 for one session
 bin/backfill 2025 1267 9920   # one past session into the stores, whole
+bin/catalogue 2025            # what that season's meetings and sessions are — names and clocks
 ```
 
 The first run clones and builds the upstream Ingestor and takes a few minutes; later runs take
@@ -76,6 +77,13 @@ about thirty seconds. The API is then on `localhost:8000` and the broker on `loc
 `bin/backfill` — running it again for the same session replaces it rather than storing it twice
 ([ADR-0008](docs/adr/0008-backfilling-a-session-is-a-command-that-replaces-it.md)). A race session
 costs about 80 MB, [measured](docs/measurements/a-race-session-on-disk.md).
+
+A backfill stores what happened; it does not store that the session was the Race at Zandvoort on
+31 August. `bin/catalogue` does, a whole season at a time, because it reads Formula 1's calendar
+rather than the livetiming archive
+([ADR-0009](docs/adr/0009-the-catalogue-is-a-season-at-a-time.md)). It costs
+[88 KB and half a minute](docs/measurements/a-season-in-the-catalogue.md), and running it again
+updates the season in place.
 
 `bin/archive` is the layer beneath all of that: this project's own copy of the raw files, which
 both OpenF1 and FastF1 read. It is the only data here that cannot be rebuilt — Formula 1 has

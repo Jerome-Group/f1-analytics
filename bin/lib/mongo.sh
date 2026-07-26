@@ -5,8 +5,8 @@
 # (ADR-0004), and `mongosh` is the one in the running container rather than one the host has to
 # have installed.
 #
-# A session_key reaches MongoDB as an interpolated JavaScript literal, so callers pass a number
-# and nothing else. bin/backfill, the only caller, rejects anything else at the prompt.
+# A session_key or a year reaches MongoDB as an interpolated JavaScript literal, so callers pass a
+# number and nothing else. bin/backfill and bin/catalogue both reject anything else at the prompt.
 
 # Upstream's default, and upstream owns it: OPENF1_DB_NAME is left unset in deploy/compose.yaml.
 F1_MONGO_DATABASE="openf1-livetiming"
@@ -46,6 +46,18 @@ f1_discard_session() {
       discarded += db[name].deleteMany({ session_key: sessionKey }).deletedCount;
     }
     print(discarded);
+  "
+}
+
+# What the catalogue holds for one season: the Meetings and the Sessions of that year, counted.
+# Both collections are reported even when a count is zero — a missing line would read as a
+# collection that has not been written yet, which is the failure this is watched for.
+f1_catalogue_records() {
+  f1_mongo_eval "
+    const year = $1;
+    for (const name of ['meetings', 'sessions']) {
+      print([name, db[name].countDocuments({ year: year })].join('\t'));
+    }
   "
 }
 

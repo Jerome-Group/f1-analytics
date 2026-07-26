@@ -45,7 +45,7 @@ jobs:
       # programs that use them rather than as fragments that appear to define unused variables.
       - name: Shell lint
         run: |
-          shellcheck -x bin/up bin/down bin/compose bin/backfill bin/archive \
+          shellcheck -x bin/up bin/down bin/compose bin/backfill bin/catalogue bin/archive \
             test/run test/*.test.sh test/lib/assert.sh
 
       # The Archive is standard-library Python and there is no formatter here yet, so this is the

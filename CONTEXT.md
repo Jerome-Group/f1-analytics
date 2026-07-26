@@ -62,6 +62,13 @@ itself, and therefore **disposable**: a changed upstream version, a corrected im
 collection is a rebuild, not a loss. The asymmetry with the Archive is the point of both words.
 _Avoid_: the database, Mongo, the data
 
+**Catalogue**:
+What the Meetings and Sessions of a season *are* — name, circuit, country, and the clock a Session
+runs to — as opposed to what happened in them. It is scraped from Formula 1's published calendar
+rather than from the livetiming archive a Backfill reads, so it is a season at a time and it is the
+half of the Stores that can be written for a Session nobody has backfilled (ADR-0009).
+_Avoid_: schedule, calendar, metadata, index
+
 **Adapter**:
 The boundary in `server/` where upstream record shapes stop and this project's own types begin.
 Its whole purpose is that no upstream field name appears anywhere above it.

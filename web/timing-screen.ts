@@ -10,7 +10,7 @@
 // counts its cells to the last one it can fill and stops — the tracks after it stay empty, and
 // nothing is drawn that would have to claim a value the feed has not sent (story 38).
 
-import type { Driver, SessionState } from '../domain/index.ts';
+import type { Driver, Separation, SessionState } from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
 
 /** The markup inside the timing table: one row per Driver, and no row that is not a Driver. */
@@ -28,8 +28,58 @@ function driverRow(driver: Driver): string {
     '<span class="team-bar"></span>',
     figure('car-number', driver.number),
     `<span class="driver-name">${tla(driver.code)}</span>`,
+    // State chip is #13, the two trend sparklines are #11. Each is an empty cell for the same
+    // reason the position-change cell above is: the columns they hold have to stay held, or Gap,
+    // Interval, Last and Best all slide one place left of the header that names them.
+    '<span class="cell"></span>',
+    gapCell('gap', driver.gap),
+    '<span class="cell"></span>',
+    gapCell('interval', driver.interval),
+    lapCell('last-lap', driver.lastLap),
+    '<span class="cell"></span>',
+    lapCell('best-lap', driver.bestLap),
     '</div>',
   ].join('');
+}
+
+/**
+ * A Gap, to the leader or to the car ahead. Absent for the leader, a time while on the lead lap,
+ * and whole laps once a lap or more down — never a lap rendered as an enormous time, because the
+ * model does not let the two be confused and neither does this.
+ */
+function gapCell(column: string, separation: Separation | undefined): string {
+  if (separation === undefined) return absent(`${column} cell--figure`);
+  const shown = 'laps' in separation ? lapsDown(separation.laps) : `+${clock(separation.millis)}`;
+  return `<span class="${column} cell--figure">${shown}</span>`;
+}
+
+/** A lap time — the Driver's last, or their best of the Session. A time or the absent mark. */
+function lapCell(column: string, millis: number | undefined): string {
+  return millis === undefined
+    ? absent(`${column} cell--figure`)
+    : `<span class="${column} cell--figure">${clock(millis)}</span>`;
+}
+
+/** The mark for a value the feed has not sent, wearing whatever column's classes it stands in. */
+function absent(classes: string): string {
+  return `<span class="${classes} absent">&mdash;</span>`;
+}
+
+function lapsDown(laps: number): string {
+  return `+${laps} ${laps === 1 ? 'LAP' : 'LAPS'}`;
+}
+
+/**
+ * Milliseconds as the timing screen reads them: `2.418`, `12.345`, and `1:02.550` once a minute
+ * is crossed. The minutes place is dropped below a minute and the seconds are only padded once
+ * there is a minute in front of them to pad against — a lone `2.418`, but a `1:02.550`.
+ */
+function clock(millis: number): string {
+  const minutes = Math.floor(millis / 60_000);
+  const seconds = Math.floor((millis % 60_000) / 1000);
+  const thousandths = String(millis % 1000).padStart(3, '0');
+  if (minutes === 0) return `${seconds}.${thousandths}`;
+  return `${minutes}:${String(seconds).padStart(2, '0')}.${thousandths}`;
 }
 
 function tla(code: string | undefined): string {
@@ -41,7 +91,7 @@ function tla(code: string | undefined): string {
 /** A number the feed gave, or the mark for one it did not. Never a nought standing in. */
 function figure(column: string, value: number | undefined): string {
   return value === undefined
-    ? `<span class="${column} absent">&mdash;</span>`
+    ? absent(column)
     : `<span class="${column}">${value}</span>`;
 }
 

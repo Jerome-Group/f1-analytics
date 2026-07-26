@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# Cuts the committed test fixture out of a Session in the running stores, so that what seam 1
+# replays is regenerated and reviewed rather than being an opaque blob that quietly stops
+# representing the feed.
+#
+#   bin/fixture
+#
+# No arguments: which minutes of which Session are worth keeping is the curation, and the
+# curation is the point. It lives in the three constants below, where changing it is a diff.
+#
+# Two recordings come out, of the same five minutes:
+#
+#   2025-dutch-race         the Session as the Stores hold it. A finished Session has nothing
+#                           Gated left in it, so this is the complete picture (ADR-0002)
+#   2025-dutch-race-gated   the same window with car positions withheld, which is what those
+#                           five minutes would have looked like inside the Live window
+#
+# The second is not a mutilation of the first. It is the case the Timing screen has to survive
+# without inventing a value, and there is no live Session to record it from on a Tuesday.
+set -euo pipefail
+
+session_key=9920
+window_from='2025-08-31T13:25:00+00:00'
+window_to='2025-08-31T13:30:00+00:00'
+
+api="${F1_OPENF1_URL:-http://localhost:8000}"
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+
+recording="$(mktemp -d)"
+trap 'rm -rf -- "$recording"' EXIT
+
+# `drivers` is identity and has no time in it, so it is taken whole. `position` is a change log,
+# so a window of it alone would leave most of the field unplaced: the standing at the window's
+# first instant is fetched with it, and the two together are what a reader of the window sees.
+fetch() {
+  local collection="$1" into="$2"
+  shift 2
+  curl --silent --show-error --fail --max-time 60 --get \
+    --data-urlencode "session_key=$session_key" "$@" \
+    --output "$recording/$into" "$api/v1/$collection" || {
+    cat >&2 <<EOF
+
+$api/v1/$collection did not answer.
+
+Bring the stack up and put the Session in the stores:
+
+  bin/up
+  bin/backfill 2025 1267 $session_key
+EOF
+    exit 1
+  }
+}
+
+printf 'Cutting %s to %s out of Session %s\n' "$window_from" "$window_to" "$session_key"
+
+fetch drivers drivers.json
+fetch position standing.json --data-urlencode "date<=$window_from"
+fetch position changes.json --data-urlencode "date>$window_from" \
+  --data-urlencode "date<=$window_to"
+
+python3 - "$recording" "$repo_root/test/fixtures" "$session_key" "$window_from" "$window_to" <<'PY'
+"""Turns three recorded responses into the two fixtures, byte-stable across runs."""
+
+import json
+import pathlib
+import sys
+
+recording, fixtures, session_key, window_from, window_to = sys.argv[1:]
+recording, fixtures = pathlib.Path(recording), pathlib.Path(fixtures)
+
+# Only the fields the Adapter reads. A fixture that carried whole upstream records would grow
+# every time upstream added one, and would invite a test to assert on a field nothing maps.
+KEPT = {
+    "drivers": ("driver_number", "name_acronym", "team_name"),
+    "position": ("driver_number", "date", "position"),
+}
+
+
+def read(name, collection):
+    records = json.loads((recording / name).read_text())
+    return [{field: record[field] for field in KEPT[collection]} for record in records]
+
+
+def latest_per_driver(records):
+    standing = {}
+    for record in sorted(records, key=lambda r: (r["driver_number"], r["date"])):
+        standing[record["driver_number"]] = record
+    return list(standing.values())
+
+
+def write(name, collections):
+    directory = fixtures / name
+    directory.mkdir(parents=True, exist_ok=True)
+    for collection, records in collections.items():
+        path = directory / f"{collection}.json"
+        path.write_text(json.dumps(records, indent=2, sort_keys=True) + "\n")
+        print(f"  {path.relative_to(fixtures.parent.parent)}  {len(records)} records")
+
+
+drivers = sorted(read("drivers.json", "drivers"), key=lambda r: r["driver_number"])
+position = sorted(
+    latest_per_driver(read("standing.json", "position")) + read("changes.json", "position"),
+    key=lambda r: (r["date"], r["driver_number"]),
+)
+
+print(f"\nThe window, whole — {window_from} to {window_to}")
+write("2025-dutch-race", {"drivers": drivers, "position": position})
+
+print("\nThe same window with car positions Gated")
+write("2025-dutch-race-gated", {"drivers": drivers, "position": []})
+PY

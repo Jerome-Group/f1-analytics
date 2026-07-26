@@ -13,8 +13,8 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 | The dashboard | The timing screen, and the design system it is built from — tokens, components, and the full-screen assembly that proves the density budget | `web/`, `web/design-system/` |
 | Shared types | The canonical model, imported by both `server/` and `web/` | `domain/` |
 | Analysis mode | Deferred. Offline FastF1 work; the dashboard never calls it | `analysis/` |
-| Running anything | Wrappers that place the container runtime and its data on the external volume. **The runtime is never invoked directly** | `bin/up`, `bin/down`, `bin/compose`, `bin/backfill`, `bin/catalogue` |
-| Tests | One file per unit under test, run by a script with no dependencies to install | `test/run` |
+| Running anything | Wrappers that place the container runtime and its data on the external volume. **The runtime is never invoked directly** | `bin/up`, `bin/down`, `bin/compose`, `bin/backfill`, `bin/catalogue`, `bin/fixture` |
+| Tests | One file per unit under test, run by a script with no dependencies to install. The recordings the tests replay are cut from a real Session by `bin/fixture` | `test/run`, `test/fixtures/` |
 | Working here | Agent + contributor conventions, commit/attribution rules | `AGENTS.md` (= `CLAUDE.md`) |
 | Code standards | How code is written and reviewed | `CODING_STANDARDS.md` |
 | Domain language | The glossary — this repository's ubiquitous language | `CONTEXT.md` |
@@ -23,9 +23,13 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | Automation | The workflows that run on a pull request, and dependency updates | `.github/` |
 
-`archive/`, `bin/`, `deploy/`, `test/` and `web/design-system/` exist. The rest do not yet — they are where the code
-goes, recorded here so the first pull request that creates one is placing it rather than
-inventing it.
+`archive/`, `bin/`, `deploy/`, `domain/`, `server/`, `test/` and `web/design-system/` exist.
+`analysis/` and the rest of `web/` do not yet — they are where the code goes, recorded here so
+the first pull request that creates one is placing it rather than inventing it.
+
+`server/` and `domain/` are TypeScript that Node runs as written: there is no build step and no
+runtime dependency, and the one package in the repository is the type checker
+(`docs/adr/0011`).
 
 The runtime itself lives *outside* this repository, in `.runtime/` beside it on the same volume:
 the virtual machine, the Docker CLI's configuration, and the upstream checkout. The Archive is in

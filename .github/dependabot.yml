@@ -2,9 +2,9 @@
 # day let merge itself: ADR-0010 (in the management hub) argues all three, org-wide. How a bump
 # is landed once it is open is `docs/agents/dependencies.md`.
 #
-# Only `github-actions` is here because it is the only ecosystem a newly generated repository
-# certainly has — the workflow in `.github/workflows/`. Add an ecosystem when this repository
-# gains one, and mind what a missing `cooldown` means: **omitting it is not zero**. The option's
+# An ecosystem is added when this repository gains one — `github-actions` for the workflow in
+# `.github/workflows/`, and `npm` since the type checker arrived. Mind what a missing `cooldown`
+# means: **omitting it is not zero**. The option's
 # `default-days` has a minimum of 1, and an unconfigured ecosystem still takes Dependabot's own
 # 3-day default for version updates. ADR-0010 wants no wait on `terraform`; three days is what
 # the platform actually offers, and it costs nothing on bumps a human reads anyway.
@@ -28,5 +28,16 @@ updates:
     # Seven days, because this is the ecosystem a repository may let merge itself once its check
     # can genuinely fail for an action bump. `cooldown` delays version updates only; a security
     # update is never held back by it.
+    cooldown:
+      default-days: 7
+
+  # The whole ecosystem is the type checker and its Node types (ADR-0011) — nothing here ships,
+  # and nothing here runs the program. Seven days matches the actions above rather than being
+  # argued separately: a bump nobody is waiting for costs nothing to hold.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    rebase-strategy: auto
     cooldown:
       default-days: 7

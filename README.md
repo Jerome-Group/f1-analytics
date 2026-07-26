@@ -11,8 +11,10 @@ work is done here.
 
 ## Status
 
-🌱 **The pipeline comes up; nothing reads from it yet.** `bin/up` runs the self-hosted OpenF1
-stack, and no application code exists above it. The decisions are recorded in
+🌱 **The path exists end to end, and carries almost nothing.** `bin/up` runs the self-hosted
+OpenF1 stack, and `server/` reads a backfilled session out of it and serves session state to a
+WebSocket — twenty drivers with position, number, code and team, and no more than that. The
+browser at the other end is not written yet. The decisions are recorded in
 [`docs/adr/`](docs/adr/) and the vocabulary in [`CONTEXT.md`](CONTEXT.md).
 
 ## What it is
@@ -59,7 +61,7 @@ per-second data (car telemetry, live intervals) is rendered only for a driver yo
 
 ## Getting started
 
-The pipeline runs; the dashboard does not exist yet.
+The pipeline runs and the backend serves; the dashboard does not exist yet.
 
 ```
 bin/up      # api, the live ingestor, MongoDB and Mosquitto — building whatever is missing first
@@ -68,6 +70,9 @@ bin/down    # and the virtual machine with them, so the volume can be unplugged
 bin/archive 2025              # mirror a season's raw files; 2025 1267 9920 for one session
 bin/backfill 2025 1267 9920   # one past session into the stores, whole
 bin/catalogue 2025            # what that season's meetings and sessions are — names and clocks
+
+node server/main.ts 9920      # serve that session's state on ws://127.0.0.1:8080
+bin/fixture                   # re-cut the committed test recording from the running stores
 ```
 
 The first run clones and builds the upstream Ingestor and takes a few minutes; later runs take
@@ -96,7 +101,14 @@ external volume. A bare `docker compose up` will silently use the wrong disk and
 see
 [ADR-0004](docs/adr/0004-the-container-toolchain-lives-on-the-raid0-and-is-reached-through-bin.md).
 
-Tests are `test/run`, and need nothing installed.
+Tests are `test/run`, and need nothing installed. Neither does the backend: Node runs the
+TypeScript as it is written, and the only package in the repository is the type checker, which is
+a check on a pull request rather than a step before anything works
+([ADR-0011](docs/adr/0011-the-live-path-is-typescript-that-node-runs-and-nothing-is-installed-to-run-it.md)).
+
+```
+npm ci && npm run typecheck
+```
 
 ## What this licence does not cover
 

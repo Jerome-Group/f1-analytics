@@ -10,7 +10,6 @@
   --surface-row-alt: #171c24;
   --surface-row-pit: #1e2430;
   --surface-row-retired: #0c0e13;
-  --surface-row-hover: #202634;
 
   --rule: #232a35;
   --rule-strong: #3a4553;
@@ -32,11 +31,11 @@
 
   --gain: #00d46a;
   --loss: #ff4d4d;
-  --neutral: #6b7787;
 
-  /* Driver state. A stationary car must never read as a slow one. */
+  /* Driver state. A stationary car must never read as a slow one. These are held clear of
+     every livery in tokens/teams.css: a state and a team must never share a hue. */
   --state-pit: #ff9f1c;
-  --state-out-lap: #64c4ff;
+  --state-out-lap: #8fa0b8;
   --state-retired: #ff4d4d;
 
   /* Session-global flag conditions. */
@@ -45,6 +44,4 @@
   --flag-red: #ff2d2d;
   --flag-safety-car: #ff9f1c;
   --flag-chequered: #f2f5f8;
-
-  --focus-ring: #64c4ff;
 }

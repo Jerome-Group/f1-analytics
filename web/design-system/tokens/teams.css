@@ -1,4 +1,4 @@
-/* Reference team colours. The row never reads these directly: it reads --team-colour,
+/* The 2025 constructors, as reference. The row never reads these directly: it reads --team-colour,
    which is set per row from the value the feed carries, so a livery change or a new
    constructor needs no code. These are the fallback and the design reference. */
 

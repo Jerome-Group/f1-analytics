@@ -39,10 +39,8 @@
   fill: var(--team-colour);
 }
 
-/* Fewer than two laps is not an empty chart, and a Gated stream is not an empty chart.
-   Both say so instead of drawing nothing. */
-.sparkline-absent,
-.sparkline-unavailable {
+/* Fewer than two laps is not a trend, and it is not an empty chart either. It says so. */
+.sparkline-absent {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,11 +48,4 @@
   font-family: var(--font-ui);
   font-size: var(--type-secondary-size);
   color: var(--text-absent);
-}
-
-.sparkline-unavailable {
-  background: var(--hatch-unavailable);
-  font-size: var(--type-micro-size);
-  letter-spacing: var(--type-label-tracking);
-  text-transform: uppercase;
 }

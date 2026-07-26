@@ -13,7 +13,7 @@
   border: 3px solid var(--tyre-colour);
   border-radius: 50%;
   font-family: var(--font-ui);
-  font-size: 15px;
+  font-size: var(--type-secondary-size);
   line-height: 1;
   font-weight: 700;
   color: var(--tyre-colour);
@@ -41,9 +41,9 @@
 }
 
 .tyre-age[data-fitted-used="true"]::after {
-  content: "\2022";
-  margin-left: 3px;
+  content: "+";
+  margin-left: 2px;
   font-size: var(--type-micro-size);
   vertical-align: super;
-  color: var(--tyre-fitted-used);
+  color: var(--text-secondary);
 }

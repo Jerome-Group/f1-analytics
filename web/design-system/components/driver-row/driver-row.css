@@ -28,6 +28,15 @@
   color: var(--text-tertiary);
 }
 
+/* A header cell wears the class of the column beneath it, so a label is aligned by the same
+   rule as the figures it names and cannot drift from them. Only the type is the header's own. */
+.driver-row-header .cell--figure,
+.driver-row-header .cell--figure-secondary {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
 .driver-row {
   height: var(--row-height);
   background: var(--surface-row);
@@ -88,7 +97,7 @@
 .position-change[data-direction="none"] { color: var(--text-tertiary); }
 
 .team-bar {
-  width: 6px;
+  width: 100%;
   height: 40px;
   background: var(--team-colour);
   border-radius: 1px;

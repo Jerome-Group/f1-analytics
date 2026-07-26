@@ -32,6 +32,13 @@ body {
   margin: 12px 0 0;
 }
 
+/* A sparkline shown at the width of the trend column it lives in. */
+.sparkline-cell {
+  width: 160px;
+  padding: 6px;
+  background: var(--surface-row);
+}
+
 .swatches {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

@@ -10,7 +10,7 @@
   <body style="--team-colour: var(--team-mclaren)">
     <section class="specimen">
       <h1 class="specimen__title">Complete run &mdash; last twelve laps</h1>
-      <div style="width: 160px; background: var(--surface-row); padding: 6px">
+      <div class="sparkline-cell">
         <svg class="sparkline" viewBox="0 0 160 36" role="img" aria-label="Lap times, last twelve laps">
           <line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" />
           <polyline
@@ -30,7 +30,7 @@
 
     <section class="specimen">
       <h1 class="specimen__title">Laps the feed never sent</h1>
-      <div style="width: 160px; background: var(--surface-row); padding: 6px">
+      <div class="sparkline-cell">
         <svg class="sparkline" viewBox="0 0 160 36" role="img" aria-label="Lap times with three laps missing">
           <line class="sparkline__datum" x1="0" y1="8" x2="160" y2="8" />
           <polyline class="sparkline__run" points="4,26 17.8,22 31.6,18 45.5,14 59.3,12" />
@@ -48,19 +48,13 @@
     </section>
 
     <section class="specimen">
-      <h1 class="specimen__title">Not enough laps, and not available at all</h1>
-      <div style="display: flex; gap: 24px">
-        <div style="width: 160px; background: var(--surface-row); padding: 6px">
-          <div class="sparkline-absent">&mdash;</div>
-        </div>
-        <div style="width: 160px; background: var(--surface-row); padding: 6px">
-          <div class="sparkline-unavailable">Gated</div>
-        </div>
+      <h1 class="specimen__title">Not enough laps</h1>
+      <div class="sparkline-cell">
+        <div class="sparkline-absent">&mdash;</div>
       </div>
       <p class="specimen__note">
-        One lap is not a trend, and a Gated stream is not an empty chart. Neither draws an
-        empty box: the first says there is nothing to show yet, the second says this will
-        not arrive until the Session ends.
+        One lap is not a trend. It draws an em dash rather than an empty box, so the cell
+        says there is nothing to show yet rather than looking broken.
       </p>
     </section>
 

@@ -14,12 +14,11 @@ design="$here/../web/design-system"
 
 # --- The budget fits ---------------------------------------------------------------------
 
-budget() {
-  python3 - "$design/tokens/layout.css" "$1" <<'PY'
+read -r columns width screen_width height screen_height < <(
+  python3 - "$design/tokens/layout.css" <<'PY'
 import re, sys
 
-css = open(sys.argv[1]).read()
-css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+css = re.sub(r"/\*.*?\*/", "", open(sys.argv[1]).read(), flags=re.S)
 
 
 def token(name):
@@ -28,23 +27,19 @@ def token(name):
 
 tracks = [int(px) for px in re.findall(r"(\d+)px", re.search(r"--row-columns:(.*?);", css, re.S).group(1))]
 
-width = sum(tracks) + (len(tracks) - 1) * token("column-gap") + 2 * token("screen-pad")
-height = token("strip-height") + token("header-height") + token("row-count") * token("row-height")
-
-print({
-    "columns": len(tracks),
-    "width": width,
-    "screen-width": token("screen-width"),
-    "height": height,
-    "screen-height": token("screen-height"),
-}[sys.argv[2]])
+print(
+    len(tracks),
+    sum(tracks) + (len(tracks) - 1) * token("column-gap") + 2 * token("screen-pad"),
+    token("screen-width"),
+    token("strip-height") + token("header-height") + token("row-count") * token("row-height"),
+    token("screen-height"),
+)
 PY
-}
+)
 
-assert_equals "the row is twenty-five columns wide" "25" "$(budget columns)"
-assert_at_most "the columns fit the screen width" "$(budget screen-width)" "$(budget width)"
-assert_at_most "the strip and twenty rows fit the screen height" \
-  "$(budget screen-height)" "$(budget height)"
+assert_equals "the row is twenty-five columns wide" "25" "$columns"
+assert_at_most "the columns fit the screen width" "$screen_width" "$width"
+assert_at_most "the strip and twenty rows fit the screen height" "$screen_height" "$height"
 
 # --- Every row lays out against the same track list --------------------------------------
 
@@ -63,20 +58,40 @@ print(",".join(str(n) for n in widths) if rows else "no rows found")
 PY
 }
 
-for page in "$design/components/driver-row/driver-row.html" "$design/timing-screen.html"; do
+component_row="$design/components/driver-row/driver-row.html"
+screen="$design/timing-screen.html"
+
+for page in "$component_row" "$screen"; do
   assert_equals "every row in $(basename "$page") has twenty-five cells" \
     "25" "$(cells_per_row "$page")"
 done
 
-# --- Colour lives in tokens/, and nowhere else --------------------------------------------
+# The header exists in two static pages and cannot include itself into both. It can at least be
+# held identical, so a column renamed or reordered in one is not silently right in the other.
+header() {
+  python3 -c "
+import re, sys
+print(re.search(r'<div class=\"driver-row-header\">.*?</div>', open(sys.argv[1]).read(), re.S).group())
+" "$1"
+}
+
+assert_equals "the screen's header is the Driver row's header, to the character" \
+  "$(header "$component_row")" "$(header "$screen")"
+
+# --- Values live in tokens/, and nowhere else ---------------------------------------------
 #
-# A literal colour in a component is the drift the token files exist to prevent: it is invisible
-# in review and it is the one thing that cannot be corrected in one place.
+# A literal in a component is the drift the token files exist to prevent: it is invisible in
+# review, and it is the one thing that cannot be corrected in one place.
 
 literals="$(grep -rEn '#[0-9a-fA-F]{3,8}\b' "$design" --include='*.css' --include='*.html' |
   grep -v '/tokens/' || true)"
 
 assert_equals "no colour literal outside tokens/" "" "$literals"
+
+dimensions="$(grep -rEn '\b(2560|1440)px' "$design" --include='*.css' --include='*.html' |
+  grep -v '/tokens/' || true)"
+
+assert_equals "no screen dimension restated outside tokens/" "" "$dimensions"
 
 # --- Every Driver state the spec names is drawn ------------------------------------------
 

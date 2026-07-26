@@ -15,6 +15,8 @@
 
   --column-gap: 12px;
 
+  --strip-columns: 640px 1fr 720px 300px;
+
   --row-columns:
     56px    /* position */
     44px    /* position change against grid */

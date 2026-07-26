@@ -51,5 +51,8 @@ mkdir -p "$F1_ARCHIVE_HOME"
 
 # The Archive depends on nothing this project deploys — no virtual machine, no containers, no
 # MongoDB. It is the layer beneath all of that, and it must still work when none of it does.
+#
+# -u because this runs for hours and is usually watched through a redirected log: buffered stdout
+# would show an empty file for the whole of it, which is indistinguishable from a hung run.
 export F1_ARCHIVE_HOME
-exec python3 "$F1_REPO_ROOT/archive" "$@"
+exec python3 -u "$F1_REPO_ROOT/archive" "$@"

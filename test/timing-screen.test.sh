@@ -244,4 +244,84 @@ assert_contains "the leader's Gap is the absent mark, not a zero and not an empt
   '<span class="gap cell--figure absent">&mdash;</span>' \
   "$screen"
 
+# --- Sector times with purple, green and yellow status (#10) ----------------------------------
+
+# The three sectors' status read left to right off each row — purple/green/yellow by another name,
+# and "absent" for a sector the current lap has not set. Keyed off data-status, which is what the
+# colour is drawn from, so a sector drawn the wrong colour reads as the wrong status here.
+sector_status() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    print(" ".join(re.findall(r"<span class=\"sector-time\" data-status=\"([a-z-]+)\"", row)))
+'
+}
+
+# The personal best beside each sector, and the speed trap that ends the row. A value the feed gave,
+# or "-" for one it did not.
+sector_bests() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    cells = re.findall(r"<span class=\"cell--figure-secondary( absent)?\"[^>]*>([^<]*)</span>", row)
+    print(" ".join("-" if absent else text for absent, text in cells))
+'
+}
+
+speed_trap() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    found = re.search(r"<span class=\"cell--figure speed-trap( absent)?\"[^>]*>([^<]*)</span>", row)
+    print("." if found is None else ("-" if found.group(1) else found.group(2)))
+'
+}
+
+# A field built here on purpose: the three statuses have to differ within one Driver so a colour
+# drawn under the wrong sector shows, one Driver has a sector the current lap has not reached, and
+# one has set nothing at all. A recording is a place where those might happen to coincide.
+sector_field='[
+  {"number":81,"code":"PIA","position":1,
+   "sectors":[{"millis":28402,"status":"personal-best"},{"millis":31114,"status":"session-best"},{"millis":29601,"status":"set"}],
+   "sectorBests":[28402,31114,29480],"speedTrap":327},
+  {"number":16,"code":"LEC","position":8,
+   "sectors":[{"millis":33104,"status":"set"},{"millis":36550,"status":"set"}],
+   "sectorBests":[28702,31402,29776]},
+  {"number":55,"code":"SAI","position":20}
+]'
+
+sectors_screen="$(a_screen "$sector_field" | render)"
+
+# Purple for Session best, green for personal best, yellow otherwise, all three per Driver — and a
+# sector the current lap has not set reading as absent, never as the lap before's time.
+assert_equals "each sector is coloured to its status, and an unset sector reads as absent" \
+  "$(
+    cat <<'EOF'
+personal-best session-best set
+set set absent
+absent absent absent
+EOF
+  )" \
+  "$(sector_status <<<"$sectors_screen")"
+
+assert_equals "the Driver's own best sits beside each sector, absent until they have set one" \
+  "$(
+    cat <<'EOF'
+28.402 31.114 29.480
+28.702 31.402 29.776
+- - -
+EOF
+  )" \
+  "$(sector_bests <<<"$sectors_screen")"
+
+assert_equals "the speed trap is shown where the feed provided it, absent where it did not" \
+  "$(
+    cat <<'EOF'
+327
+-
+-
+EOF
+  )" \
+  "$(speed_trap <<<"$sectors_screen")"
+
 finish

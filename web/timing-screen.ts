@@ -10,7 +10,14 @@
 // counts its cells to the last one it can fill and stops — the tracks after it stay empty, and
 // nothing is drawn that would have to claim a value the feed has not sent (story 38).
 
-import type { Driver, Separation, SessionState } from '../domain/index.ts';
+import type {
+  Driver,
+  Sector,
+  SectorBests,
+  Sectors,
+  Separation,
+  SessionState,
+} from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
 
 /** The markup inside the timing table: one row per Driver, and no row that is not a Driver. */
@@ -38,8 +45,40 @@ function driverRow(driver: Driver): string {
     lapCell('last-lap', driver.lastLap),
     '<span class="cell"></span>',
     lapCell('best-lap', driver.bestLap),
+    sectorCells(driver.sectors, driver.sectorBests),
+    // Speed trap is the last cell the row can fill for now; tyres (#11) pick up where it stops,
+    // and the row ends here rather than drawing a column it has nothing to put in.
+    figure('cell--figure speed-trap', driver.speedTrap),
     '</div>',
   ].join('');
+}
+
+/**
+ * The three sectors of the lap in progress, each with the Driver's own best beside it. A sector
+ * not yet crossed this lap is absent — the dotted mark the design gives it — never the time from
+ * the lap before, which is the one thing this column must not do (story: "a sector not yet set
+ * reads as absent"). The personal best beside it persists across the lap boundary, so it can show
+ * even while the live sector is still absent.
+ */
+function sectorCells(sectors: Sectors | undefined, bests: SectorBests | undefined): string {
+  return [0, 1, 2].map((i) => sectorCell(sectors?.[i]) + sectorBestCell(bests?.[i])).join('');
+}
+
+/**
+ * One sector, coloured purple, green or yellow to a meaning everyone already knows (#10). The
+ * status is settled above the row against the whole field; this only draws the colour it is given,
+ * so the row never has to know what anyone else did.
+ */
+function sectorCell(sector: Sector | undefined): string {
+  if (sector === undefined) return '<span class="sector-time" data-status="absent">&mdash;</span>';
+  return `<span class="sector-time" data-status="${sector.status}">${clock(sector.millis)}</span>`;
+}
+
+/** The Driver's own best in one sector, drawn secondary beside the live time, or the absent mark. */
+function sectorBestCell(millis: number | undefined): string {
+  return millis === undefined
+    ? absent('cell--figure-secondary')
+    : `<span class="cell--figure-secondary">${clock(millis)}</span>`;
 }
 
 /**

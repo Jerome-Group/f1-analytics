@@ -24,6 +24,35 @@ export type DriverNumber = number;
  */
 export type Separation = { millis: number } | { laps: number };
 
+/**
+ * How good a sector time is against the field and against the Driver themselves — the
+ * purple/green/yellow everyone already reads without a legend (CONTEXT.md, "Timing screen").
+ * `session-best` is the fastest anyone has set (purple), `personal-best` the Driver's own best
+ * (green), `set` a time slower than their own best (yellow). Which one it is depends on the whole
+ * field, so it is settled where the whole field is — above the row, never in it.
+ */
+export type SectorStatus = 'session-best' | 'personal-best' | 'set';
+
+/** One sector of the current lap: the time, and how good it is. */
+export interface Sector {
+  millis: number;
+  status: SectorStatus;
+}
+
+/**
+ * The three sectors of the lap in progress. A slot is absent until the Driver crosses that
+ * sector's line this lap, so a sector not yet set reads as absent and never as last lap's time
+ * (story: "a sector not yet set reads as absent"). Always three, because a Formula 1 lap is.
+ */
+export type Sectors = readonly [Sector?, Sector?, Sector?];
+
+/**
+ * The Driver's own best in each of the three sectors so far, drawn beside the live sector. It
+ * persists across the lap boundary — a sector the current lap has not reached yet still shows what
+ * the Driver has done in it — so it is held apart from `Sectors`, which is only ever this lap.
+ */
+export type SectorBests = readonly [number?, number?, number?];
+
 export interface Driver {
   number: DriverNumber;
   /** The three-letter code the Timing screen shows — `VER`, `NOR`. */
@@ -47,6 +76,12 @@ export interface Driver {
   lastLap?: number;
   /** The Driver's best lap of the Session so far, in milliseconds. Absent before their first. */
   bestLap?: number;
+  /** The lap in progress, sector by sector. Absent slots are sectors not yet crossed this lap. */
+  sectors?: Sectors;
+  /** The Driver's own best in each sector so far, drawn beside the live sector times. */
+  sectorBests?: SectorBests;
+  /** The speed trap reading for the current lap, in km/h. Absent where the feed has not sent it. */
+  speedTrap?: number;
 }
 
 export interface SessionState {

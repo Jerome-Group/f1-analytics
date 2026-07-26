@@ -16,8 +16,7 @@ The time is the whole cost, and it is small too — **29 seconds** for the first
 second. Nearly all of it is the per-Meeting timetable requests, one per Meeting, at about a second
 each. The event listing that gives the Meetings comes back in one, and is fetched twice: upstream's
 `get_sessions` calls `get_meetings` itself, so the second command re-reads what the first just
-wrote. That is why this is a little over the 22 seconds
-[#25](https://github.com/Jerome-Group/f1-live-analytics/issues/25) measured for the scrape alone.
+wrote. That is why this is a little over the 22 seconds #25 measured for the scrape alone.
 
 25 Meetings is 24 Grands Prix and Pre-Season Testing. The 123 Sessions are 63 Practice, 30
 Qualifying and 30 Race — Sprint weekends carry a second of each of the last two, and upstream
@@ -41,8 +40,7 @@ MongoDB:
 
 The Session keys line up with the ones a Backfill was given by hand: Meeting 1267 catalogues five
 Sessions, 9913 to 9916 and 9920, and 9920 is the Session already in the stores. Nothing joined them
-— both sides carry upstream's key, which is the assumption
-[#3](https://github.com/Jerome-Group/f1-live-analytics/issues/3) makes and this measurement checks.
+— both sides carry upstream's key, which is the assumption #3 makes and this measurement checks.
 
 Both collections answer immediately, and neither needed an index to. `/v1/sessions?year=2025`
 returns all 123 and `/v1/meetings?year=2025` all 25 — the telemetry collections are the only ones

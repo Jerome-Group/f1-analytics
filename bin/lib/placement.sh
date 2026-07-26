@@ -16,6 +16,10 @@ F1_RUNTIME_HOME="${F1_RUNTIME_HOME:-$(dirname -- "$F1_REPO_ROOT")/.runtime}"
 export COLIMA_HOME="$F1_RUNTIME_HOME/colima"
 export DOCKER_CONFIG="$F1_RUNTIME_HOME/docker"
 
+# Beside the runtime rather than inside it: the Archive outlives any virtual machine, and a
+# `colima delete` must not be able to take fifteen gigabytes of unrepeatable download with it.
+F1_ARCHIVE_HOME="${F1_ARCHIVE_HOME:-$(dirname -- "$F1_REPO_ROOT")/.archive}"
+
 F1_COLIMA_PROFILE="f1-live-analytics"
 F1_OPENF1_CHECKOUT="$F1_RUNTIME_HOME/openf1"
 

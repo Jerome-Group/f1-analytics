@@ -7,6 +7,7 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 
 | Area | What lives there | Entry point |
 |------|------------------|-------------|
+| The Archive | Mirrors what Formula 1 publishes, raw. Depends on nothing else here, and is the only data that cannot be rebuilt | `archive/`, `bin/archive` |
 | The pipeline | The self-hosted OpenF1 stack. Upstream software, run here and never vendored | `deploy/` |
 | The backend | MQTT subscriber, canonical session state, the WebSocket the browser reads | `server/` |
 | The dashboard | The timing screen | `web/` |
@@ -22,11 +23,14 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | Automation | The workflows that run on a pull request, and dependency updates | `.github/` |
 
-`bin/`, `deploy/` and `test/` exist. The rest do not yet — they are where the code goes, recorded
-here so the first pull request that creates one is placing it rather than inventing it.
+`archive/`, `bin/`, `deploy/` and `test/` exist. The rest do not yet — they are where the code
+goes, recorded here so the first pull request that creates one is placing it rather than
+inventing it.
 
 The runtime itself lives *outside* this repository, in `.runtime/` beside it on the same volume:
-the virtual machine, the Docker CLI's configuration, and the upstream checkout. Nothing there is
-committed, and nothing there is on the internal disk.
+the virtual machine, the Docker CLI's configuration, and the upstream checkout. The Archive is in
+`.archive/`, beside both — outside the runtime because it outlives any virtual machine, and
+outside the working tree because it is Formula 1's data. Nothing in either is committed, and
+nothing in either is on the internal disk.
 
 Update this file in the same pull request whenever a top-level area is added, moved, or removed.

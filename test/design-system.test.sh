@@ -39,7 +39,14 @@ PY
 
 assert_equals "the row is twenty-five columns wide" "25" "$columns"
 assert_at_most "the columns fit the screen width" "$screen_width" "$width"
-assert_at_most "the strip and twenty rows fit the screen height" "$screen_height" "$height"
+assert_at_most "the strip and the whole field fit the screen height" "$screen_height" "$height"
+
+# The field is twenty-two for 2026 and was twenty before it. The screen has to hold whatever
+# --row-count says, so the token and the specimen are checked against each other rather than
+# both being edited by hand and one being forgotten.
+assert_equals "the screen draws every Driver the budget is drawn for" \
+  "$(grep -c 'class="driver-row"' "$design/timing-screen.html")" \
+  "$(grep -oE -- '--row-count: *[0-9]+' "$design/tokens/layout.css" | grep -oE '[0-9]+')"
 
 # --- Every row lays out against the same track list --------------------------------------
 
@@ -92,6 +99,46 @@ dimensions="$(grep -rEn '\b(2560|1440)px' "$design" --include='*.css' --include=
   grep -v '/tokens/' || true)"
 
 assert_equals "no screen dimension restated outside tokens/" "" "$dimensions"
+
+# --- The liveries the feed knows about, and nothing else ----------------------------------
+#
+# A team token referenced but never defined is a Driver with no colour on their row, and it is
+# invisible until that constructor is on the grid. The 2026 field arriving with Audi and Cadillac
+# is what this exists for.
+
+undefined="$(python3 - "$design" <<'PY'
+import pathlib, re, sys
+
+design = pathlib.Path(sys.argv[1])
+defined = set(re.findall(r"^\s*(--team-[a-z-]+):", (design / "tokens/teams.css").read_text(), re.M))
+referenced = set()
+for f in list(design.rglob("*.css")) + list(design.rglob("*.html")):
+    referenced |= set(re.findall(r"var\((--team-[a-z-]+)", f.read_text()))
+print("\n".join(sorted(referenced - defined)))
+PY
+)"
+
+assert_equals "every team colour a row asks for is defined" "" "$undefined"
+
+# A state that repeats a livery is a bar and a chip the same colour on the same screen.
+shared="$(python3 - "$design" <<'PY'
+import pathlib, re, sys
+
+design = pathlib.Path(sys.argv[1])
+
+
+def colours(path, prefix):
+    text = (design / path).read_text()
+    return {m[0]: m[1].lower() for m in re.findall(rf"(--{prefix}[a-z-]+):\s*(#[0-9a-fA-F]{{6}})", text)}
+
+
+teams = colours("tokens/teams.css", "team-")
+states = colours("tokens/palette.css", "state-")
+print("\n".join(f"{s} == {t}" for s, sc in states.items() for t, tc in teams.items() if sc == tc))
+PY
+)"
+
+assert_equals "no Driver state repeats a livery" "" "$shared"
 
 # --- Every Driver state the spec names is drawn ------------------------------------------
 

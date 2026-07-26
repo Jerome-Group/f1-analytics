@@ -9,37 +9,52 @@
   </head>
   <body>
     <section class="specimen">
-      <h1 class="specimen__title">Team colour</h1>
+      <h1 class="specimen__title">Team colour &mdash; the 2026 grid</h1>
       <div class="swatches">
-        <div class="swatch"><span class="swatch__chip" style="background: var(--team-mclaren)"></span><span><span class="swatch__name">McLaren</span><br /><span class="swatch__value">--team-mclaren</span></span></div>
-        <div class="swatch"><span class="swatch__chip" style="background: var(--team-ferrari)"></span><span><span class="swatch__name">Ferrari</span><br /><span class="swatch__value">--team-ferrari</span></span></div>
-        <div class="swatch"><span class="swatch__chip" style="background: var(--team-red-bull)"></span><span><span class="swatch__name">Red Bull Racing</span><br /><span class="swatch__value">--team-red-bull</span></span></div>
-        <div class="swatch"><span class="swatch__chip" style="background: var(--team-mercedes)"></span><span><span class="swatch__name">Mercedes</span><br /><span class="swatch__value">--team-mercedes</span></span></div>
-        <div class="swatch"><span class="swatch__chip" style="background: var(--team-aston-martin)"></span><span><span class="swatch__name">Aston Martin</span><br /><span class="swatch__value">--team-aston-martin</span></span></div>
         <div class="swatch"><span class="swatch__chip" style="background: var(--team-alpine)"></span><span><span class="swatch__name">Alpine</span><br /><span class="swatch__value">--team-alpine</span></span></div>
+        <div class="swatch"><span class="swatch__chip" style="background: var(--team-aston-martin)"></span><span><span class="swatch__name">Aston Martin</span><br /><span class="swatch__value">--team-aston-martin</span></span></div>
+        <div class="swatch"><span class="swatch__chip" style="background: var(--team-audi)"></span><span><span class="swatch__name">Audi</span><br /><span class="swatch__value">--team-audi</span></span></div>
+        <div class="swatch"><span class="swatch__chip" style="background: var(--team-cadillac)"></span><span><span class="swatch__name">Cadillac</span><br /><span class="swatch__value">--team-cadillac</span></span></div>
+        <div class="swatch"><span class="swatch__chip" style="background: var(--team-ferrari)"></span><span><span class="swatch__name">Ferrari</span><br /><span class="swatch__value">--team-ferrari</span></span></div>
         <div class="swatch"><span class="swatch__chip" style="background: var(--team-haas)"></span><span><span class="swatch__name">Haas</span><br /><span class="swatch__value">--team-haas</span></span></div>
+        <div class="swatch"><span class="swatch__chip" style="background: var(--team-mclaren)"></span><span><span class="swatch__name">McLaren</span><br /><span class="swatch__value">--team-mclaren</span></span></div>
+        <div class="swatch"><span class="swatch__chip" style="background: var(--team-mercedes)"></span><span><span class="swatch__name">Mercedes</span><br /><span class="swatch__value">--team-mercedes</span></span></div>
         <div class="swatch"><span class="swatch__chip" style="background: var(--team-racing-bulls)"></span><span><span class="swatch__name">Racing Bulls</span><br /><span class="swatch__value">--team-racing-bulls</span></span></div>
+        <div class="swatch"><span class="swatch__chip" style="background: var(--team-red-bull)"></span><span><span class="swatch__name">Red Bull Racing</span><br /><span class="swatch__value">--team-red-bull</span></span></div>
         <div class="swatch"><span class="swatch__chip" style="background: var(--team-williams)"></span><span><span class="swatch__name">Williams</span><br /><span class="swatch__value">--team-williams</span></span></div>
-        <div class="swatch"><span class="swatch__chip" style="background: var(--team-kick-sauber)"></span><span><span class="swatch__name">Kick Sauber</span><br /><span class="swatch__value">--team-kick-sauber</span></span></div>
         <div class="swatch"><span class="swatch__chip" style="background: var(--team-unknown)"></span><span><span class="swatch__name">Unknown</span><br /><span class="swatch__value">--team-unknown</span></span></div>
       </div>
       <p class="specimen__note">
-        A Driver row sets <code>--team-colour</code> from the value the feed carries. These
-        tokens are the reference and the fallback, so a livery change or a new constructor
-        needs no code — and a team the feed does not name still gets a bar rather than a
-        hole in the row.
+        These are the feed's own <code>team_colour</code>, not a livery matched by eye. A Driver
+        row sets <code>--team-colour</code> from the value the feed carries, so these are the
+        reference and the fallback &mdash; and a constructor the feed does not name still gets a
+        bar rather than a hole in the row.
+      </p>
+    </section>
+
+    <section class="specimen">
+      <h1 class="specimen__title">Two greys the feed hands us</h1>
+      <div class="swatches" style="grid-template-columns: repeat(2, 1fr)">
+        <div class="swatch"><span class="swatch__chip" style="width: 6px; height: 40px; background: var(--team-haas)"></span><span class="swatch__name">87&nbsp;&nbsp;BEA &nbsp; Bearman</span></div>
+        <div class="swatch"><span class="swatch__chip" style="width: 6px; height: 40px; background: var(--team-cadillac)"></span><span class="swatch__name">77&nbsp;&nbsp;BOT &nbsp; Bottas</span></div>
+      </div>
+      <p class="specimen__note">
+        Haas and Cadillac are separated by a hair, and nothing in this file can fix it: both
+        values come from the feed. It is the reason the bar is never the only thing identifying a
+        Driver &mdash; the car number and the three-letter code sit beside it, and they are what
+        the eye actually lands on.
       </p>
     </section>
 
     <section class="specimen">
       <h1 class="specimen__title">Team-mates in a dense table</h1>
       <div class="swatches" style="grid-template-columns: repeat(2, 1fr)">
-        <div class="swatch"><span class="swatch__chip" style="width: 6px; height: 40px; background: var(--team-mclaren)"></span><span class="swatch__name">NOR &nbsp; Norris</span></div>
-        <div class="swatch"><span class="swatch__chip" style="width: 6px; height: 40px; background: var(--team-mclaren)"></span><span class="swatch__name">PIA &nbsp; Piastri</span></div>
+        <div class="swatch"><span class="swatch__chip" style="width: 6px; height: 40px; background: var(--team-mclaren)"></span><span class="swatch__name">1&nbsp;&nbsp;NOR &nbsp; Norris</span></div>
+        <div class="swatch"><span class="swatch__chip" style="width: 6px; height: 40px; background: var(--team-mclaren)"></span><span class="swatch__name">81&nbsp;&nbsp;PIA &nbsp; Piastri</span></div>
       </div>
       <p class="specimen__note">
-        The colour is a 6 px bar, not a row tint. Twenty tinted rows would leave the row
-        state — pit lane, in box, retired — nowhere to live.
+        The colour is a 6 px bar, not a row tint. Twenty-two tinted rows would leave the row
+        state &mdash; pit lane, in box, retired &mdash; nowhere to live.
       </p>
     </section>
   </body>

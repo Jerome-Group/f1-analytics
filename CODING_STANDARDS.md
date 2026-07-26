@@ -90,6 +90,11 @@ a test, in a documented command someone is meant to type — invoking them is a 
 because it will use the internal disk and appear to work (`docs/adr/0004`). Prose *about* the
 rule naturally names the command it forbids; that is not an invocation.
 
+**Python is standard library only, and stays that way where it can.** `archive/` is the first
+Python here. It has no dependencies and should not acquire any: the Archive is what a rebuild
+starts from, and a rebuild that first needs a package index is a worse rebuild. `analysis/`, when
+it arrives, is the exception — FastF1 is the whole point of it.
+
 **`deploy/` owns no upstream source.** It holds configuration this project wrote, and a pinned
 reference to software it did not (`docs/adr/0003`, `docs/adr/0006`). A file copied out of
 upstream is not configuration.

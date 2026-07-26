@@ -46,6 +46,16 @@ assert_equals "the upstream checkout lives under the runtime home, never in the 
   "/external/.runtime/openf1" \
   "$(placement_of F1_OPENF1_CHECKOUT F1_RUNTIME_HOME=/external/.runtime)"
 
+assert_equals "the Archive sits beside the repository, not inside it" \
+  "$(dirname -- "$repo_root")/.archive" \
+  "$(placement_of F1_ARCHIVE_HOME F1_ARCHIVE_HOME=)"
+
+# The Archive has to survive the virtual machine being deleted — it is the half of the data that
+# cannot be downloaded again, and `colima delete` must not be able to reach it.
+assert_equals "the Archive is outside the runtime it outlives" \
+  "$(dirname -- "$repo_root")/.archive" \
+  "$(placement_of F1_ARCHIVE_HOME F1_ARCHIVE_HOME= F1_RUNTIME_HOME=/external/.runtime)"
+
 assert_equals "the profile is this project's own, so the existing torrent one is untouched" \
   "f1-live-analytics" \
   "$(placement_of F1_COLIMA_PROFILE F1_RUNTIME_HOME=/external/.runtime)"

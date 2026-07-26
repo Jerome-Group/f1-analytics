@@ -44,6 +44,7 @@ OpenF1 (self-hosted)  →  MQTT  →  server/  →  one WebSocket  →  web/
 
 | Directory | What lives there |
 |---|---|
+| `archive/` | The Archive — mirrors the raw files Formula 1 publishes. Depends on nothing else here. |
 | `deploy/` | The self-hosted OpenF1 stack — the compose file, the upstream pin, the broker's configuration. Runs upstream software; owns none of it. |
 | `server/` | The backend. Subscribes to MQTT, holds canonical session state, serves it to the browser. |
 | `web/` | The timing screen. |
@@ -64,6 +65,7 @@ The pipeline runs; the dashboard does not exist yet.
 bin/up      # api, the live ingestor, MongoDB and Mosquitto — building whatever is missing first
 bin/down    # and the virtual machine with them, so the volume can be unplugged
 
+bin/archive 2025              # mirror a season's raw files; 2025 1267 9920 for one session
 bin/backfill 2025 1267 9920   # one past session into the stores, whole
 ```
 
@@ -74,6 +76,11 @@ about thirty seconds. The API is then on `localhost:8000` and the broker on `loc
 `bin/backfill` — running it again for the same session replaces it rather than storing it twice
 ([ADR-0008](docs/adr/0008-backfilling-a-session-is-a-command-that-replaces-it.md)). A race session
 costs about 80 MB, [measured](docs/measurements/a-race-session-on-disk.md).
+
+`bin/archive` is the layer beneath all of that: this project's own copy of the raw files, which
+both OpenF1 and FastF1 read. It is the only data here that cannot be rebuilt — Formula 1 has
+already removed 2018 and 2022 from its own servers — so it lives in `.archive/` beside the
+repository, never inside it and never committed.
 
 One rule applies from the first commit: **never invoke the container runtime directly.**
 Everything goes through `bin/`, which places the runtime, its virtual machine and all data on the

@@ -1,4 +1,5 @@
-// Reads a backfilled Session out of the Stores and serves it to a browser over one WebSocket.
+// Reads a backfilled Session out of the Stores, serves the dashboard, and sends it that Session
+// over one WebSocket. One port, so there is nothing to point at anything.
 //
 //   node server/main.ts 9920
 //
@@ -9,6 +10,7 @@
 //   F1_PORT         the port the browser connects to; nought asks the operating system for one
 
 import { readSession } from './openf1/rest-feed.ts';
+import { servePage } from './dashboard.ts';
 import { serveSessionState } from './websocket/server.ts';
 
 const DEFAULT_API = 'http://localhost:8000';
@@ -28,12 +30,17 @@ const api = new URL(process.env['F1_OPENF1_URL'] ?? DEFAULT_API);
 const sessionKey = Number(key);
 
 const state = await readSession(api, sessionKey);
-const server = await serveSessionState(state, Number(process.env['F1_PORT'] ?? DEFAULT_PORT));
+const server = await serveSessionState(
+  state,
+  Number(process.env['F1_PORT'] ?? DEFAULT_PORT),
+  servePage,
+);
 
 // One line, and the port is in it: the caller may have asked for an ephemeral one, and a test
-// harness has nothing else to wait for.
+// harness has nothing else to wait for. The viewer wants the other address on the same line.
 process.stdout.write(
-  `${server.url} is serving Session ${sessionKey}, ${state.drivers.length} Drivers\n`,
+  `${server.url} is serving Session ${sessionKey}, ${state.drivers.length} Drivers` +
+    ` — watch it at ${server.page}\n`,
 );
 
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {

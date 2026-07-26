@@ -49,7 +49,7 @@ OpenF1 (self-hosted)  →  MQTT  →  server/  →  one WebSocket  →  web/
 | `archive/` | The Archive — mirrors the raw files Formula 1 publishes. Depends on nothing else here. |
 | `deploy/` | The self-hosted OpenF1 stack — the compose file, the upstream pin, the broker's configuration. Runs upstream software; owns none of it. |
 | `server/` | The backend. Subscribes to MQTT, holds canonical session state, serves it to the browser. |
-| `web/` | The timing screen. |
+| `web/` | The timing screen, and the design system it is built from. |
 | `domain/` | The canonical types, shared by `server/` and `web/` so the boundary is enforced by the compiler. |
 | `analysis/` | Deferred. Offline FastF1 work; the dashboard never calls it. |
 | `bin/` | Wrappers. Every container command goes through these — see below. |
@@ -71,7 +71,7 @@ bin/archive 2025              # mirror a season's raw files; 2025 1267 9920 for 
 bin/backfill 2025 1267 9920   # one past session into the stores, whole
 bin/catalogue 2025            # what that season's meetings and sessions are — names and clocks
 
-node server/main.ts 9920      # serve that session's state on ws://127.0.0.1:8080
+node server/main.ts 9920      # serve that session, and the screen showing it, on :8080
 bin/fixture                   # re-cut the committed test recording from the running stores
 ```
 

@@ -8,8 +8,11 @@
    Budgeting the panel instead would put the last two Drivers below the fold with nothing on
    screen to say they were missing, which is the worst way for a timing screen to fail.
 
-   The grid is twenty-two, not twenty: Audi and Cadillac joined for 2026. Twenty-two rows in
-   1300 is what sets the row at 50 px rather than the 60 the brief assumed. */
+   --row-capacity is how many Drivers the screen has to be able to hold, not how many it draws.
+   The screen draws the field the Session has — twenty in 2025, twenty-two in 2026, and fewer
+   than either the moment a car is withdrawn — so the number lives here, in the budget, and
+   nowhere in the rendering. Twenty-two in 1300 is what sets the row at 50 px rather than the 60
+   the brief assumed. */
 
 :root {
   --screen-width: 2560px;
@@ -17,7 +20,7 @@
   --screen-pad: 24px;
 
   --row-height: 50px;
-  --row-count: 22;
+  --row-capacity: 22;
   --header-height: 34px;
   --strip-height: 142px;
 

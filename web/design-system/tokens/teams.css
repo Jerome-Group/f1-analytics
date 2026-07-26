@@ -1,7 +1,11 @@
-/* The 2026 constructors, taken from the feed's own `team_colour` rather than from a livery
+/* The constructors, taken from the feed's own `team_colour` rather than from a livery
    photograph. The row never reads these directly: it reads --team-colour, which is set per row
-   from the value the feed carries, so a livery change or a new constructor needs no code. These
-   are the fallback and the design reference.
+   from the constructor the feed names.
+
+   Every constructor a Replayable Session can put on screen is here, not only this season's:
+   Kick Sauber raced in 2025 and Audi replaced it in 2026, and Replay draws both. A constructor
+   with no livery here is grey (--team-unknown) rather than absent, because a row with no bar
+   reads as an empty seat.
 
    Cadillac and Haas are separated by a hair — #909090 against #9c9fa2 — and nothing here can fix
    that, because both come from the feed. It is why the bar is never the only thing identifying a
@@ -14,6 +18,7 @@
   --team-cadillac: #909090;
   --team-ferrari: #ed1131;
   --team-haas: #9c9fa2;
+  --team-kick-sauber: #01c00e;
   --team-mclaren: #f47600;
   --team-mercedes: #00d7b6;
   --team-racing-bulls: #6c98ff;

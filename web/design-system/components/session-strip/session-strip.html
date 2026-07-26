@@ -1,0 +1,104 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Session-global strip</title>
+    <link rel="stylesheet" href="../../preview.css" />
+    <link rel="stylesheet" href="session-strip.css" />
+  </head>
+  <body style="padding: 0">
+    <div style="width: var(--screen-width)">
+      <div class="session-strip" data-flag="green">
+        <div>
+          <div class="session-identity__meeting">Belgian Grand Prix</div>
+          <div class="session-identity__session">Race &middot; Circuit de Spa-Francorchamps</div>
+          <div class="session-clock">
+            <span class="session-clock__remaining">1:12:04</span>
+            <span class="session-clock__laps">Lap 32 / 44</span>
+          </div>
+          <span class="flag-state">Track clear</span>
+        </div>
+
+        <div class="race-control">
+          <div class="strip-label">Race control</div>
+          <div class="race-control__message"><span class="race-control__time">14:38:12</span><span>Turn 9 incident involving car 44 noted &mdash; under investigation</span></div>
+          <div class="race-control__message"><span class="race-control__time">14:36:40</span><span>Yellow flag in sector 2 cleared</span></div>
+          <div class="race-control__message"><span class="race-control__time">14:31:05</span><span>Car 55 retired</span></div>
+        </div>
+
+        <div class="weather">
+          <div class="weather__reading"><span class="strip-label">Track</span><span class="strip-value">41.2&deg;C</span></div>
+          <div class="weather__reading"><span class="strip-label">Air</span><span class="strip-value">24.8&deg;C</span></div>
+          <div class="weather__reading"><span class="strip-label">Humidity</span><span class="strip-value">38%</span></div>
+          <div class="weather__reading"><span class="strip-label">Wind</span><span class="strip-value">2.4 m/s</span></div>
+          <div class="weather__reading"><span class="strip-label">Rain</span><span class="strip-value">No</span></div>
+        </div>
+
+        <div class="session-mode">
+          <span class="mode-badge" data-mode="live">Live</span>
+          <span class="connection" data-connection="connected">Connected</span>
+          <div class="gated-streams">
+            <span class="gated-streams__stream">Positions</span>
+            <span class="gated-streams__stream">DRS</span>
+            <span class="gated-streams__stream">Standings</span>
+            <span class="gated-streams__stream">Stop times</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 24px"></div>
+
+    <div style="width: var(--screen-width)">
+      <div class="session-strip" data-flag="safety-car">
+        <div>
+          <div class="session-identity__meeting">Belgian Grand Prix</div>
+          <div class="session-identity__session">Race &middot; Circuit de Spa-Francorchamps</div>
+          <div class="session-clock">
+            <span class="session-clock__remaining">1:04:51</span>
+            <span class="session-clock__laps">Lap 35 / 44</span>
+          </div>
+          <span class="flag-state">Safety car</span>
+        </div>
+
+        <div class="race-control">
+          <div class="strip-label">Race control</div>
+          <div class="race-control__message"><span class="race-control__time">14:45:02</span><span>Safety car deployed</span></div>
+          <div class="race-control__message"><span class="race-control__time">14:44:58</span><span>Double yellow in sector 3</span></div>
+          <div class="race-control__message"><span class="race-control__time">14:44:51</span><span>Car 22 stopped at turn 15</span></div>
+        </div>
+
+        <div class="weather">
+          <div class="weather__reading"><span class="strip-label">Track</span><span class="strip-value">39.6&deg;C</span></div>
+          <div class="weather__reading"><span class="strip-label">Air</span><span class="strip-value">23.1&deg;C</span></div>
+          <div class="weather__reading"><span class="strip-label">Humidity</span><span class="strip-value">54%</span></div>
+          <div class="weather__reading"><span class="strip-label">Wind</span><span class="strip-value">3.9 m/s</span></div>
+          <div class="weather__reading"><span class="strip-label">Rain</span><span class="strip-value">Yes</span></div>
+        </div>
+
+        <div class="session-mode">
+          <span class="mode-badge" data-mode="replay">Replay</span>
+          <span class="connection" data-connection="reconnecting">Reconnecting</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 32px">
+      <p class="specimen__note">
+        Everything true of the Session rather than of a Driver, kept out of the twenty rows
+        so the rows stay a table. The flag condition is a band across the full 2560 px
+        because it is the one thing that has to be readable while looking at something
+        else; the worded chip repeats it for anyone the colour does not reach.
+      </p>
+      <p class="specimen__note">
+        Live and Replay differ in fill as well as in wording, so the two are never confused
+        &mdash; and the connection light is beside them, because a frozen screen is either a
+        red flag or a dropped connection and the viewer should not have to wait to find out
+        which. The four Gated streams are listed as hatched and unavailable during a Live
+        window; in Replay they are simply gone, because nothing is Gated once a Session has
+        finished.
+      </p>
+    </div>
+  </body>
+</html>

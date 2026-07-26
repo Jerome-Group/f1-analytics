@@ -1,0 +1,83 @@
+/* Chrome for the specimen pages only. Nothing here ships with the Timing screen. */
+
+@import url("tokens/palette.css");
+@import url("tokens/type.css");
+
+body {
+  margin: 0;
+  padding: 32px;
+  background: var(--surface-screen);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+}
+
+.specimen {
+  margin-bottom: 40px;
+}
+
+.specimen__title {
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 0 0 12px;
+}
+
+.specimen__note {
+  font-size: var(--type-secondary-size);
+  line-height: 21px;
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 12px 0 0;
+}
+
+/* A sparkline shown at the width of the trend column it lives in. */
+.sparkline-cell {
+  width: 160px;
+  padding: 6px;
+  background: var(--surface-row);
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.swatches > * {
+  min-width: 0;
+}
+
+.swatches .specimen__note {
+  max-width: 100%;
+}
+
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface-row);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
+.swatch__chip {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  flex: none;
+}
+
+.swatch__name {
+  font-size: var(--type-secondary-size);
+  line-height: var(--type-secondary-line);
+}
+
+.swatch__value {
+  font-size: var(--type-micro-size);
+  line-height: var(--type-micro-line);
+  font-variant-numeric: var(--figures);
+  color: var(--text-tertiary);
+}

@@ -35,6 +35,16 @@ in:                  $haystack" ;;
   esac
 }
 
+assert_at_most() {
+  local description="$1" limit="$2" actual="$3"
+  if [ "$actual" -le "$limit" ] 2>/dev/null; then
+    f1_assert_pass "$description"
+  else
+    f1_assert_fail "$description" "expected: at most $limit
+actual:   $actual"
+  fi
+}
+
 assert_fails() {
   local description="$1"
   shift

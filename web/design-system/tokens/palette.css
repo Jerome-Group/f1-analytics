@@ -1,0 +1,47 @@
+/* Surfaces, text and the two ways a value can fail to be a value.
+   Dark by construction: twenty-two rows of figures on a 1440p panel for three hours. */
+
+:root {
+  --surface-screen: #0a0c10;
+  --surface-strip: #12151c;
+  --surface-header: #10141a;
+
+  --surface-row: #14181f;
+  --surface-row-alt: #171c24;
+  --surface-row-pit: #1e2430;
+  --surface-row-retired: #0c0e13;
+
+  --rule: #232a35;
+  --rule-strong: #3a4553;
+
+  --text-primary: #f2f5f8;
+  --text-secondary: #9aa6b4;
+  --text-tertiary: #5f6b7a;
+
+  /* Absent: the feed has sent nothing. Never a zero, never a stale value. */
+  --text-absent: #46505e;
+
+  /* Unavailable: the stream is Gated for this Session and will not arrive.
+     Carried as a hatch so it is distinguishable from absent at a glance. */
+  --hatch-unavailable: repeating-linear-gradient(
+    -45deg,
+    transparent 0 5px,
+    #1c222c 5px 6px
+  );
+
+  --gain: #00d46a;
+  --loss: #ff4d4d;
+
+  /* Driver state. A stationary car must never read as a slow one. These are held clear of
+     every livery in tokens/teams.css: a state and a team must never share a hue. */
+  --state-pit: #ff9f1c;
+  --state-out-lap: #8fa0b8;
+  --state-retired: #ff4d4d;
+
+  /* Session-global flag conditions. */
+  --flag-green: #00d46a;
+  --flag-yellow: #f5d000;
+  --flag-red: #ff2d2d;
+  --flag-safety-car: #ff9f1c;
+  --flag-chequered: #f2f5f8;
+}

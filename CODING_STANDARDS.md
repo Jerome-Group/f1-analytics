@@ -99,6 +99,13 @@ it arrives, is the exception — FastF1 is the whole point of it.
 reference to software it did not (`docs/adr/0003`, `docs/adr/0006`). A file copied out of
 upstream is not configuration.
 
+**CSS states its values once, in `web/design-system/tokens/`.** A component reads a custom
+property and never a literal colour or a literal column width, because a literal in a component
+is invisible in review and is the one thing that cannot be corrected in one place. The column
+track list is a token for the same reason: the header and every row lay out against it, and a
+row that disagrees is a screen where every column right of the disagreement is quietly wrong
+(`docs/adr/0010`).
+
 **No bind mounts.** Containers get their configuration from a build context; the virtual machine
 sees no host path at all (`docs/adr/0007`).
 

@@ -1,0 +1,51 @@
+/* The density budget, written down once. Twenty-five data columns and the whole field have
+   to land inside the viewport with nothing scrolled and nothing reflowed, so the column
+   template is a token rather than a property of any one component: the header, the rows
+   and the screen all lay out against the same track list or they do not line up.
+
+   The height is 1300, not the panel's 1440. The target is a browser window on a 2560 x 1440
+   display, and a tab strip and an address bar take about 140 px before any of this is drawn.
+   Budgeting the panel instead would put the last two Drivers below the fold with nothing on
+   screen to say they were missing, which is the worst way for a timing screen to fail.
+
+   The grid is twenty-two, not twenty: Audi and Cadillac joined for 2026. Twenty-two rows in
+   1300 is what sets the row at 50 px rather than the 60 the brief assumed. */
+
+:root {
+  --screen-width: 2560px;
+  --screen-height: 1300px;
+  --screen-pad: 24px;
+
+  --row-height: 50px;
+  --row-count: 22;
+  --header-height: 34px;
+  --strip-height: 142px;
+
+  --column-gap: 12px;
+
+  --strip-columns: 640px 1fr 720px 300px;
+
+  --row-columns:
+    56px    /* position */
+    44px    /* position change against grid */
+    6px     /* team colour */
+    52px    /* car number */
+    200px   /* driver */
+    64px    /* state */
+    96px    /* gap to leader */
+    160px   /* gap trend */
+    96px    /* interval to car ahead */
+    108px   /* last lap */
+    160px   /* last lap trend */
+    108px   /* best lap */
+    88px 76px   /* sector 1, sector 1 personal best */
+    88px 76px   /* sector 2, sector 2 personal best */
+    88px 76px   /* sector 3, sector 3 personal best */
+    84px    /* speed trap */
+    56px    /* tyre */
+    60px    /* tyre age */
+    48px    /* stint */
+    48px    /* pit stops */
+    170px   /* degradation trend */
+    56px;   /* laps */
+}

@@ -1,0 +1,64 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Type scale for dense tabular numerals</title>
+    <link rel="stylesheet" href="../preview.css" />
+    <link rel="stylesheet" href="../tokens/type.css" />
+  </head>
+  <body>
+    <section class="specimen">
+      <h1 class="specimen__title">Scale</h1>
+      <div style="display: grid; grid-template-columns: 200px 1fr; gap: 10px 24px; align-items: baseline">
+        <span class="swatch__value">clock &middot; 40/44</span>
+        <span class="figures" style="font-size: 40px; line-height: 44px; font-weight: 600">1:12:04.8</span>
+
+        <span class="swatch__value">strip &middot; 22/26</span>
+        <span class="figures" style="font-size: 22px; line-height: 26px">41.2&deg;C</span>
+
+        <span class="swatch__value">position &middot; 26/28 700</span>
+        <span class="figures" style="font-size: 26px; line-height: 28px; font-weight: 700">14</span>
+
+        <span class="swatch__value">driver &middot; 19/22 700</span>
+        <span style="font-size: 19px; line-height: 22px; font-weight: 700; letter-spacing: 0.04em">VER</span>
+
+        <span class="swatch__value">figure &middot; 19/22</span>
+        <span class="figures" style="font-size: 19px; line-height: 22px">1:31.408</span>
+
+        <span class="swatch__value">secondary &middot; 15/18</span>
+        <span class="figures" style="font-size: 15px; line-height: 18px; color: var(--text-secondary)">+0.214</span>
+
+        <span class="swatch__value">label &middot; 11/12 uppercase</span>
+        <span style="font-size: 11px; line-height: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary)">Interval</span>
+
+        <span class="swatch__value">micro &middot; 10/11</span>
+        <span style="font-size: 10px; line-height: 11px; color: var(--text-absent)">Gated</span>
+      </div>
+      <p class="specimen__note">
+        Sizes are in px because the target is one fixed window on one known display. Nothing on
+        this screen scales, so nothing here is relative.
+      </p>
+    </section>
+
+    <section class="specimen">
+      <h1 class="specimen__title">Figures align in a column</h1>
+      <div style="display: grid; grid-template-columns: 160px 160px; gap: 4px 32px">
+        <span class="figures" style="font-size: 19px; text-align: right">1:31.408</span>
+        <span style="font-size: 19px; text-align: right; font-variant-numeric: proportional-nums">1:31.408</span>
+        <span class="figures" style="font-size: 19px; text-align: right">1:29.117</span>
+        <span style="font-size: 19px; text-align: right; font-variant-numeric: proportional-nums">1:29.117</span>
+        <span class="figures" style="font-size: 19px; text-align: right">1:30.006</span>
+        <span style="font-size: 19px; text-align: right; font-variant-numeric: proportional-nums">1:30.006</span>
+        <span class="swatch__value">tabular &mdash; every digit one width</span>
+        <span class="swatch__value">proportional &mdash; the 1s pull the column crooked</span>
+      </div>
+      <p class="specimen__note">
+        Every figure on the Timing screen carries <code>tabular-nums</code> and
+        <code>slashed-zero</code>. A column of lap times has to be scannable as a shape,
+        and a proportional 1 destroys that. The slashed zero separates 0 from O in a car
+        number and a compound letter sitting side by side.
+      </p>
+    </section>
+  </body>
+</html>

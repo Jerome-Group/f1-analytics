@@ -1,0 +1,25 @@
+/* The 2026 constructors, taken from the feed's own `team_colour` rather than from a livery
+   photograph. The row never reads these directly: it reads --team-colour, which is set per row
+   from the value the feed carries, so a livery change or a new constructor needs no code. These
+   are the fallback and the design reference.
+
+   Cadillac and Haas are separated by a hair — #909090 against #9c9fa2 — and nothing here can fix
+   that, because both come from the feed. It is why the bar is never the only thing identifying a
+   Driver: the car number and the three-letter code sit beside it. */
+
+:root {
+  --team-alpine: #00a1e8;
+  --team-aston-martin: #229971;
+  --team-audi: #f50537;
+  --team-cadillac: #909090;
+  --team-ferrari: #ed1131;
+  --team-haas: #9c9fa2;
+  --team-mclaren: #f47600;
+  --team-mercedes: #00d7b6;
+  --team-racing-bulls: #6c98ff;
+  --team-red-bull: #4781d7;
+  --team-williams: #1868db;
+
+  --team-unknown: #6b7787;
+  --team-colour: var(--team-unknown);
+}

@@ -9,8 +9,8 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 |------|------------------|-------------|
 | The Archive | Mirrors what Formula 1 publishes, raw. Depends on nothing else here, and is the only data that cannot be rebuilt | `archive/`, `bin/archive` |
 | The pipeline | The self-hosted OpenF1 stack. Upstream software, run here and never vendored | `deploy/` |
-| The backend | MQTT subscriber, canonical session state, the WebSocket the browser reads | `server/` |
-| The dashboard | The timing screen, and the design system it is built from — tokens, components, and the full-screen assembly that proves the density budget | `web/`, `web/design-system/` |
+| The backend | MQTT subscriber, canonical session state, the WebSocket the browser reads, and the page it reads it into | `server/` |
+| The dashboard | The timing screen, and the design system it is built from — tokens, components, and the full-screen assembly that proves the density budget | `web/index.html`, `web/design-system/` |
 | Shared types | The canonical model, imported by both `server/` and `web/` | `domain/` |
 | Analysis mode | Deferred. Offline FastF1 work; the dashboard never calls it | `analysis/` |
 | Running anything | Wrappers that place the container runtime and its data on the external volume. **The runtime is never invoked directly** | `bin/up`, `bin/down`, `bin/compose`, `bin/backfill`, `bin/catalogue`, `bin/fixture` |
@@ -23,13 +23,14 @@ Start here: `README.md`, then `AGENTS.md`. The design is recorded before the cod
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | Automation | The workflows that run on a pull request, and dependency updates | `.github/` |
 
-`archive/`, `bin/`, `deploy/`, `domain/`, `server/`, `test/` and `web/design-system/` exist.
-`analysis/` and the rest of `web/` do not yet — they are where the code goes, recorded here so
-the first pull request that creates one is placing it rather than inventing it.
+Everything above exists except `analysis/`, which is where that code goes, recorded here so the
+first pull request that creates it is placing it rather than inventing it.
 
-`server/` and `domain/` are TypeScript that Node runs as written: there is no build step and no
-runtime dependency, and the one package in the repository is the type checker
-(`docs/adr/0011`).
+`server/`, `domain/` and `web/` are TypeScript that Node runs as written: there is no build step
+and no runtime dependency, and the one package in the repository is the type checker
+(`docs/adr/0011`). `web/` is checked against a browser's globals rather than Node's, which is
+what `tsconfig.web.json` is for; the browser is given it with the types stripped out on the way
+past, so there is still nothing built.
 
 The runtime itself lives *outside* this repository, in `.runtime/` beside it on the same volume:
 the virtual machine, the Docker CLI's configuration, and the upstream checkout. The Archive is in

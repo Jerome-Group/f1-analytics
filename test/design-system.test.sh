@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck source-path=SCRIPTDIR
-# The density budget is the design. Twenty-five columns and twenty rows either fit inside
+# The density budget is the design. Twenty-five columns and a full grid either fit inside
 # 2560 x 1440 or the screen is unreadable, and a row that lays out against a different track
 # list than its header is the failure this project was warned about: plausible on screen and
 # wrong. Both are arithmetic, so both are checked here rather than noticed during a Session.
@@ -31,7 +31,7 @@ print(
     len(tracks),
     sum(tracks) + (len(tracks) - 1) * token("column-gap") + 2 * token("screen-pad"),
     token("screen-width"),
-    token("strip-height") + token("header-height") + token("row-count") * token("row-height"),
+    token("strip-height") + token("header-height") + token("row-capacity") * token("row-height"),
     token("screen-height"),
 )
 PY
@@ -41,12 +41,13 @@ assert_equals "the row is twenty-five columns wide" "25" "$columns"
 assert_at_most "the columns fit the screen width" "$screen_width" "$width"
 assert_at_most "the strip and the whole field fit the screen height" "$screen_height" "$height"
 
-# The field is twenty-two for 2026 and was twenty before it. The screen has to hold whatever
-# --row-count says, so the token and the specimen are checked against each other rather than
-# both being edited by hand and one being forgotten.
-assert_equals "the screen draws every Driver the budget is drawn for" \
+# The field is twenty-two for 2026 and was twenty before it, so the running screen draws whatever
+# the Session carries and knows no number at all (test/timing-screen.test.sh). The specimen is
+# the other case: it is drawn at capacity deliberately, because a full grid is the one that has
+# to fit, and a specimen a row short of the budget would fit while the real screen did not.
+assert_equals "the specimen is drawn at the capacity the budget is drawn for" \
   "$(grep -c 'class="driver-row"' "$design/timing-screen.html")" \
-  "$(grep -oE -- '--row-count: *[0-9]+' "$design/tokens/layout.css" | grep -oE '[0-9]+')"
+  "$(grep -oE -- '--row-capacity: *[0-9]+' "$design/tokens/layout.css" | grep -oE '[0-9]+')"
 
 # --- Every row lays out against the same track list --------------------------------------
 

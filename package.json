@@ -5,7 +5,7 @@
   "description": "A dashboard for watching a live Formula 1 session. Nothing is published from here.",
   "license": "MIT",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && tsc --noEmit --project tsconfig.web.json"
   },
   "devDependencies": {
     "@types/node": "26.1.1",

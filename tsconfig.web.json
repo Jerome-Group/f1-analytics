@@ -1,0 +1,11 @@
+{
+  // `web/` runs in a browser and the rest runs in Node, so they are checked against different
+  // globals. One project for both would let `document` into `server/` and `process` into `web/`,
+  // and neither would be a type error until it was a broken page.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2024", "DOM"],
+    "types": []
+  },
+  "include": ["domain", "web"]
+}

@@ -6,12 +6,18 @@ export type {
   Driver,
   DriverNumber,
   DriverState,
+  Flag,
+  Mode,
+  RaceControlMessage,
   Sector,
   SectorBests,
   SectorStatus,
   Sectors,
   Separation,
+  SessionClock,
+  SessionIdentity,
   SessionState,
   Tyre,
+  Weather,
 } from './session-state.ts';
 export type { SessionStateMessage } from './wire.ts';

@@ -127,9 +127,76 @@ export interface Driver {
   gridPosition?: number;
 }
 
+/** Which mode the screen is in. Chrome only (#3): no Driver fact ever branches on it. */
+export type Mode = 'live' | 'replay';
+
+/**
+ * The track's condition, drawn as a band across the whole strip because it is the one thing that
+ * must read without looking at anything (#13). Safety car is a flag here rather than a separate
+ * field, because on the strip it is one of the conditions the band shows.
+ */
+export type Flag = 'green' | 'yellow' | 'red' | 'safety-car' | 'chequered';
+
+/** Which Session this is — the words, as opposed to what happened in it (CONTEXT.md, "Catalogue"). */
+export interface SessionIdentity {
+  /** The Meeting — a whole Grand Prix weekend, e.g. "Belgian Grand Prix". */
+  meeting?: string;
+  /** The Session within it, e.g. "Race", "Qualifying". */
+  session?: string;
+  /** The circuit it is run at. */
+  circuit?: string;
+}
+
+/**
+ * How much of the Session is left. Time and laps both, because a race counts down laps and a
+ * practice counts down time, and either may be the one that is running. Each absent until the feed
+ * has said, so a Session with no lap count does not read as being on lap zero of zero.
+ */
+export interface SessionClock {
+  /** Time remaining, as the feed gives it, e.g. "1:12:04". */
+  remaining?: string;
+  currentLap?: number;
+  totalLaps?: number;
+}
+
+/** One race control message — an incident, an investigation, a penalty — as the feed sent it. */
+export interface RaceControlMessage {
+  /** Wall-clock time it was issued, as the feed gave it, e.g. "14:38:12". */
+  time?: string;
+  text: string;
+}
+
+/** The conditions, so a strategy change can be anticipated before it happens (story 18). */
+export interface Weather {
+  /** Track temperature, in degrees Celsius. */
+  trackTemp?: number;
+  /** Air temperature, in degrees Celsius. */
+  airTemp?: number;
+  /** Relative humidity, as a percentage. */
+  humidity?: number;
+  /** Wind speed, in metres per second. */
+  windSpeed?: number;
+  /** Whether it is raining. Absent where the feed has not said, never a default of dry. */
+  raining?: boolean;
+}
+
 export interface SessionState {
   /** Upstream's key for the Session. The dashboard does not invent its own. */
   sessionKey: number;
   /** In position order, a Driver the feed has not placed sorting last. */
   drivers: Driver[];
+  /** Which Session this is, for the strip. Absent until the catalogue has named it. */
+  identity?: SessionIdentity;
+  /** The Session's own status, e.g. "Running", "Suspended", "Finished". Always meant to be shown. */
+  status?: string;
+  /** The track's condition. Absent until the feed has stated one, never assumed green. */
+  flag?: Flag;
+  /** How much of the Session remains. */
+  clock?: SessionClock;
+  /** Race control messages, newest first: what just happened explains what is on screen now. */
+  raceControl?: readonly RaceControlMessage[];
+  /** The conditions. */
+  weather?: Weather;
+  /** Live or Replay, for the strip's chrome. The one field the two modes may differ in (#3). */
+  mode?: Mode;
 }

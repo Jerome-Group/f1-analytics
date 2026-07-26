@@ -99,4 +99,8 @@ assert_contains "bin/archive with no arguments says what it takes" \
   "bin/archive <year>" \
   "$(misuse)"
 
+assert_contains "bin/archive names the argument that is wrong" \
+  "twenty-twenty-five" \
+  "$(misuse twenty-twenty-five)"
+
 finish

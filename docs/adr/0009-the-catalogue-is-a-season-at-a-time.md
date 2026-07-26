@@ -51,7 +51,11 @@ the second run says so.
   reason `backfill` has one — the entrypoint that reads `ROLE` is the season-wide service
   behaviour, and both commands override it.
 - **Results and starting grids are still unwritten.** They are the other half of upstream's
-  `scrape-latest`, they are not identity, and no command here runs them yet.
+  `scrape-latest`, they are not identity, and no command here runs them. They are also not one
+  thing: the starting grid is the only source for #12's position-change column, and picking
+  between that scrape and deriving the slot from `position` is #12's to do. Session results have
+  no consumer in v1 at all, so nothing is tracking them — the Timing screen shows a Session
+  running, not a Session classified.
 
 ## Revisit when
 

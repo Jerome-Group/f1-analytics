@@ -142,4 +142,130 @@ assert_equals "the leader's Gap and Interval are absent, not zero" \
 assert_equals "an absent field is missing from the object, never present and holding nothing" \
   "code number position team" "$(keys_of 81 <<<"$mapped")"
 
+# --- The lap-time trend and the lap count (#16) -----------------------------------------------
+# The laps stream is per-lap and already read here (#35), so the recent window the sparkline draws and
+# the count of laps run are built from it. Fed straight in: a whole-Session recording has no lap the
+# feed skipped and no lap still on the road, and both are exactly what the model has to drop.
+
+# A Driver's recent laps read as "completed=<n> recent=<numbers> keys=<the fields each lap carries>".
+laps_of() {
+  python3 -c '
+import json, sys
+
+number = int(sys.argv[1])
+driver = next(d for d in json.load(sys.stdin) if d["number"] == number)
+recent = driver.get("recentLaps", [])
+print(
+    "completed=" + str(driver.get("lapsCompleted", "-")),
+    "recent=" + ",".join(str(lap["number"]) for lap in recent),
+    "keys=" + "|".join(sorted({key for lap in recent for key in lap})),
+)
+' "$1"
+}
+
+# Fifteen laps run, but the feed never sent lap 8 and lap 11 was still on the road when it was read
+# (a null duration). Both are absences the model drops: neither counts as completed, and neither is a
+# point in the window — the window keeps its width by lap number, so their gaps are the sparkline's.
+laps="$(mapping <<'JSON'
+{
+  "drivers": [{ "driver_number": 4, "name_acronym": "NOR", "team_name": "McLaren" }],
+  "laps": [
+    { "driver_number": 4, "lap_number": 1, "lap_duration": 80.100 },
+    { "driver_number": 4, "lap_number": 2, "lap_duration": 79.900 },
+    { "driver_number": 4, "lap_number": 3, "lap_duration": 79.800 },
+    { "driver_number": 4, "lap_number": 4, "lap_duration": 79.700 },
+    { "driver_number": 4, "lap_number": 5, "lap_duration": 79.600 },
+    { "driver_number": 4, "lap_number": 6, "lap_duration": 79.500 },
+    { "driver_number": 4, "lap_number": 7, "lap_duration": 79.400 },
+    { "driver_number": 4, "lap_number": 9, "lap_duration": 79.300 },
+    { "driver_number": 4, "lap_number": 10, "lap_duration": 79.200 },
+    { "driver_number": 4, "lap_number": 11, "lap_duration": null },
+    { "driver_number": 4, "lap_number": 12, "lap_duration": 79.100 },
+    { "driver_number": 4, "lap_number": 13, "lap_duration": 79.000 },
+    { "driver_number": 4, "lap_number": 14, "lap_duration": 78.900 },
+    { "driver_number": 4, "lap_number": 15, "lap_duration": 78.800 }
+  ]
+}
+JSON
+)"
+
+# Thirteen laps completed of fifteen numbered — laps 8 and 11 are not among them. The window is the last
+# twelve lap *numbers* (4 through 15), so it drops laps 8 and 11 as holes rather than pulling laps 1–3
+# in to keep the count, and each lap carries only the number and the time the adapter has for it.
+assert_equals "the lap-time window is by lap number, dropping the laps the feed did not complete" \
+  "completed=13 recent=4,5,6,7,9,10,12,13,14,15 keys=number|time" \
+  "$(laps_of 4 <<<"$laps")"
+
+# --- The Gap and tyre-age each lap ran on (#16) -----------------------------------------------
+# The other two trends the sparklines draw. A whole-Session recording cannot pin either — its laps
+# are dated but its intervals are reduced to one reading per Driver, and no lap of it was ever run a
+# lap down — so both are fed straight in here, with times chosen to make each boundary land.
+
+# Each window lap's Gap and tyre age, as `lap gap tyreAge`, absent shown as `-`.
+per_lap() {
+  python3 -c '
+import json, sys
+
+driver = next(d for d in json.load(sys.stdin) if d["number"] == int(sys.argv[1]))
+for lap in driver.get("recentLaps", []):
+    print(lap["number"], lap.get("gap", "-"), lap.get("tyreAge", "-"))
+' "$1"
+}
+
+# The current set, as `compound age stint stintLaps pitStops`.
+tyre_of() {
+  python3 -c '
+import json, sys
+
+driver = next(d for d in json.load(sys.stdin) if d["number"] == int(sys.argv[1]))
+tyre = driver.get("tyre", {})
+print(tyre.get("compound", "-"), tyre.get("ageInLaps", "-"),
+      driver.get("stint", "-"), driver.get("stintLaps", "-"), driver.get("pitStops", "-"))
+' "$1"
+}
+
+# NOR three laps into a Stint, on a Medium set fitted with two laps already on it. The intervals are a
+# series, not one reading: lap 4 finishes at 00:01:20 and reads the 00:01:00 Gap, lap 5 finishes at
+# 00:02:40 and reads the 00:02:00 Gap, and by lap 6 the feed has him a lap down — which is no duration
+# to plot, so that lap carries a tyre age but no Gap, exactly as a lap down carries none in the model.
+trends="$(mapping <<'JSON'
+{
+  "drivers": [{ "driver_number": 4, "name_acronym": "NOR", "team_name": "McLaren" }],
+  "intervals": [
+    { "driver_number": 4, "date": "2025-01-01T00:01:00Z", "gap_to_leader": 5.0, "interval": 1.0 },
+    { "driver_number": 4, "date": "2025-01-01T00:02:00Z", "gap_to_leader": 4.0, "interval": 1.0 },
+    { "driver_number": 4, "date": "2025-01-01T00:03:30Z", "gap_to_leader": "+1 LAP", "interval": "+1 LAP" }
+  ],
+  "laps": [
+    { "driver_number": 4, "lap_number": 4, "lap_duration": 80, "date_start": "2025-01-01T00:00:00Z" },
+    { "driver_number": 4, "lap_number": 5, "lap_duration": 80, "date_start": "2025-01-01T00:01:20Z" },
+    { "driver_number": 4, "lap_number": 6, "lap_duration": 80, "date_start": "2025-01-01T00:02:40Z" }
+  ],
+  "stints": [
+    { "driver_number": 4, "stint_number": 1, "lap_start": 1, "lap_end": 3, "compound": "SOFT", "tyre_age_at_start": 0 },
+    { "driver_number": 4, "stint_number": 2, "lap_start": 4, "lap_end": 6, "compound": "MEDIUM", "tyre_age_at_start": 2 }
+  ]
+}
+JSON
+)"
+
+# The Gap is the separation that stood when the lap ended, in millis; the tyre age climbs with the
+# Stint from the two laps the set was fitted carrying; and the lap the feed had a lap down carries its
+# age but no Gap — a break in that trend, never an invented value.
+assert_equals "each lap carries the Gap that stood when it ended and the tyre age it ran on" \
+  "$(
+    cat <<'EOF'
+4 5000 2
+5 4000 3
+6 - 4
+EOF
+  )" \
+  "$(per_lap 4 <<<"$trends")"
+
+# The badge is the set covering the latest completed lap: the Medium of Stint two, four laps of age on
+# it against three run this Stint — the scrubbed-set distinction #11 keeps — and one stop to reach it.
+assert_equals "the current tyre, its age, Stint and pit count come off the Stint covering the last lap" \
+  "medium 4 2 3 1" \
+  "$(tyre_of 4 <<<"$trends")"
+
 finish

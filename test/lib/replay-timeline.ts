@@ -28,6 +28,7 @@ const timeline = timelineFrom(
   input.position ?? [],
   input.intervals ?? [],
   input.laps ?? [],
+  input.stints ?? [],
 );
 
 // `end` and `start` are printed as offsets from `start`, so the assertions read in Session-relative

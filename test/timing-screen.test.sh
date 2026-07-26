@@ -521,4 +521,149 @@ assert_equals "a Driver who retires mid-Session transitions rather than freezing
       "$(row_states < <(a_screen "$gone" | render) | awk '{print $1}')"
   )"
 
+# --- The per-lap sparklines (#16) -------------------------------------------------------------
+#
+# Three trends per row and no more: recent lap times, the Gap over recent laps, and pace against the
+# age of the current set. A fourth would mean something per-second had been drawn for all twenty, and
+# that is precisely the cost the frequency tiering exists to avoid, so it is asserted absent.
+
+# Every trend cell of a row read as one token: a drawn sparkline as "runs<N>/miss<M>/<datum|flat>",
+# a cell that says there is not yet a trend as "absent", keyed by which trend it is. The three are
+# told apart by the aria-label a viewer's screen reader would read, never by position, so a trend
+# drawn in the wrong column reads as being in the wrong column.
+trends() {
+  python3 -c '
+import re, sys
+
+NAMED = {
+    "Lap times, recent laps": "lap",
+    "Gap to leader, recent laps": "gap",
+    "Pace against tyre age": "deg",
+}
+
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    drawn = {}
+    for svg in re.finditer(r"<svg class=\"sparkline\"[^>]*aria-label=\"([^\"]+)\">(.*?)</svg>", row, re.S):
+        key = NAMED.get(svg.group(1), svg.group(1))
+        body = svg.group(2)
+        runs = len(re.findall(r"<polyline", body))
+        miss = len(re.findall(r"sparkline__missing", body))
+        datum = "datum" if "sparkline__datum" in body else "flat"
+        drawn[key] = f"{key}:runs{runs}/miss{miss}/{datum}"
+    absent = len(re.findall(r"sparkline-absent", row))
+    order = [drawn[k] for k in ("gap", "lap", "deg") if k in drawn]
+    if absent:
+        order.append(f"absent{absent}")
+    print(" ".join(order))
+'
+}
+
+# Built here on purpose so each case is unmissable. VER runs four unbroken laps, so all three trends
+# draw as a single run, the lap-time and Gap trends against their own best as a dotted datum. LEC is
+# missing laps 5 and 6 mid-window — the feed never sent them — so every trend breaks into two runs
+# with the absence drawn as a stub, never a line sloped across it. HAM has completed every lap but
+# was a lap down for lap 5 in the middle of the window, so the Gap trend breaks across it where the
+# lap-time trend runs straight through. RUS pitted mid-window, so its window spans two Stints. SAI has
+# a single lap, which is not a trend at all.
+spark_field='[
+  {"number":1,"code":"VER","position":1,"bestLap":88000,"lapsCompleted":6,
+   "recentLaps":[
+     {"number":3,"time":89117,"gap":0,"tyreAge":3,"stint":1},
+     {"number":4,"time":89663,"gap":1200,"tyreAge":4,"stint":1},
+     {"number":5,"time":89880,"gap":2400,"tyreAge":5,"stint":1},
+     {"number":6,"time":90100,"gap":3600,"tyreAge":6,"stint":1}]},
+  {"number":16,"code":"LEC","position":2,"bestLap":88500,"lapsCompleted":8,
+   "recentLaps":[
+     {"number":3,"time":89200,"gap":1000,"tyreAge":3,"stint":1},
+     {"number":4,"time":89400,"gap":2000,"tyreAge":4,"stint":1},
+     {"number":7,"time":90800,"gap":5000,"tyreAge":7,"stint":1},
+     {"number":8,"time":90900,"gap":5500,"tyreAge":8,"stint":1}]},
+  {"number":44,"code":"HAM","position":3,"bestLap":88900,"lapsCompleted":6,
+   "recentLaps":[
+     {"number":3,"time":89300,"gap":1500,"stint":1},
+     {"number":4,"time":89500,"gap":2500,"stint":1},
+     {"number":5,"time":91000,"stint":1},
+     {"number":6,"time":91200,"gap":4000,"stint":1}]},
+  {"number":63,"code":"RUS","position":4,"bestLap":88000,"lapsCompleted":8,
+   "recentLaps":[
+     {"number":5,"time":90000,"gap":5000,"tyreAge":18,"stint":1},
+     {"number":6,"time":90200,"gap":5200,"tyreAge":19,"stint":1},
+     {"number":7,"time":88900,"gap":3000,"tyreAge":1,"stint":2},
+     {"number":8,"time":88950,"gap":3100,"tyreAge":2,"stint":2}]},
+  {"number":55,"code":"SAI","position":5,"bestLap":89000,"lapsCompleted":1,
+   "recentLaps":[{"number":6,"time":89000,"gap":4000,"tyreAge":6,"stint":1}]}
+]'
+
+spark_screen="$(a_screen "$spark_field" | render)"
+
+# The three trends, in the order they sit on the row, and nothing else drawn as a sparkline. VER's are
+# unbroken; LEC's each break across the two laps the feed never sent; HAM's Gap breaks where the lap
+# trend holds, because a lap down carries no Gap; RUS draws its tyre-age trend over the current Stint
+# alone — the two laps of the older set are left out, so it is one run of two rather than a run split
+# across the pit (which is how the earlier set's leaking in would read); SAI has none, so all say so.
+assert_equals "each row draws the three per-lap trends, breaking across missing laps, and no more" \
+  "$(
+    cat <<'EOF'
+gap:runs1/miss0/datum lap:runs1/miss0/datum deg:runs1/miss0/flat
+gap:runs2/miss1/datum lap:runs2/miss1/datum deg:runs2/miss1/flat
+gap:runs2/miss1/datum lap:runs1/miss0/datum absent1
+gap:runs1/miss0/datum lap:runs1/miss0/datum deg:runs1/miss0/flat
+absent3
+EOF
+  )" \
+  "$(trends <<<"$spark_screen")"
+
+# The one the ticket turns on: a lap the feed never sent is a gap the width of that lap, never a value
+# invented for it. LEC's window jumps from lap 4 to lap 7, so the stub spans exactly laps 5 and 6, and
+# the run does not slope through them.
+assert_contains "a missing lap is drawn as a stub on the floor, not interpolated across" \
+  '<path class="sparkline__missing"' \
+  "$spark_screen"
+
+# Nothing on the per-second tier is sparklined: Interval is the per-second separation and stays a
+# figure, never a trend. VER, who has data for every trend, draws exactly three sparklines and no
+# fourth — a fourth would be something per-second drawn for all twenty, the cost the tiering avoids.
+ver_row="$(python3 -c '
+import re, sys
+print(re.search(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S).group(0))
+' <<<"$spark_screen")"
+
+assert_equals "the Driver with the fullest data draws three sparklines, not a fourth" \
+  "3" "$(grep -o '<svg class="sparkline"' <<<"$ver_row" | wc -l | tr -d ' ')"
+
+# --- The row is the whole track list ----------------------------------------------------------
+#
+# Twenty-five columns, the same list the design system lays the header and every row against
+# (docs/adr/0010). A renderer a column short draws every column right of the gap in the wrong place,
+# and the sparklines and lap count are the last of the twenty-five to be filled (#16).
+
+cells_in_a_row() {
+  python3 -c '
+import re, sys
+from html.parser import HTMLParser
+
+class Columns(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.depth = 0
+        self.columns = 0
+
+    def handle_starttag(self, tag, attrs):
+        if self.depth == 1:
+            self.columns += 1
+        self.depth += 1
+
+    def handle_endtag(self, tag):
+        self.depth -= 1
+
+row = re.search(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S).group(0)
+counter = Columns()
+counter.feed(row)
+print(counter.columns)
+'
+}
+
+assert_equals "a row is twenty-five columns, the whole track list the design system lays out" \
+  "25" "$(cells_in_a_row <<<"$spark_screen")"
+
 finish

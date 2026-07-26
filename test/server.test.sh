@@ -119,8 +119,9 @@ EOF
   )" \
   "$(as_a_timing_screen <<<"$whole")"
 
-assert_equals "the Drivers carry identity, place, separation and lap times, and nothing else" \
-  "bestLap code gap interval lastLap number position team" "$(keys_present <<<"$whole")"
+assert_equals "the Drivers carry identity, place, separation, lap times, the recent-lap trend and tyres, and nothing else" \
+  "bestLap code gap interval lapsCompleted lastLap number pitStops position recentLaps stint stintLaps team tyre" \
+  "$(keys_present <<<"$whole")"
 
 # VER, running third, is behind two cars: further from the leader than from the one immediately
 # ahead. That the two numbers differ is what makes this a transposition guard rather than a
@@ -137,7 +138,60 @@ assert_equals "the leader has no Gap or Interval, but does have lap times" \
   "$(figures_of 81 <<<"$whole")"
 
 assert_equals "and so the leader carries no Gap or Interval key at all" \
-  "bestLap code lastLap number position team" "$(keys_of 81 <<<"$whole")"
+  "bestLap code lapsCompleted lastLap number pitStops position recentLaps stint stintLaps team tyre" \
+  "$(keys_of 81 <<<"$whole")"
+
+# The sparkline trends ride the whole path too (#16), and the window is a window: VER has run twenty
+# laps by the end of the five minutes, but only the last twelve are kept, oldest first, each carrying
+# its time and the tyre age it ran on — the pace-against-age trend, off the Stints stream. That the
+# count of laps run and the window disagree is the point: a Driver an hour in still draws a dozen.
+#
+# The Gap on each lap is absent here on purpose, not for want of wiring: the recording keeps only the
+# latest intervals reading per Driver (bin/fixture), and these laps completed before it, so there is
+# no separation to place on them. Against the live stores, where the whole intervals series is read,
+# the Gap trend fills — which is why its wiring is pinned at the Adapter seam, on records timed to
+# overlap (adapter.test.sh), rather than here.
+trend_of() {
+  python3 -c '
+import json, sys
+
+driver = next(d for d in json.load(sys.stdin)["state"]["drivers"] if d["number"] == int(sys.argv[1]))
+recent = driver.get("recentLaps", [])
+print(
+    "completed=" + str(driver.get("lapsCompleted", "-")),
+    "window=" + str(len(recent)),
+    "laps=" + ",".join(str(lap["number"]) for lap in recent),
+    "keys=" + "|".join(sorted({key for lap in recent for key in lap})),
+)
+' "$1"
+}
+
+assert_equals "the recent-lap trend is a window off the real recording — the last twelve, not all twenty" \
+  "completed=20 window=12 laps=9,10,11,12,13,14,15,16,17,18,19,20 keys=number|stint|time|tyreAge" \
+  "$(trend_of 1 <<<"$whole")"
+
+# The tyre badge and its age ride the path too (#11, #16): VER is on the Soft it started on, twenty
+# laps into the Session and so nineteen laps of age on a set fitted fresh, still its first Stint and
+# no stops made. Read off the Stints stream, the current set being the one covering the latest lap.
+tyre_of() {
+  python3 -c '
+import json, sys
+
+driver = next(d for d in json.load(sys.stdin)["state"]["drivers"] if d["number"] == int(sys.argv[1]))
+tyre = driver.get("tyre", {})
+print(
+    "compound=" + str(tyre.get("compound", "-")),
+    "age=" + str(tyre.get("ageInLaps", "-")),
+    "stint=" + str(driver.get("stint", "-")),
+    "stintLaps=" + str(driver.get("stintLaps", "-")),
+    "pitStops=" + str(driver.get("pitStops", "-")),
+)
+' "$1"
+}
+
+assert_equals "the tyre, its age, the Stint and the pit count arrive off the real recording's Stints" \
+  "compound=soft age=19 stint=1 stintLaps=20 pitStops=0" \
+  "$(tyre_of 1 <<<"$whole")"
 
 # The fixture is worth having only if it says the same thing every time it is played. Two runs
 # of the whole path, compared byte for byte.

@@ -75,9 +75,28 @@ export interface LapRecord {
   lap_duration: number | null;
   /**
    * When the lap began, ISO 8601, so a Replay can know the wall-clock moment it *completed*
-   * (`date_start` plus `lap_duration`) and count it only once the clock has passed that (#15). A
-   * whole-Session read never needs it — every lap is complete by the end — so it is absent from the
-   * recordings cut for those tests, and the timeline treats an absent one as always-already run.
+   * (`date_start` plus `lap_duration`) and count it only once the clock has passed that (#15) — and
+   * so the Gap trend can read the separation that stood when the lap ended (#16). Absent in the
+   * recordings cut for a whole-Session read, which the timeline treats as always-already run.
    */
   date_start?: string | null;
+}
+
+/**
+ * One Stint, from `/v1/stints`: a continuous run on one set of tyres (CONTEXT.md, "Stint"). Discrete
+ * like laps, and read for the compound and the tyre's age — `tyre_age_at_start` is the laps already
+ * on the rubber when the set was fitted, so a set fitted scrubbed reads older than the Stint is long,
+ * which is the distinction the Timing screen keeps (#11) and the tyre-age trend plots against (#16).
+ */
+export interface StintRecord {
+  driver_number: number;
+  /** One-based, in the order the Stints run: the one covering the last completed lap is the current. */
+  stint_number: number;
+  /** The first and last lap of the Stint, one-based and inclusive — which laps ran on this set. */
+  lap_start: number;
+  lap_end: number;
+  /** The compound, upstream's uppercase — `SOFT`, `MEDIUM`, `HARD`, `INTERMEDIATE`, `WET`. */
+  compound: string | null;
+  /** The laps already on the set when it was fitted: nought for a fresh set, more for a scrubbed one. */
+  tyre_age_at_start: number | null;
 }

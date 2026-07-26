@@ -48,6 +48,43 @@ print(message["type"], message["state"]["sessionKey"])
 '
 }
 
+# One Driver'"'"'s timing figures, normalised to `field=form:value`, absent shown as `-`. Gap and
+# Interval are printed in the order the Driver holds them, so a transposition across the whole path
+# — feed to Adapter to socket — would show here as plainly as it does at seam 2.
+figures_of() {
+  python3 -c '
+import json, sys
+
+number = int(sys.argv[1])
+driver = next(d for d in json.load(sys.stdin)["state"]["drivers"] if d["number"] == number)
+
+
+def separation(value):
+    if value is None:
+        return "-"
+    (kind, amount), = value.items()
+    return f"{kind}:{amount}"
+
+
+print(
+    "gap=" + separation(driver.get("gap")),
+    "interval=" + separation(driver.get("interval")),
+    "lastLap=" + str(driver.get("lastLap", "-")),
+    "bestLap=" + str(driver.get("bestLap", "-")),
+)
+' "$1"
+}
+
+keys_of() {
+  python3 -c '
+import json, sys
+
+number = int(sys.argv[1])
+driver = next(d for d in json.load(sys.stdin)["state"]["drivers"] if d["number"] == number)
+print(" ".join(sorted(driver)))
+' "$1"
+}
+
 # --- Five minutes of a finished Session ----------------------------------------------------
 
 whole="$(replay 2025-dutch-race)"
@@ -82,8 +119,25 @@ EOF
   )" \
   "$(as_a_timing_screen <<<"$whole")"
 
-assert_equals "a Driver carries the four things this Session state is, and nothing else" \
-  "code number position team" "$(keys_present <<<"$whole")"
+assert_equals "the Drivers carry identity, place, separation and lap times, and nothing else" \
+  "bestLap code gap interval lastLap number position team" "$(keys_present <<<"$whole")"
+
+# VER, running third, is behind two cars: further from the leader than from the one immediately
+# ahead. That the two numbers differ is what makes this a transposition guard rather than a
+# coincidence — a swap would read `gap=millis:13279 interval=millis:16844`. The last lap is not the
+# best, so the best is genuinely the Session'"'"'s and not merely the most recent.
+assert_equals "a running Driver's real Gap, Interval and lap times arrive off the Replay, not swapped" \
+  "gap=millis:16844 interval=millis:13279 lastLap=76710 bestLap=75648" \
+  "$(figures_of 1 <<<"$whole")"
+
+# The leader is behind no one, so Gap and Interval are absent for them — but they have lapped the
+# circuit, so their lap times are not. Absence and presence in the same Driver, off one recording.
+assert_equals "the leader has no Gap or Interval, but does have lap times" \
+  "gap=- interval=- lastLap=75573 bestLap=74901" \
+  "$(figures_of 81 <<<"$whole")"
+
+assert_equals "and so the leader carries no Gap or Interval key at all" \
+  "bestLap code lastLap number position team" "$(keys_of 81 <<<"$whole")"
 
 # The fixture is worth having only if it says the same thing every time it is played. Two runs
 # of the whole path, compared byte for byte.
@@ -93,7 +147,7 @@ assert_equals "the recording replays identically twice" "$whole" "$(replay 2025-
 
 gated="$(replay 2025-dutch-race-gated)"
 
-assert_equals "a position the feed withheld is absent, not zero and not stale" \
+assert_equals "streams the feed withheld are absent, not zero and not stale" \
   "code number team" "$(keys_present <<<"$gated")"
 
 assert_equals "an unplaced field still arrives whole, ordered by Driver number" \

@@ -219,6 +219,21 @@ print(" ".join(order))
 '
 }
 
+# The two seams meet on these columns too, not only on identity: the state seam 1 now produces off
+# the Replay — Gap, Interval and lap times populated — is a valid seam 2 input, and the values it
+# carries are the values drawn. Read off the real recording, so the leader's absent separation and
+# VER's genuinely-different Gap and Interval (a swap would read `+13.279 +16.844`) survive the whole
+# path, feed to Adapter to socket to screen.
+assert_equals "the real Gap, Interval and lap times seam 1 sends are the ones seam 2 draws" \
+  "$(
+    cat <<'EOF'
+- - 1:15.573 1:14.901
++3.571 +3.571 1:15.804 1:14.708
++16.844 +13.279 1:16.710 1:15.648
+EOF
+  )" \
+  "$(columns <<<"$whole" | sed -n '1,3p')"
+
 field='[
   {"number":81,"code":"PIA","team":"McLaren","position":1,"lastLap":89117,"bestLap":88402},
   {"number":1,"code":"VER","team":"Red Bull","position":2,"gap":{"millis":2418},"interval":{"millis":2418},"lastLap":89663,"bestLap":89402},

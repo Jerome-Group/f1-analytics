@@ -120,10 +120,31 @@ assert_equals "a position the feed withheld reads as absent, never as a nought" 
 assert_equals "every row on the screen has the same cells" "1" \
   "$(python3 -c '
 import re, sys
+from html.parser import HTMLParser
 
-screen = sys.stdin.read()
-rows = re.findall(r"<div class=\"driver-row\".*?</div>", screen, re.S)
-print(len({len(re.findall(r"<span\b", row)) for row in rows}))
+# A column is a direct child of the row, whatever it holds — a bare cell, a chip inside a cell, a
+# tyre inside a cell. Counting every <span> would call a chip an extra column; counting the direct
+# children counts columns, which is the track list every row has to lay out against.
+class Columns(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.depth = 0
+        self.columns = 0
+
+    def handle_starttag(self, tag, attrs):
+        if self.depth == 1:
+            self.columns += 1
+        self.depth += 1
+
+    def handle_endtag(self, tag):
+        self.depth -= 1
+
+widths = set()
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    counter = Columns()
+    counter.feed(row)
+    widths.add(counter.columns)
+print(len(widths))
 ' <<<"$whole")"
 
 # --- Liveries come from the design system, and are never nothing -------------------------------
@@ -243,5 +264,246 @@ assert_equals "Gap sits left of Interval, in the order the header names the colu
 assert_contains "the leader's Gap is the absent mark, not a zero and not an empty cell" \
   '<span class="gap cell--figure absent">&mdash;</span>' \
   "$screen"
+
+# --- Sector times with purple, green and yellow status (#10) ----------------------------------
+
+# The three sectors' status read left to right off each row — purple/green/yellow by another name,
+# and "absent" for a sector the current lap has not set. Keyed off data-status, which is what the
+# colour is drawn from, so a sector drawn the wrong colour reads as the wrong status here.
+sector_status() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    print(" ".join(re.findall(r"<span class=\"sector-time\" data-status=\"([a-z-]+)\"", row)))
+'
+}
+
+# The personal best beside each sector, and the speed trap that ends the row. A value the feed gave,
+# or "-" for one it did not.
+sector_bests() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    cells = re.findall(r"<span class=\"cell--figure-secondary( absent)?\"[^>]*>([^<]*)</span>", row)
+    print(" ".join("-" if absent else text for absent, text in cells))
+'
+}
+
+speed_trap() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    found = re.search(r"<span class=\"cell--figure speed-trap( absent)?\"[^>]*>([^<]*)</span>", row)
+    print("." if found is None else ("-" if found.group(1) else found.group(2)))
+'
+}
+
+# A field built here on purpose: the three statuses have to differ within one Driver so a colour
+# drawn under the wrong sector shows, one Driver has a sector the current lap has not reached, and
+# one has set nothing at all. A recording is a place where those might happen to coincide.
+sector_field='[
+  {"number":81,"code":"PIA","position":1,
+   "sectors":[{"millis":28402,"status":"personal-best"},{"millis":31114,"status":"session-best"},{"millis":29601,"status":"set"}],
+   "sectorBests":[28402,31114,29480],"speedTrap":327},
+  {"number":16,"code":"LEC","position":8,
+   "sectors":[{"millis":33104,"status":"set"},{"millis":36550,"status":"set"}],
+   "sectorBests":[28702,31402,29776]},
+  {"number":55,"code":"SAI","position":20}
+]'
+
+sectors_screen="$(a_screen "$sector_field" | render)"
+
+# Purple for Session best, green for personal best, yellow otherwise, all three per Driver — and a
+# sector the current lap has not set reading as absent, never as the lap before's time.
+assert_equals "each sector is coloured to its status, and an unset sector reads as absent" \
+  "$(
+    cat <<'EOF'
+personal-best session-best set
+set set absent
+absent absent absent
+EOF
+  )" \
+  "$(sector_status <<<"$sectors_screen")"
+
+assert_equals "the Driver's own best sits beside each sector, absent until they have set one" \
+  "$(
+    cat <<'EOF'
+28.402 31.114 29.480
+28.702 31.402 29.776
+- - -
+EOF
+  )" \
+  "$(sector_bests <<<"$sectors_screen")"
+
+assert_equals "the speed trap is shown where the feed provided it, absent where it did not" \
+  "$(
+    cat <<'EOF'
+327
+-
+-
+EOF
+  )" \
+  "$(speed_trap <<<"$sectors_screen")"
+
+# --- Tyres: compound, tyre age, Stint and pit count (#11) -------------------------------------
+
+# Each row's strategy read across: the compound (which carries its own colour), the tyre's age with
+# a "+" when the set was fitted with laps already on it, the Stint number and the pit count. A "-"
+# for anything the feed has not sent.
+tyres() {
+  python3 -c '
+import re, sys
+
+def figure(row, column):
+    found = re.search(rf"<span class=\"cell--figure {column}( absent)?\"[^>]*>([^<]*)</span>", row)
+    if found is None:
+        return "."
+    return "-" if found.group(1) else found.group(2)
+
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    compound = re.search(r"data-compound=\"([a-z]+)\"", row).group(1)
+    age = re.search(r"class=\"cell--figure tyre-age( absent)?\"(?P<used> data-fitted-used=\"true\")?[^>]*>([^<]*)", row)
+    age_text = "-" if age.group(1) else age.group(3) + ("+" if age.group("used") else "")
+    print(compound, age_text, figure(row, "stint"), figure(row, "pit-stops"))
+'
+}
+
+# Built here on purpose: VER is on a set with twenty-one laps on it but only eight run this Stint —
+# a set fitted scrubbed, the case the ticket names — so tyre age and Stint laps genuinely differ and
+# conflating them would show. SAI is on nothing the feed has named. PIA's age equals its Stint laps,
+# so a fresh set carries no "fitted used" mark.
+tyre_field='[
+  {"number":81,"code":"PIA","position":1,"tyre":{"compound":"medium","ageInLaps":14},"stintLaps":14,"stint":2,"pitStops":1},
+  {"number":1,"code":"VER","position":2,"tyre":{"compound":"hard","ageInLaps":21},"stintLaps":8,"stint":2,"pitStops":1},
+  {"number":16,"code":"LEC","position":3,"tyre":{"compound":"soft","ageInLaps":1},"stintLaps":1,"stint":3,"pitStops":2},
+  {"number":55,"code":"SAI","position":20}
+]'
+
+tyre_screen="$(a_screen "$tyre_field" | render)"
+
+# Compound, tyre age, Stint and pit count per Driver — and the age of a scrubbed set marked apart
+# from the laps run in its Stint, which is the distinction this ticket exists to keep.
+assert_equals "compound, tyre age, Stint and pit count render, and a fitted-used set is marked" \
+  "$(
+    cat <<'EOF'
+medium 14 2 1
+hard 21+ 2 1
+soft 1 3 2
+unknown - - -
+EOF
+  )" \
+  "$(tyres <<<"$tyre_screen")"
+
+# The distinction stated once more, on its own, so a future change that starts drawing tyre age as
+# Stint laps fails here rather than passing quietly: VER's twenty-one is the rubber's age, not the
+# eight laps this Stint has run.
+assert_contains "a tyre fitted with laps already on it shows its true age, marked as fitted used" \
+  '<span class="cell--figure tyre-age" data-fitted-used="true">21</span>' \
+  "$tyre_screen"
+
+# A compound change mid-Session is a new Session state rendered, not a reload: the screen is a
+# function of the state it is given, so the same Driver on a new compound simply draws the new one.
+before='[{"number":16,"code":"LEC","position":3,"tyre":{"compound":"medium","ageInLaps":18},"stintLaps":18,"stint":1,"pitStops":0}]'
+after='[{"number":16,"code":"LEC","position":3,"tyre":{"compound":"soft","ageInLaps":0},"stintLaps":0,"stint":2,"pitStops":1}]'
+
+assert_equals "a compound change is reflected on the next state, without a reload" \
+  "medium soft" \
+  "$(
+    printf '%s %s' \
+      "$(tyres < <(a_screen "$before" | render) | awk '{print $1}')" \
+      "$(tyres < <(a_screen "$after" | render) | awk '{print $1}')"
+  )"
+
+# --- Driver state and position change against the grid (#12) ----------------------------------
+
+# Each row's state read two ways: the row's own data-state, which carries the whole treatment, and
+# the worded chip, which repeats it — "-" for on track, the state that wears no chip.
+row_states() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    state = re.search(r"<div class=\"driver-row\" data-state=\"([a-z-]+)\"", row).group(1)
+    chip = re.search(r"<span class=\"state-chip\" data-state=\"[a-z-]+\">([^<]*)</span>", row)
+    print(state, chip.group(1) if chip else "-")
+'
+}
+
+# The change against the grid slot, with its direction: the direction the colour is drawn from and
+# the places themselves, with the level mark read as ".".
+position_change() {
+  python3 -c '
+import re, sys
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    found = re.search(r"<span class=\"position-change\" data-direction=\"([a-z]+)\">([^<]*)</span>", row)
+    print(found.group(1), found.group(2).replace("&middot;", ".").replace("&minus;", "-"))
+'
+}
+
+# Built here on purpose: one Driver in each state, and grid slots chosen so the change is a gain, a
+# loss and level — SAI has retired and the feed no longer places them, so there is no change to draw.
+state_field='[
+  {"number":81,"code":"PIA","position":1,"gridPosition":1},
+  {"number":1,"code":"VER","position":2,"gridPosition":3},
+  {"number":16,"code":"LEC","position":8,"gridPosition":5,"state":"out-lap"},
+  {"number":14,"code":"ALO","position":11,"gridPosition":6,"state":"pit-lane"},
+  {"number":63,"code":"RUS","position":12,"gridPosition":5,"state":"in-box"},
+  {"number":55,"code":"SAI","gridPosition":9,"state":"retired"}
+]'
+
+state_screen="$(a_screen "$state_field" | render)"
+
+# Every state the spec names is distinguishable: on track quietly, the four exceptions chipped, so a
+# stationary car in the box is never read as a slow one on track.
+assert_equals "each Driver state is drawn distinctly, on track carrying no chip" \
+  "$(
+    cat <<'EOF'
+on-track -
+on-track -
+out-lap Out
+pit-lane Pit
+in-box Box
+retired Ret
+EOF
+  )" \
+  "$(row_states <<<"$state_screen")"
+
+# Position change against the grid, with direction: a gain, two column of losses, and the level mark
+# where there is no change to draw.
+assert_equals "position change is drawn against the grid slot, with its direction" \
+  "$(
+    cat <<'EOF'
+none .
+gain +1
+loss -3
+loss -5
+loss -7
+none .
+EOF
+  )" \
+  "$(position_change <<<"$state_screen")"
+
+# A retired Driver is unmistakable and does not read as merely slow: the row wears the retired state
+# and the feed no longer places them, so the position is the absent mark rather than a last-known
+# number that would read as a car still running, only slowly.
+assert_contains "a retired Driver's row is marked retired, not left looking slow" \
+  '<div class="driver-row" data-state="retired"' \
+  "$state_screen"
+
+assert_contains "a retired Driver is no longer placed, so their position reads as absent" \
+  '<span class="position absent">&mdash;</span>' \
+  "$state_screen"
+
+# A Driver who retires mid-Session transitions rather than freezing: the same Driver rendered from a
+# running state and then a retired one changes state, because the row is a function of the state.
+running='[{"number":55,"code":"SAI","position":9,"gridPosition":9}]'
+gone='[{"number":55,"code":"SAI","state":"retired","gridPosition":9}]'
+
+assert_equals "a Driver who retires mid-Session transitions rather than freezing in place" \
+  "on-track retired" \
+  "$(
+    printf '%s %s' \
+      "$(row_states < <(a_screen "$running" | render) | awk '{print $1}')" \
+      "$(row_states < <(a_screen "$gone" | render) | awk '{print $1}')"
+  )"
 
 finish

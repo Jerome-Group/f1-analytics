@@ -33,7 +33,10 @@ what `tsconfig.web.json` is for; the browser is given it with the types stripped
 past, so there is still nothing built.
 
 The runtime itself lives *outside* this repository, in `.runtime/` beside it on the same volume:
-the virtual machine, the Docker CLI's configuration, and the upstream checkout. The Archive is in
+the virtual machine, the Docker CLI's configuration, and the upstream checkout. Because the `bin/`
+wrappers point `COLIMA_HOME` and `DOCKER_CONFIG` there rather than at `~`, a bare `colima list` or
+`docker ps` sees nothing — an empty result is the query missing the wrapper, not the stack being
+down. `bin/compose ps` is the honest check (ADR-0004). The Archive is in
 `.archive/`, beside both — outside the runtime because it outlives any virtual machine, and
 outside the working tree because it is Formula 1's data. Nothing in either is committed, and
 nothing in either is on the internal disk.

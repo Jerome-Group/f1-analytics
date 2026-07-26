@@ -10,8 +10,19 @@
 // counts its cells to the last one it can fill and stops — the tracks after it stay empty, and
 // nothing is drawn that would have to claim a value the feed has not sent (story 38).
 
-import type { Driver, Separation, SessionState } from '../domain/index.ts';
+import type {
+  Compound,
+  Driver,
+  DriverState,
+  Sector,
+  SectorBests,
+  Sectors,
+  Separation,
+  SessionState,
+  Tyre,
+} from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
+import { escapeText } from './escape.ts';
 
 /** The markup inside the timing table: one row per Driver, and no row that is not a Driver. */
 export function timingScreen(state: SessionState): string {
@@ -19,27 +30,128 @@ export function timingScreen(state: SessionState): string {
 }
 
 function driverRow(driver: Driver): string {
+  // The row wears its state, so pit lane, box, out lap and retired change the whole row and not
+  // only a chip (#12). On track is the ordinary state and the default, drawn quietly.
+  const state = driver.state ?? 'on-track';
   return [
-    `<div class="driver-row" style="--team-colour: ${teamColour(driver.team)}">`,
+    `<div class="driver-row" data-state="${state}" style="--team-colour: ${teamColour(driver.team)}">`,
     figure('position', driver.position),
-    // Position change against the grid is #12. The cell is here because the row lays out against
-    // the whole track list: drop it and every column to its right moves one place left.
-    '<span class="cell"></span>',
+    positionChangeCell(driver.gridPosition, driver.position),
     '<span class="team-bar"></span>',
     figure('car-number', driver.number),
     `<span class="driver-name">${tla(driver.code)}</span>`,
-    // State chip is #13, the two trend sparklines are #11. Each is an empty cell for the same
-    // reason the position-change cell above is: the columns they hold have to stay held, or Gap,
-    // Interval, Last and Best all slide one place left of the header that names them.
-    '<span class="cell"></span>',
+    stateCell(state),
     gapCell('gap', driver.gap),
     '<span class="cell"></span>',
     gapCell('interval', driver.interval),
     lapCell('last-lap', driver.lastLap),
     '<span class="cell"></span>',
     lapCell('best-lap', driver.bestLap),
+    sectorCells(driver.sectors, driver.sectorBests),
+    figure('cell--figure speed-trap', driver.speedTrap),
+    // Strategy at a glance (#11): what they are on, how old it is, and how often they have stopped.
+    // The row ends at the pit count for now; the sparklines and lap count after it are later work.
+    tyreCell(driver.tyre),
+    tyreAgeCell(driver.tyre, driver.stintLaps),
+    figure('cell--figure stint', driver.stint),
+    figure('cell--figure pit-stops', driver.pitStops),
     '</div>',
   ].join('');
+}
+
+/**
+ * A Driver's change against their grid slot, with direction (#12) — what says who is having a good
+ * afternoon. Places gained is the grid slot minus the current position: a lower position than the
+ * slot is a gain. A Driver the feed has not placed, or has no grid slot for, has no change to draw
+ * and reads as level rather than as a spurious jump.
+ */
+function positionChangeCell(grid: number | undefined, position: number | undefined): string {
+  const level = '<span class="position-change" data-direction="none">&middot;</span>';
+  if (grid === undefined || position === undefined) return level;
+  const places = grid - position;
+  if (places === 0) return level;
+  if (places > 0) return `<span class="position-change" data-direction="gain">+${places}</span>`;
+  return `<span class="position-change" data-direction="loss">&minus;${-places}</span>`;
+}
+
+/** The worded chip for each state that is not on track. */
+const STATE_CHIP: Record<Exclude<DriverState, 'on-track'>, string> = {
+  'pit-lane': 'Pit',
+  'in-box': 'Box',
+  'out-lap': 'Out',
+  retired: 'Ret',
+};
+
+/**
+ * The state chip — for every state except on track, which is nineteen rows in twenty and carries no
+ * chip, so the screen keeps something to mark the exceptional state with (#12). The row's own
+ * data-state carries the rest of the treatment; this cell is only the worded chip that repeats it
+ * for anyone the row colour does not reach.
+ */
+function stateCell(state: DriverState): string {
+  if (state === 'on-track') return '<span class="cell"></span>';
+  return `<span class="cell"><span class="state-chip" data-state="${state}">${STATE_CHIP[state]}</span></span>`;
+}
+
+/**
+ * The three sectors of the lap in progress, each with the Driver's own best beside it. A sector
+ * not yet crossed this lap is absent — the dotted mark the design gives it — never the time from
+ * the lap before, which is the one thing this column must not do (story: "a sector not yet set
+ * reads as absent"). The personal best beside it persists across the lap boundary, so it can show
+ * even while the live sector is still absent.
+ */
+function sectorCells(sectors: Sectors | undefined, bests: SectorBests | undefined): string {
+  return [0, 1, 2].map((i) => sectorCell(sectors?.[i]) + sectorBestCell(bests?.[i])).join('');
+}
+
+/**
+ * One sector, coloured purple, green or yellow to a meaning everyone already knows (#10). The
+ * status is settled above the row against the whole field; this only draws the colour it is given,
+ * so the row never has to know what anyone else did.
+ */
+function sectorCell(sector: Sector | undefined): string {
+  if (sector === undefined) return '<span class="sector-time" data-status="absent">&mdash;</span>';
+  return `<span class="sector-time" data-status="${sector.status}">${clock(sector.millis)}</span>`;
+}
+
+/** The Driver's own best in one sector, drawn secondary beside the live time, or the absent mark. */
+function sectorBestCell(millis: number | undefined): string {
+  return millis === undefined
+    ? absent('cell--figure-secondary')
+    : `<span class="cell--figure-secondary">${clock(millis)}</span>`;
+}
+
+/** The compound letter drawn inside the tyre's ring — the sidewall marking, not a coloured dot. */
+const COMPOUND_LETTER: Record<Compound, string> = {
+  soft: 'S',
+  medium: 'M',
+  hard: 'H',
+  intermediate: 'I',
+  wet: 'W',
+};
+
+/**
+ * The tyre a Driver is on, drawn as its compound ring (#11). A set the feed has not named yet is
+ * the unknown ring rather than a blank cell, so an unknown compound reads as unknown and never as
+ * an empty seat.
+ */
+function tyreCell(tyre: Tyre | undefined): string {
+  const compound = tyre === undefined ? 'unknown' : tyre.compound;
+  const letter = tyre === undefined ? '?' : COMPOUND_LETTER[tyre.compound];
+  return `<span class="cell--centred"><span class="tyre-badge" data-compound="${compound}">${letter}</span></span>`;
+}
+
+/**
+ * The tyre's age in laps — and the mark that says it was fitted with laps already on it, which is
+ * true exactly when the rubber has turned more laps than the Stint has run. Age and Stint laps are
+ * two numbers on purpose (CONTEXT.md, "Stint"), and the superscript is what makes a scrubbed set
+ * legible without a second column.
+ */
+function tyreAgeCell(tyre: Tyre | undefined, stintLaps: number | undefined): string {
+  if (tyre === undefined) return absent('cell--figure tyre-age');
+  const fittedUsed = stintLaps !== undefined && tyre.ageInLaps > stintLaps;
+  const marker = fittedUsed ? ' data-fitted-used="true"' : '';
+  return `<span class="cell--figure tyre-age"${marker}>${tyre.ageInLaps}</span>`;
 }
 
 /**
@@ -85,7 +197,7 @@ function clock(millis: number): string {
 function tla(code: string | undefined): string {
   return code === undefined
     ? '<span class="driver-name__tla absent">&mdash;</span>'
-    : `<span class="driver-name__tla">${text(code)}</span>`;
+    : `<span class="driver-name__tla">${escapeText(code)}</span>`;
 }
 
 /** A number the feed gave, or the mark for one it did not. Never a nought standing in. */
@@ -94,15 +206,3 @@ function figure(column: string, value: number | undefined): string {
     ? absent(column)
     : `<span class="${column}">${value}</span>`;
 }
-
-/** Upstream's text, drawn as text. A driver code is not markup, whatever arrives in it. */
-function text(value: string): string {
-  return value.replace(/[&<>"]/g, (character) => ENTITIES[character] ?? character);
-}
-
-const ENTITIES: Record<string, string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-};

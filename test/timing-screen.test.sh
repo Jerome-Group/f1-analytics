@@ -324,4 +324,73 @@ EOF
   )" \
   "$(speed_trap <<<"$sectors_screen")"
 
+# --- Tyres: compound, tyre age, Stint and pit count (#11) -------------------------------------
+
+# Each row's strategy read across: the compound (which carries its own colour), the tyre's age with
+# a "+" when the set was fitted with laps already on it, the Stint number and the pit count. A "-"
+# for anything the feed has not sent.
+tyres() {
+  python3 -c '
+import re, sys
+
+def figure(row, column):
+    found = re.search(rf"<span class=\"cell--figure {column}( absent)?\"[^>]*>([^<]*)</span>", row)
+    if found is None:
+        return "."
+    return "-" if found.group(1) else found.group(2)
+
+for row in re.findall(r"<div class=\"driver-row\".*?</div>", sys.stdin.read(), re.S):
+    compound = re.search(r"data-compound=\"([a-z]+)\"", row).group(1)
+    age = re.search(r"class=\"cell--figure tyre-age( absent)?\"(?P<used> data-fitted-used=\"true\")?[^>]*>([^<]*)", row)
+    age_text = "-" if age.group(1) else age.group(3) + ("+" if age.group("used") else "")
+    print(compound, age_text, figure(row, "stint"), figure(row, "pit-stops"))
+'
+}
+
+# Built here on purpose: VER is on a set with twenty-one laps on it but only eight run this Stint —
+# a set fitted scrubbed, the case the ticket names — so tyre age and Stint laps genuinely differ and
+# conflating them would show. SAI is on nothing the feed has named. PIA's age equals its Stint laps,
+# so a fresh set carries no "fitted used" mark.
+tyre_field='[
+  {"number":81,"code":"PIA","position":1,"tyre":{"compound":"medium","ageInLaps":14},"stintLaps":14,"stint":2,"pitStops":1},
+  {"number":1,"code":"VER","position":2,"tyre":{"compound":"hard","ageInLaps":21},"stintLaps":8,"stint":2,"pitStops":1},
+  {"number":16,"code":"LEC","position":3,"tyre":{"compound":"soft","ageInLaps":1},"stintLaps":1,"stint":3,"pitStops":2},
+  {"number":55,"code":"SAI","position":20}
+]'
+
+tyre_screen="$(a_screen "$tyre_field" | render)"
+
+# Compound, tyre age, Stint and pit count per Driver — and the age of a scrubbed set marked apart
+# from the laps run in its Stint, which is the distinction this ticket exists to keep.
+assert_equals "compound, tyre age, Stint and pit count render, and a fitted-used set is marked" \
+  "$(
+    cat <<'EOF'
+medium 14 2 1
+hard 21+ 2 1
+soft 1 3 2
+unknown - - -
+EOF
+  )" \
+  "$(tyres <<<"$tyre_screen")"
+
+# The distinction stated once more, on its own, so a future change that starts drawing tyre age as
+# Stint laps fails here rather than passing quietly: VER's twenty-one is the rubber's age, not the
+# eight laps this Stint has run.
+assert_contains "a tyre fitted with laps already on it shows its true age, marked as fitted used" \
+  '<span class="cell--figure tyre-age" data-fitted-used="true">21</span>' \
+  "$tyre_screen"
+
+# A compound change mid-Session is a new Session state rendered, not a reload: the screen is a
+# function of the state it is given, so the same Driver on a new compound simply draws the new one.
+before='[{"number":16,"code":"LEC","position":3,"tyre":{"compound":"medium","ageInLaps":18},"stintLaps":18,"stint":1,"pitStops":0}]'
+after='[{"number":16,"code":"LEC","position":3,"tyre":{"compound":"soft","ageInLaps":0},"stintLaps":0,"stint":2,"pitStops":1}]'
+
+assert_equals "a compound change is reflected on the next state, without a reload" \
+  "medium soft" \
+  "$(
+    printf '%s %s' \
+      "$(tyres < <(a_screen "$before" | render) | awk '{print $1}')" \
+      "$(tyres < <(a_screen "$after" | render) | awk '{print $1}')"
+  )"
+
 finish

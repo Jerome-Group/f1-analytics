@@ -11,12 +11,14 @@
 // nothing is drawn that would have to claim a value the feed has not sent (story 38).
 
 import type {
+  Compound,
   Driver,
   Sector,
   SectorBests,
   Sectors,
   Separation,
   SessionState,
+  Tyre,
 } from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
 
@@ -46,9 +48,13 @@ function driverRow(driver: Driver): string {
     '<span class="cell"></span>',
     lapCell('best-lap', driver.bestLap),
     sectorCells(driver.sectors, driver.sectorBests),
-    // Speed trap is the last cell the row can fill for now; tyres (#11) pick up where it stops,
-    // and the row ends here rather than drawing a column it has nothing to put in.
     figure('cell--figure speed-trap', driver.speedTrap),
+    // Strategy at a glance (#11): what they are on, how old it is, and how often they have stopped.
+    // The row ends at the pit count for now; the sparklines and lap count after it are later work.
+    tyreCell(driver.tyre),
+    tyreAgeCell(driver.tyre, driver.stintLaps),
+    figure('cell--figure stint', driver.stint),
+    figure('cell--figure pit-stops', driver.pitStops),
     '</div>',
   ].join('');
 }
@@ -79,6 +85,39 @@ function sectorBestCell(millis: number | undefined): string {
   return millis === undefined
     ? absent('cell--figure-secondary')
     : `<span class="cell--figure-secondary">${clock(millis)}</span>`;
+}
+
+/** The compound letter drawn inside the tyre's ring — the sidewall marking, not a coloured dot. */
+const COMPOUND_LETTER: Record<Compound, string> = {
+  soft: 'S',
+  medium: 'M',
+  hard: 'H',
+  intermediate: 'I',
+  wet: 'W',
+};
+
+/**
+ * The tyre a Driver is on, drawn as its compound ring (#11). A set the feed has not named yet is
+ * the unknown ring rather than a blank cell, so an unknown compound reads as unknown and never as
+ * an empty seat.
+ */
+function tyreCell(tyre: Tyre | undefined): string {
+  const compound = tyre === undefined ? 'unknown' : tyre.compound;
+  const letter = tyre === undefined ? '?' : COMPOUND_LETTER[tyre.compound];
+  return `<span class="cell--centred"><span class="tyre-badge" data-compound="${compound}">${letter}</span></span>`;
+}
+
+/**
+ * The tyre's age in laps — and the mark that says it was fitted with laps already on it, which is
+ * true exactly when the rubber has turned more laps than the Stint has run. Age and Stint laps are
+ * two numbers on purpose (CONTEXT.md, "Stint"), and the superscript is what makes a scrubbed set
+ * legible without a second column.
+ */
+function tyreAgeCell(tyre: Tyre | undefined, stintLaps: number | undefined): string {
+  if (tyre === undefined) return absent('cell--figure tyre-age');
+  const fittedUsed = stintLaps !== undefined && tyre.ageInLaps > stintLaps;
+  const marker = fittedUsed ? ' data-fitted-used="true"' : '';
+  return `<span class="cell--figure tyre-age"${marker}>${tyre.ageInLaps}</span>`;
 }
 
 /**

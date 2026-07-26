@@ -53,6 +53,21 @@ export type Sectors = readonly [Sector?, Sector?, Sector?];
  */
 export type SectorBests = readonly [number?, number?, number?];
 
+/** The five dry and wet compounds, each with its own colour everyone reads (CONTEXT.md, "Stint"). */
+export type Compound = 'soft' | 'medium' | 'hard' | 'intermediate' | 'wet';
+
+/**
+ * The set of tyres a Driver is on now. `ageInLaps` is the age of the rubber — every lap it has
+ * turned, including any it was fitted already carrying — and is deliberately not the number of laps
+ * run in the current Stint: a set can be fitted scrubbed, and drawing the two as one number would
+ * misrepresent every used set on the grid (CONTEXT.md, "Stint"). The distinction is the point of
+ * this type, so laps run in the Stint lives on the Driver, apart, and the two are never merged.
+ */
+export interface Tyre {
+  compound: Compound;
+  ageInLaps: number;
+}
+
 export interface Driver {
   number: DriverNumber;
   /** The three-letter code the Timing screen shows — `VER`, `NOR`. */
@@ -82,6 +97,18 @@ export interface Driver {
   sectorBests?: SectorBests;
   /** The speed trap reading for the current lap, in km/h. Absent where the feed has not sent it. */
   speedTrap?: number;
+  /** The set of tyres the Driver is on now. Absent before the feed has said what they are on. */
+  tyre?: Tyre;
+  /**
+   * Laps run in the current Stint. Held apart from the tyre's age so a set fitted with laps already
+   * on it reads as older than the Stint is long, which is the whole distinction (CONTEXT.md).
+   */
+  stintLaps?: number;
+  /** The current Stint number, one-based: a Driver on their first set of tyres is on Stint one. */
+  stint?: number;
+  /** How many times the Driver has pitted this Session. Zero before their first stop, absent
+   * before the feed has said. */
+  pitStops?: number;
 }
 
 export interface SessionState {

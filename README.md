@@ -1,4 +1,4 @@
-# f1-live-analytics
+# f1-analytics
 
 A dashboard for watching a live Formula 1 session — the official timing screen, expanded, showing
 all twenty drivers at once with considerably more per-driver data than the broadcast gives you.

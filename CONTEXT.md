@@ -1,4 +1,4 @@
-# f1-live-analytics — context
+# f1-analytics — context
 
 A dashboard for watching a live Formula 1 session: the official timing screen, expanded, fed by a
 self-hosted data pipeline.
@@ -47,6 +47,21 @@ The upstream service that holds the connection to Formula 1, decodes the feed an
 It is run, never written, here (ADR-0003).
 _Avoid_: scraper, collector, poller, feed
 
+**Archive**:
+This project's own copy of the raw files Formula 1 publishes for a finished Session — every
+stream, exactly as published, decoded by nothing. It is derived from no other thing here, and it
+is the one thing that cannot be rebuilt: Formula 1 has removed whole seasons from its own servers,
+and a Session that was never mirrored is simply gone. Both OpenF1 and FastF1 read these same
+files, so the Archive sits beneath the choice of either.
+_Avoid_: cache, backup, dump, raw data, mirror
+
+**Stores**:
+The collections everything downstream reads — what the Ingestor writes during a Live window, and
+what a Backfill writes for a past Session. A *reading* of the raw Session rather than the Session
+itself, and therefore **disposable**: a changed upstream version, a corrected import or a new
+collection is a rebuild, not a loss. The asymmetry with the Archive is the point of both words.
+_Avoid_: the database, Mongo, the data
+
 **Adapter**:
 The boundary in `server/` where upstream record shapes stop and this project's own types begin.
 Its whole purpose is that no upstream field name appears anywhere above it.
@@ -93,14 +108,16 @@ _Avoid_: hot/cold, fast/slow, high-frequency
 A past Session played back through the Timing screen, in the same shapes as live, with a scrubable
 Session clock. Replay is not a reduced view of live — because no stream is Gated once a Session has
 finished, it is the *complete* one.
-_Avoid_: historical, playback, archive, rewind
+_Avoid_: historical, playback, rewind — and **Archive**, which is a different thing entirely: the
+Archive is the raw material, Replay is one way of looking at what was made from it.
 
 **Backfill**:
-Fetching one finished Session from Formula 1's archive and writing it into the stores, so that it
-can be Replayed. A deliberate one-Session command, not a background import, and re-running it for
-the same Session replaces that Session rather than adding a second copy (ADR-0008). It is what
-puts a Session there; Replay is what looks at it.
-_Avoid_: import, sync, ingest, load
+Deriving one finished Session into the Stores, so that it can be Replayed. A deliberate
+one-Session command, not a background import, and re-running it for the same Session replaces
+that Session rather than adding a second copy (ADR-0008). Repeatable by construction: the raw
+Session outlives the Backfill, so re-running one is a re-reading and never destroys the only copy
+of anything.
+_Avoid_: import, sync, ingest, load, download
 
 **Analysis mode**:
 The separate, offline path over completed Sessions — telemetry, degradation, results. It has its

@@ -29,6 +29,49 @@ proof that gating ends when a Session does.
 **78 MB per race Session**, collections and indexes together, and `du` on the data directory
 agrees at 80 MB.
 
+## What is actually in there
+
+Every collection was read back through the query API on `localhost:8000`, not just counted in
+MongoDB, because stored and readable are different claims — and for the two telemetry collections
+they came apart. Before the indexes existed, `/v1/car_data` and `/v1/location` returned a
+`MaxTimeMSExpired` traceback rather than data: the query scans the collection and the API gives up
+at five seconds. With the indexes, both answer immediately. Everything else was readable either
+way.
+
+The four streams Formula 1 gates during a Live window
+([ADR-0002](../adr/0002-live-data-is-the-free-subset-only.md)) are all present and all populated,
+which is the point of backfilling this Session in particular:
+
+| Gated stream | Where it landed | Evidence |
+|---|---|---|
+| Car positions | `location` | 731,740 records, `x`/`y`/`z` per Driver |
+| DRS | `car_data.drs` | 295,748 records with DRS active, across ten distinct channel values |
+| Championship standings | `championship_drivers`, `championship_teams` | 21 and 10 records, `points_start` and `points_current` |
+| Pit stop durations | `pit` | 39 of 40 records carry `stop_duration` |
+
+The DRS row settles half of ADR-0002's outstanding measurement: whatever Formula 1 does to that
+channel during a Session, it is intact in the archive. What happens to it *live* is still
+unanswered and still needs a live Session.
+
+Sectors are inside `laps` rather than beside them: 1,359 of 1,365 laps carry all three
+`duration_sector_*` values — the six that do not are in-laps and retirements — and all 1,365 carry
+the `segments_sector_*` arrays the Timing screen needs for purple and green.
+
+## Running it twice
+
+The Session was backfilled a second time into the stores it was already in:
+
+| | Run 1 | Run 2 |
+|---|---:|---:|
+| Records discarded first | 0 | 1,456,784 |
+| Records after | 1,456,784 | 1,456,784 |
+
+Identical, per collection as well as in total, which is the behaviour
+[ADR-0008](../adr/0008-backfilling-a-session-is-a-command-that-replaces-it.md) exists to produce —
+upstream's insert-only write path stores a second copy otherwise. `bin/backfill` prints the
+per-collection counts at the end of every run, so this is checked by running the command rather
+than by trusting this table.
+
 ## Against the estimate
 
 [ADR-0003](../adr/0003-openf1-feeds-the-timing-screen-and-fastf1-feeds-analysis-mode.md) estimated

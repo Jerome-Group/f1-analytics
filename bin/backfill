@@ -44,7 +44,6 @@ done
 year="$1"
 meeting_key="$2"
 session_key="$3"
-compose="$(dirname -- "${BASH_SOURCE[0]}")/compose"
 
 f1_ensure_runtime_home
 f1_require_vm
@@ -60,7 +59,7 @@ discarded="$(f1_discard_session "$session_key")"
 printf '%s records discarded\n' "$discarded"
 
 printf 'Ingesting Session %s of Meeting %s, %s\n' "$session_key" "$meeting_key" "$year"
-"$compose" run --rm --entrypoint python backfill \
+"$F1_REPO_ROOT/bin/compose" run --rm --entrypoint python backfill \
   -m openf1.services.ingestor_livetiming.historical.main \
   ingest-session "$year" "$meeting_key" "$session_key"
 

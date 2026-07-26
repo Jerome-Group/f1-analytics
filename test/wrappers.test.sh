@@ -15,10 +15,6 @@ refusal() {
   env "$unmounted" "$@" 2>&1
 }
 
-fails() {
-  refusal "$@" >/dev/null 2>&1
-}
-
 # Each wrapper is invoked the way it is meant to be invoked — bin/backfill answers a usage error
 # from its arguments alone, so an argument-less call would never reach the placement check.
 refuses_before_reaching_the_runtime() {
@@ -26,7 +22,7 @@ refuses_before_reaching_the_runtime() {
   shift
 
   assert_fails "bin/$(basename -- "$wrapper") refuses when the external volume is not mounted" \
-    fails "$wrapper" "$@"
+    refusal "$wrapper" "$@"
 
   assert_contains \
     "bin/$(basename -- "$wrapper") names the volume rather than reporting a container error" \
@@ -37,6 +33,6 @@ refuses_before_reaching_the_runtime() {
 refuses_before_reaching_the_runtime up
 refuses_before_reaching_the_runtime down
 refuses_before_reaching_the_runtime compose
-refuses_before_reaching_the_runtime backfill 2025 1277 9693
+refuses_before_reaching_the_runtime backfill 2025 1267 9920
 
 finish

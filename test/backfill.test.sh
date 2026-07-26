@@ -16,14 +16,10 @@ misuse() {
   env F1_RUNTIME_HOME=/Volumes/NotMounted/.runtime "$backfill" "$@" 2>&1
 }
 
-fails() {
-  misuse "$@" >/dev/null 2>&1
-}
-
-assert_fails "bin/backfill with no arguments" fails
-assert_fails "bin/backfill with a Meeting but no Session" fails 2025 1277
-assert_fails "bin/backfill with a Session key that is not a key" fails 2025 1277 monza
-assert_fails "bin/backfill with more than a Session" fails 2025 1277 9693 laps
+assert_fails "bin/backfill with no arguments" misuse
+assert_fails "bin/backfill with a Meeting but no Session" misuse 2025 1267
+assert_fails "bin/backfill with a Session key that is not a key" misuse 2025 1267 monza
+assert_fails "bin/backfill with more than a Session" misuse 2025 1267 9920 laps
 
 assert_contains "bin/backfill with no arguments says what it takes" \
   "bin/backfill <year> <meeting-key> <session-key>" \
@@ -31,6 +27,6 @@ assert_contains "bin/backfill with no arguments says what it takes" \
 
 assert_contains "bin/backfill names the argument that is wrong" \
   "monza" \
-  "$(misuse 2025 1277 monza)"
+  "$(misuse 2025 1267 monza)"
 
 finish

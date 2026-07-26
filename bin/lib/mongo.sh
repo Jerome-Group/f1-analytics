@@ -4,6 +4,9 @@
 # Every call goes out through bin/compose, so placement is inherited rather than restated
 # (ADR-0004), and `mongosh` is the one in the running container rather than one the host has to
 # have installed.
+#
+# A session_key reaches MongoDB as an interpolated JavaScript literal, so callers pass a number
+# and nothing else. bin/backfill, the only caller, rejects anything else at the prompt.
 
 # Upstream's default, and upstream owns it: OPENF1_DB_NAME is left unset in deploy/compose.yaml.
 F1_MONGO_DATABASE="openf1-livetiming"
@@ -14,11 +17,8 @@ f1_mongo_eval() {
 }
 
 f1_require_stores() {
-  local running
-  running="$("$F1_REPO_ROOT/bin/compose" ps --services --status running 2>/dev/null)"
-  case "$running" in
-    *mongo*) return 0 ;;
-  esac
+  "$F1_REPO_ROOT/bin/compose" ps --services --status running 2>/dev/null |
+    grep --quiet --line-regexp mongo && return 0
 
   printf 'The stores are not running. Bring the stack up with bin/up.\n' >&2
   return 1

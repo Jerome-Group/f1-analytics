@@ -200,17 +200,20 @@ export interface LapDetail {
   number: number;
   /** The lap's duration in milliseconds. Absent for a lap the feed timed by sector but not whole. */
   time?: number;
-  /** Always three, because a Formula 1 lap is. */
+  /** The sectors the feed timed, in order — at most three, because a Formula 1 lap has three. */
   sectors: readonly LapSector[];
 }
 
 /**
- * One sector of a completed lap, or `null` for one the feed never timed — a lap that ended in the
- * pit lane, or a reading that never came. The one place this model says absence with a value rather
- * than by leaving a key out: these three are a list, and a position in a list cannot simply not be
- * there. It survives JSON as written, which a hole in a tuple does not.
+ * One sector of one lap. It carries which sector it is rather than being placed by where it sits,
+ * so a sector the feed never timed — a lap that ended in the pit lane, a reading that never came —
+ * is simply not in the list. Absence stays absence, as it is everywhere else in this model, instead
+ * of a hole standing in a list of three.
  */
-export type LapSector = Sector | null;
+export interface LapSector extends Sector {
+  /** Which sector of the lap: one, two or three. */
+  number: number;
+}
 
 /**
  * One team radio clip, as the feed published it. `at` is epoch milliseconds — the same axis the
@@ -255,8 +258,12 @@ export interface OpenedDriver {
   number: DriverNumber;
   /** Every Stint run so far, oldest first. */
   stints?: readonly Stint[];
-  /** Every lap the feed has timed so far, oldest first, sector by sector. A lap still on the road
-   *  carries the sectors it has crossed and no duration, which is what it is. */
+  /**
+   * Every lap the feed has timed so far, oldest first, sector by sector. In a Replay those are the
+   * laps completed by the moment the clock stands on; a Live Session also carries the lap on the
+   * road, with the sectors it has crossed and no duration, because that is what the feed holds and
+   * neither reading invents anything the other has.
+   */
   laps?: readonly LapDetail[];
   /** The clips broadcast so far, newest first: what was just said explains what just happened. */
   radio?: readonly Radio[];

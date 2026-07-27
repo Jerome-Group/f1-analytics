@@ -9,10 +9,11 @@
 // and closing *be* immediate: the panel is a function of what the browser holds, and closing changes
 // what the browser holds without waiting for anybody.
 
-import type { DriverNumber, LapDetail, LapSector, OpenedDriver, Radio, SessionState, Stint } from '../domain/index.ts';
+import type { DriverNumber, LapDetail, OpenedDriver, Radio, SessionState, Stint } from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
 import { escapeText } from './escape.ts';
-import { timeOfDay, timeText } from './clock.ts';
+import { sectorTime } from './sector.ts';
+import { timeOfDay, timeText } from './time-text.ts';
 import { trace } from './trace.ts';
 import { tyreBadge } from './tyre.ts';
 
@@ -21,17 +22,17 @@ import { tyreBadge } from './tyre.ts';
  * `opened` is used only when it is the Driver actually open: a frame still carrying the last Driver
  * — or the next one, arriving a moment early — must never be drawn under this one's name.
  */
-export function driverDetail(state: SessionState, opened: DriverNumber | undefined): string {
+export function openedDriverPanel(state: SessionState, opened: DriverNumber | undefined): string {
   if (opened === undefined) return '';
   const driver = state.drivers.find((each) => each.number === opened);
   const depth = state.opened?.number === opened ? state.opened : undefined;
   return [
-    `<div class="driver-detail" data-driver="${opened}" style="--team-colour: ${teamColour(driver?.team)}">`,
-    '<div class="driver-detail__head">',
-    `<span class="driver-detail__number">${opened}</span>`,
-    `<span class="driver-detail__tla">${driver?.code === undefined ? '&mdash;' : escapeText(driver.code)}</span>`,
-    `<span class="driver-detail__team">${driver?.team === undefined ? '' : escapeText(driver.team)}</span>`,
-    '<button class="driver-detail__close" data-action="close-driver" aria-label="Close this Driver">Close</button>',
+    `<div class="opened-driver" data-driver="${opened}" style="--team-colour: ${teamColour(driver?.team)}">`,
+    '<div class="opened-driver__head">',
+    `<span class="opened-driver__number">${opened}</span>`,
+    `<span class="opened-driver__tla">${driver?.code === undefined ? '&mdash;' : escapeText(driver.code)}</span>`,
+    `<span class="opened-driver__team">${driver?.team === undefined ? '' : escapeText(driver.team)}</span>`,
+    '<button class="opened-driver__close" data-action="close-driver" aria-label="Close this Driver">Close</button>',
     '</div>',
     depth === undefined ? waiting() : sections(depth),
     '</div>',
@@ -41,7 +42,7 @@ export function driverDetail(state: SessionState, opened: DriverNumber | undefin
 /** What stands in the panel between the click and the depth arriving. It is not an absence — the
  *  streams are being read — so it does not say the Driver has nothing. */
 function waiting(): string {
-  return '<p class="driver-detail__waiting">Reading this Driver&rsquo;s streams&hellip;</p>';
+  return '<p class="opened-driver__waiting">Reading this Driver&rsquo;s streams&hellip;</p>';
 }
 
 function sections(depth: OpenedDriver): string {
@@ -51,15 +52,15 @@ function sections(depth: OpenedDriver): string {
     section('radio', 'Team radio', radio(depth.radio), 'Nothing has been said yet.'),
     // The trace says its own absence, because "no telemetry" and "the feed is Gated" look the same
     // from here and neither is a blank rectangle (trace.ts).
-    `<section class="driver-detail__section" data-section="telemetry"><h2 class="driver-detail__title">Telemetry</h2>${trace(depth.telemetry ?? [])}</section>`,
+    `<section class="opened-driver__section" data-section="telemetry"><h2 class="opened-driver__title">Telemetry</h2>${trace(depth.telemetry ?? [])}</section>`,
   ].join('');
 }
 
 /** One titled section. A section with nothing in it says so in words: a Driver who has not spoken
  *  and a panel that failed to draw must never look the same. */
 function section(name: string, title: string, body: string, nothing: string): string {
-  const content = body === '' ? `<p class="detail-absent">${nothing}</p>` : body;
-  return `<section class="driver-detail__section" data-section="${name}"><h2 class="driver-detail__title">${title}</h2>${content}</section>`;
+  const content = body === '' ? `<p class="opened-driver__nothing">${nothing}</p>` : body;
+  return `<section class="opened-driver__section" data-section="${name}"><h2 class="opened-driver__title">${title}</h2>${content}</section>`;
 }
 
 /**
@@ -72,15 +73,15 @@ function stints(history: readonly Stint[] | undefined): string {
   const items = history.map((stint) => {
     const age =
       stint.tyreAgeAtStart === undefined
-        ? '<span class="detail-stint__age absent">&mdash;</span>'
-        : `<span class="detail-stint__age">${fitted(stint.tyreAgeAtStart)}</span>`;
+        ? '<span class="opened-driver__stint-age absent">&mdash;</span>'
+        : `<span class="opened-driver__stint-age">${fitted(stint.tyreAgeAtStart)}</span>`;
     return (
-      `<li class="detail-stint"><span class="detail-stint__number">${stint.number}</span>` +
+      `<li class="opened-driver__stint"><span class="opened-driver__stint-number">${stint.number}</span>` +
       `${tyreBadge(stint.compound)}` +
-      `<span class="detail-stint__laps">${lapSpan(stint)}</span>${age}</li>`
+      `<span class="opened-driver__stint-laps">${lapSpan(stint)}</span>${age}</li>`
     );
   });
-  return `<ol class="detail-stints">${items.join('')}</ol>`;
+  return `<ol class="opened-driver__stints">${items.join('')}</ol>`;
 }
 
 /** Which laps a set covered. A Stint one lap long is a lap, not a span from itself to itself. */
@@ -106,21 +107,17 @@ function laps(run: readonly LapDetail[] | undefined): string {
   const items = [...run].reverse().map((lap) => {
     const time =
       lap.time === undefined
-        ? '<span class="detail-lap__time absent">&mdash;</span>'
-        : `<span class="detail-lap__time">${timeText(lap.time)}</span>`;
+        ? '<span class="opened-driver__lap-time absent">&mdash;</span>'
+        : `<span class="opened-driver__lap-time">${timeText(lap.time)}</span>`;
+    // The three slots are drawn by number rather than by what the list happens to hold, so a sector
+    // the feed never timed leaves its own place empty instead of shifting the ones after it along.
+    const sectors = [1, 2, 3].map((number) => sectorTime(lap.sectors.find((sector) => sector.number === number)));
     return (
-      `<li class="detail-lap"><span class="detail-lap__number">${lap.number}</span>${time}` +
-      `${lap.sectors.map(sectorTime).join('')}</li>`
+      `<li class="opened-driver__lap"><span class="opened-driver__lap-number">${lap.number}</span>${time}` +
+      `${sectors.join('')}</li>`
     );
   });
-  return `<ol class="detail-laps">${items.join('')}</ol>`;
-}
-
-/** One sector of one lap. A sector the feed never timed is the absent mark, never a nought and
- *  never the sector before it. */
-function sectorTime(sector: LapSector): string {
-  if (sector === null) return '<span class="sector-time" data-status="absent">&mdash;</span>';
-  return `<span class="sector-time" data-status="${sector.status}">${timeText(sector.millis)}</span>`;
+  return `<ol class="opened-driver__laps">${items.join('')}</ol>`;
 }
 
 /**
@@ -132,8 +129,8 @@ function radio(clips: readonly Radio[] | undefined): string {
   if (clips === undefined || clips.length === 0) return '';
   const items = clips.map(
     (clip) =>
-      `<li class="detail-radio"><span class="detail-radio__at">${timeOfDay(clip.at)}</span>` +
-      `<audio class="detail-radio__clip" controls preload="none" src="${escapeText(clip.url)}"></audio></li>`,
+      `<li class="opened-driver__radio"><span class="opened-driver__radio-at">${timeOfDay(clip.at)}</span>` +
+      `<audio class="opened-driver__radio-clip" controls preload="none" src="${escapeText(clip.url)}"></audio></li>`,
   );
-  return `<ol class="detail-radios">${items.join('')}</ol>`;
+  return `<ol class="opened-driver__radios">${items.join('')}</ol>`;
 }

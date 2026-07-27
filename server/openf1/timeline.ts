@@ -110,7 +110,15 @@ export function timelineFrom(
       return state;
     },
     open(log) {
-      opened = log === undefined ? undefined : { log, taken: log.carData.map((record) => at(record.date)) };
+      // Put the readings in date order here rather than trusting the order upstream answered in: the
+      // window below is a slice, and a slice of an unordered log is silently the wrong seconds.
+      // Sorting once, at opening, is what makes the search on every frame after it honest.
+      if (log === undefined) {
+        opened = undefined;
+        return;
+      }
+      const carData = [...log.carData].sort((a, b) => at(a.date) - at(b.date));
+      opened = { log: { ...log, carData }, taken: carData.map((record) => at(record.date)) };
     },
   };
 }
@@ -124,9 +132,9 @@ interface Opened {
 }
 
 /**
- * The readings inside the trace window ending at `now`. The log is in the order upstream answered
- * in, which is by date, so the window is a slice rather than a filter — the per-second tier is the
- * one stream where the difference is worth the two searches.
+ * The readings inside the trace window ending at `now`. The log was put in date order as it was
+ * opened, so the window is a slice rather than a filter — the per-second tier is the one stream
+ * where the difference is worth the two searches.
  */
 function trace(opened: Opened, now: number): CarDataRecord[] {
   const from = firstAfter(opened.taken, now - TRACE_MS);

@@ -19,14 +19,14 @@ import type {
 } from '../domain/index.ts';
 import { applyChange } from '../domain/index.ts';
 import { timingScreen } from './timing-screen.ts';
-import { driverDetail } from './driver-detail.ts';
+import { openedDriverPanel } from './opened-driver.ts';
 import { sessionStrip } from './session-strip.ts';
 import { replayControls, replayElapsed } from './replay-controls.ts';
 import { mount } from './mount.ts';
 
 const strip = mount('.session-strip-mount', 'session strip');
 const table = mount('.timing-table', 'timing table');
-const detail = mount('.driver-detail-mount', 'driver detail');
+const panel = mount('.opened-driver-mount', 'opened Driver');
 const controls = mount('.replay-controls-mount', 'replay controls');
 const connection = mount('.connection-status', 'connection status');
 
@@ -52,7 +52,7 @@ function render(): void {
   // The twenty rows are built the same way whether a Driver is open or not, which is what keeps
   // them updating while one is: the panel is another mount, not a branch in the table.
   table.innerHTML = timingScreen(state, opened);
-  detail.innerHTML = driverDetail(state, opened);
+  panel.innerHTML = openedDriverPanel(state, opened);
   drawControls(state.replay);
 }
 
@@ -65,7 +65,7 @@ table.addEventListener('click', (event) => {
   if (row === null || row === undefined || !Number.isFinite(driver)) return;
   open(driver === opened ? undefined : driver);
 });
-detail.addEventListener('click', (event) => {
+panel.addEventListener('click', (event) => {
   if ((event.target as Element | null)?.closest('[data-action="close-driver"]') !== null) open(undefined);
 });
 // Escape closes, because a panel laid over the screen has to be dismissible without aiming at it.

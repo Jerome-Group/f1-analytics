@@ -70,7 +70,7 @@ import json, sys
 
 laps = json.load(sys.stdin)["opened"]["laps"]
 numbers = [lap["number"] for lap in laps]
-statuses = {sector["status"] for lap in laps for sector in lap["sectors"] if sector is not None}
+statuses = {sector["status"] for lap in laps for sector in lap["sectors"]}
 print("laps=" + str(len(laps)),
       "from=" + str(numbers[0]), "to=" + str(numbers[-1]),
       "statuses=" + ",".join(sorted(statuses)))
@@ -88,7 +88,7 @@ sector_of() {
 import json, sys
 
 lap = next(lap for lap in json.load(sys.stdin)["opened"]["laps"] if lap["number"] == int(sys.argv[1]))
-print(" ".join("-" if s is None else f"{s['"'"'millis'"'"']}:{s['"'"'status'"'"']}" for s in lap["sectors"]),
+print(" ".join(f"{s['"'"'number'"'"']}={s['"'"'millis'"'"']}:{s['"'"'status'"'"']}" for s in lap["sectors"]),
       "time=" + str(lap.get("time", "-")))
 ' "$1"
 }
@@ -96,7 +96,7 @@ print(" ".join("-" if s is None else f"{s['"'"'millis'"'"']}:{s['"'"'status'"'"'
 # Lap 13: the Driver's own best first sector of the Session so far, green, in a lap that is otherwise
 # ordinary. That a fast sector inside a slow lap reads as fast is the point of colouring them at all.
 assert_equals "a personal-best sector is marked as one even in a lap that is not" \
-  "25303:personal-best 27077:set 22681:set time=75061" "$(sector_of 13 <<<"$on_open")"
+  "1=25303:personal-best 2=27077:set 3=22681:set time=75061" "$(sector_of 13 <<<"$on_open")"
 
 radio_of() {
   python3 -c '
@@ -195,7 +195,7 @@ print(json.dumps({"type": "session-state", "state": {**snapshot, **change}}))
 ' "$snapshot" "$on_open")"
 
 panel() {
-  node "$here/lib/seam2-detail.ts" "$@" <<<"$folded"
+  node "$here/lib/seam2-opened.ts" "$@" <<<"$folded"
 }
 
 assert_equals "no Driver open draws no panel at all, not an empty one" "" "$(panel)"
@@ -204,7 +204,7 @@ drawn="$(panel 81)"
 
 # The panel read back as a person would read it: who is open, and what each section says.
 assert_contains "the panel names the Driver it belongs to" \
-  '<span class="driver-detail__tla">PIA</span>' "$drawn"
+  '<span class="opened-driver__tla">PIA</span>' "$drawn"
 
 assert_contains "and wears their livery, so the panel and their row are plainly the same Driver" \
   '--team-colour: var(--team-mclaren)' "$drawn"
@@ -222,19 +222,19 @@ assert_equals "all four kinds of depth are drawn, in the order they are read in"
 # The Stint history in words: the compound ring, the laps it covered, and how the set went on. The
 # row has only a superscript for a scrubbed set (#11); the panel has room to say it.
 assert_contains "a Stint is drawn as its compound, its laps and how the set went on" \
-  '<span class="tyre-badge" data-compound="medium">M</span><span class="detail-stint__laps">Laps 1&ndash;21</span><span class="detail-stint__age">fitted new</span>' \
+  '<span class="tyre-badge" data-compound="medium">M</span><span class="opened-driver__stint-laps">Laps 1&ndash;21</span><span class="opened-driver__stint-age">fitted new</span>' \
   "$drawn"
 
 # Newest first: the lap just run is the one being asked about, and it should not take a scroll.
 assert_equals "the laps are drawn newest first" \
   "21 20 19" \
-  "$(grep -o '<span class="detail-lap__number">[0-9]*' <<<"$drawn" | sed 's/.*>//' | head -3 | tr '\n' ' ' | sed 's/ $//')"
+  "$(grep -o '<span class="opened-driver__lap-number">[0-9]*' <<<"$drawn" | sed 's/.*>//' | head -3 | tr '\n' ' ' | sed 's/ $//')"
 
 assert_contains "each lap's sectors are drawn in the same colours the row uses" \
   '<span class="sector-time" data-status="personal-best">25.303</span>' "$drawn"
 
 assert_contains "a radio clip is playable where it stands, at the moment it was broadcast" \
-  '<span class="detail-radio__at">13:07:09</span><audio class="detail-radio__clip" controls preload="none"' \
+  '<span class="opened-driver__radio-at">13:07:09</span><audio class="opened-driver__radio-clip" controls preload="none"' \
   "$drawn"
 
 assert_equals "the trace draws all five channels, and no sixth" \
@@ -249,12 +249,44 @@ assert_contains "each channel says where it stands now, in its own unit" \
 # A Driver opened before their streams have been read is not a Driver with nothing behind them, and
 # the panel must not say they are. This is the state a browser holds for the moment between the click
 # and the answer — the click having already drawn the panel, which is what makes opening feel instant.
-waiting="$(node "$here/lib/seam2-detail.ts" 81 <<<"{\"type\":\"session-state\",\"state\":$snapshot}")"
+waiting="$(node "$here/lib/seam2-opened.ts" 81 <<<"{\"type\":\"session-state\",\"state\":$snapshot}")"
 
 assert_contains "a Driver opened before their depth arrives says it is being read, not that there is none" \
-  'class="driver-detail__waiting"' "$waiting"
+  'class="opened-driver__waiting"' "$waiting"
 
 assert_equals "and draws no section at all until there is something in one" "" "$(sections_of "$waiting")"
+
+# A lap the feed never timed a sector of — a lap that ended in the pit lane — carries the two it did
+# and not the third. It has to leave that slot empty rather than shifting the sector after it along,
+# which is the whole reason a sector carries which one it is (domain/session-state.ts). No finished
+# recording of five green minutes has such a lap, so it is fed straight in.
+
+holed="$(node "$here/lib/seam2-opened.ts" 1 <<'JSON'
+{
+  "type": "session-state",
+  "state": {
+    "sessionKey": 9920,
+    "drivers": [{ "number": 1, "code": "VER", "team": "Red Bull Racing" }],
+    "opened": {
+      "number": 1,
+      "laps": [
+        {
+          "number": 12,
+          "sectors": [
+            { "number": 1, "millis": 25303, "status": "set" },
+            { "number": 3, "millis": 22681, "status": "set" }
+          ]
+        }
+      ]
+    }
+  }
+}
+JSON
+)"
+
+assert_contains "a sector the feed never timed leaves its own slot empty, shifting nothing along" \
+  '<span class="sector-time" data-status="set">25.303</span><span class="sector-time" data-status="absent">&mdash;</span><span class="sector-time" data-status="set">22.681</span>' \
+  "$holed"
 
 # --- The twenty rows, while one Driver is open ---------------------------------------------
 # The rows are rendered from the same state whether a Driver is open or not; all the opened Driver

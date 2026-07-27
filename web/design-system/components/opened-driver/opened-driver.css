@@ -12,7 +12,7 @@
    readings a second arrive across the field (CONTEXT.md, "Per-second tier"), so a trace is
    affordable for one Driver and for no more than one. */
 
-.driver-detail {
+.opened-driver {
   position: fixed;
   top: 0;
   right: 0;
@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: var(--detail-width);
+  width: var(--opened-driver-width);
   height: 100%;
   padding: 0 var(--screen-pad) var(--screen-pad);
   border-left: 1px solid var(--rule-strong);
@@ -33,7 +33,7 @@
 
 /* The head names who is open and carries the way out. It sticks, because the panel scrolls and a
    viewer must never have to scroll back up to close it. */
-.driver-detail__head {
+.opened-driver__head {
   position: sticky;
   top: 0;
   display: flex;
@@ -44,27 +44,27 @@
   background: var(--surface-strip);
 }
 
-.driver-detail__number {
+.opened-driver__number {
   font-size: var(--type-position-size);
   line-height: var(--type-position-line);
   font-variant-numeric: var(--figures);
   color: var(--text-secondary);
 }
 
-.driver-detail__tla {
+.opened-driver__tla {
   font-size: var(--type-clock-size);
   line-height: var(--type-clock-line);
   font-weight: 700;
 }
 
-.driver-detail__team {
+.opened-driver__team {
   flex: 1;
   font-size: var(--type-secondary-size);
   line-height: var(--type-secondary-line);
   color: var(--text-secondary);
 }
 
-.driver-detail__close {
+.opened-driver__close {
   flex: none;
   padding: 8px 16px;
   border: 1px solid var(--rule-strong);
@@ -76,12 +76,12 @@
   cursor: pointer;
 }
 
-.driver-detail__section {
+.opened-driver__section {
   padding: 16px 0;
   border-bottom: 1px solid var(--rule);
 }
 
-.driver-detail__title {
+.opened-driver__title {
   margin: 0 0 10px;
   font-size: var(--type-label-size);
   line-height: var(--type-label-line);
@@ -92,7 +92,7 @@
 
 /* The streams are being read. Not an absence — an absence says the Driver has nothing, and this
    says nobody has looked yet. */
-.driver-detail__waiting {
+.opened-driver__waiting {
   margin: 0;
   padding: 24px 0;
   font-size: var(--type-primary-size);
@@ -101,7 +101,7 @@
 
 /* A section with nothing in it says so in words, so a Driver who has not spoken and a panel that
    failed to draw can never look the same. */
-.detail-absent,
+.opened-driver__nothing,
 .trace-absent {
   margin: 0;
   font-size: var(--type-secondary-size);
@@ -111,34 +111,34 @@
 
 /* --- Stints ------------------------------------------------------------------------------- */
 
-.detail-stints,
-.detail-laps,
-.detail-radios {
+.opened-driver__stints,
+.opened-driver__laps,
+.opened-driver__radios {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.detail-stint {
+.opened-driver__stint {
   display: grid;
-  grid-template-columns: 28px 40px 140px 1fr;
+  grid-template-columns: var(--opened-stint-columns);
   align-items: center;
-  gap: 12px;
+  gap: var(--column-gap);
   height: var(--row-height);
   border-bottom: 1px solid var(--rule);
   font-size: var(--type-primary-size);
   font-variant-numeric: var(--figures);
 }
 
-.detail-stint:last-child {
+.opened-driver__stint:last-child {
   border-bottom: none;
 }
 
-.detail-stint__number {
+.opened-driver__stint-number {
   color: var(--text-tertiary);
 }
 
-.detail-stint__age {
+.opened-driver__stint-age {
   font-size: var(--type-secondary-size);
   color: var(--text-secondary);
 }
@@ -148,44 +148,43 @@
 /* Newest first, and scrollable on its own: a race is seventy of these and the panel is one screen.
    The height holds a dozen laps, which is the same window the row's sparklines draw — long enough
    to read a stint from without the section swallowing the ones below it. */
-.detail-laps {
-  max-height: calc(12 * 30px);
+.opened-driver__laps {
+  max-height: calc(var(--opened-laps-shown) * var(--opened-lap-height));
   overflow-y: auto;
 }
 
-.detail-lap {
+.opened-driver__lap {
   display: grid;
-  grid-template-columns: 48px 108px repeat(3, 88px);
+  grid-template-columns: var(--opened-lap-columns);
   align-items: center;
   gap: var(--column-gap);
-  height: 30px;
+  height: var(--opened-lap-height);
   font-size: var(--type-secondary-size);
   font-variant-numeric: var(--figures);
 }
 
-.detail-lap__number {
+.opened-driver__lap-number {
   color: var(--text-tertiary);
 }
 
 /* --- Team radio --------------------------------------------------------------------------- */
 
-.detail-radio {
-  display: flex;
+.opened-driver__radio {
+  display: grid;
+  grid-template-columns: var(--opened-radio-columns);
   align-items: center;
-  gap: 16px;
+  gap: var(--column-gap);
   padding: 8px 0;
 }
 
-.detail-radio__at {
-  flex: none;
-  width: 88px;
+.opened-driver__radio-at {
   font-size: var(--type-secondary-size);
   font-variant-numeric: var(--figures);
   color: var(--text-secondary);
 }
 
-.detail-radio__clip {
-  flex: 1;
+.opened-driver__radio-clip {
+  width: 100%;
   height: 32px;
 }
 
@@ -193,9 +192,9 @@
 
 .trace__channel {
   display: grid;
-  grid-template-columns: 88px 88px 1fr;
+  grid-template-columns: var(--trace-columns);
   align-items: center;
-  gap: 12px;
+  gap: var(--column-gap);
 }
 
 .trace__label {
@@ -221,7 +220,7 @@
 .trace__plot {
   display: block;
   width: 100%;
-  height: 44px;
+  height: var(--trace-plot-height);
 }
 
 /* The line wears the livery, because the panel belongs to one Driver and nothing on it has to say

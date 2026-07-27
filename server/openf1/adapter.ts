@@ -342,18 +342,18 @@ function bestSectors(records: readonly LapRecord[]): readonly (number | undefine
   });
 }
 
-/** One lap of the opened Driver, sector by sector. A sector the feed never timed is a hole in the
- *  list rather than a nought, and the status is the same purple/green/yellow the row draws. */
+/** One lap of the opened Driver, sector by sector. A sector the feed never timed is left out rather
+ *  than carried as a nought, and the status is the same purple/green/yellow the row draws. */
 function lapDetailOf(
   record: LapRecord,
   session: readonly (number | undefined)[],
   personal: readonly (number | undefined)[],
 ): LapDetail {
-  const sectors: LapSector[] = SECTORS.map((of, index) => {
+  const sectors: LapSector[] = SECTORS.flatMap((of, index) => {
     const value = of(record);
-    if (typeof value !== 'number' || value <= 0) return null;
+    if (typeof value !== 'number' || value <= 0) return [];
     const millis = seconds(value);
-    return { millis, status: sectorStatus(millis, session[index], personal[index]) };
+    return [{ number: index + 1, millis, status: sectorStatus(millis, session[index], personal[index]) }];
   });
   const lap: LapDetail = { number: record.lap_number, sectors };
   if (record.lap_duration !== null) lap.time = seconds(record.lap_duration);

@@ -89,13 +89,15 @@ async function open(driver: DriverNumber | undefined): Promise<void> {
     if (log === undefined) {
       try {
         log = await loadOpened(api, activeKey, driver);
+        opened.set(key, log);
       } catch (failure) {
-        // The stack being down, or answering a 429, is the ordinary reason this fails. The Session
-        // on screen is unharmed and the twenty rows keep moving, so it is said once and left there.
-        process.stderr.write(`Driver ${driver} could not be opened: ${String(failure)}\n`);
-        return;
+        // The stack being down, or answering a 429, is the ordinary reason this fails. It costs the
+        // two deep streams and nothing else — the Stints and the laps are already in the timeline —
+        // so the Driver is opened without them rather than left as a panel waiting for ever. It is
+        // not cached either, so asking again is a retry.
+        process.stderr.write(`Driver ${driver}'s deep streams could not be read: ${String(failure)}\n`);
+        log = { driver, radio: [], carData: [] };
       }
-      opened.set(key, log);
     }
     // A viewer who opened somebody else, or closed this one, while the streams were being read gets
     // what they asked for last rather than what finished loading first.

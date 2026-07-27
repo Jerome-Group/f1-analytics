@@ -15,7 +15,6 @@ import type {
   DriverNumber,
   DriverState,
   Lap,
-  Sector,
   SectorBests,
   Sectors,
   Separation,
@@ -24,7 +23,8 @@ import type {
 } from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
 import { escapeText } from './escape.ts';
-import { timeText } from './clock.ts';
+import { timeText } from './time-text.ts';
+import { sectorTime } from './sector.ts';
 import { tyreBadge } from './tyre.ts';
 import { sparkline, type Plot } from './sparkline.ts';
 
@@ -114,17 +114,7 @@ function stateCell(state: DriverState): string {
  * even while the live sector is still absent.
  */
 function sectorCells(sectors: Sectors | undefined, bests: SectorBests | undefined): string {
-  return [0, 1, 2].map((i) => sectorCell(sectors?.[i]) + sectorBestCell(bests?.[i])).join('');
-}
-
-/**
- * One sector, coloured purple, green or yellow to a meaning everyone already knows (#10). The
- * status is settled above the row against the whole field; this only draws the colour it is given,
- * so the row never has to know what anyone else did.
- */
-function sectorCell(sector: Sector | undefined): string {
-  if (sector === undefined) return '<span class="sector-time" data-status="absent">&mdash;</span>';
-  return `<span class="sector-time" data-status="${sector.status}">${timeText(sector.millis)}</span>`;
+  return [0, 1, 2].map((i) => sectorTime(sectors?.[i]) + sectorBestCell(bests?.[i])).join('');
 }
 
 /** The Driver's own best in one sector, drawn secondary beside the live time, or the absent mark. */

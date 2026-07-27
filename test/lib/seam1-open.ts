@@ -9,7 +9,7 @@
 // change a scrub brings while they are open where seconds were asked for, and the change closing
 // them brings. The scrub is optional because a recording with no timed streams in it has nowhere to
 // scrub to — its clock has one moment — and asking for a change that cannot come is a test that
-// hangs rather than fails. The assertions live in test/driver-detail.test.sh.
+// hangs rather than fails. The assertions live in test/opened-driver.test.sh.
 
 import { once } from 'node:events';
 import { spawnServer } from './spawn-server.ts';

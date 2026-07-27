@@ -184,9 +184,12 @@ write("2025-dutch-race", {
     "team_radio": team_radio, "car_data": car_data,
 })
 
-# Telemetry is Gated during a Live window and is withheld here with the rest of the timed streams.
-# Radio is not Gated, so it stays: a Driver opened inside a Live window still has something behind
-# them, which is the case the panel has to survive without inventing a trace.
+# Telemetry is withheld here with the rest of the timed streams. Whether Formula 1 gates the whole
+# car_data stream, only its DRS channel, or none of it is the measurement #42 exists to take
+# (docs/measurements/what-survives-a-live-session-unauthenticated.md) — so this recording is not a
+# claim about which. It is the case the panel has to survive either way: a Driver opened with no
+# trace behind them, and nothing invented to fill it. Radio is not among the Gated streams
+# (CONTEXT.md), so it stays.
 print("\nThe same window with the timed streams Gated")
 write("2025-dutch-race-gated", {
     "drivers": drivers, "position": [], "intervals": [], "laps": [], "stints": [],

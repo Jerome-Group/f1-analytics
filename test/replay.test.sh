@@ -151,12 +151,16 @@ EOF
 # a browser sends it (replay-socket.ts). This is the whole path — frame reader, control guard, clock,
 # fan-out — proving a Replay opens at the end and that scrubbing back gives the earlier moment, not
 # the finished Session left stale.
+#
+# The recording's laps are dated now (#16), so the clock's start is the first lap of the Session, not
+# the opening of the five-minute window — an earlier moment, where only the few Drivers already placed
+# that early have a position. The end is still the whole finished window, in its final order.
 
 assert_equals "a Replay opens paused at the end, a scrub back gives the earlier moment, a speed change moves nothing" \
   "$(
     cat <<'EOF'
 mode=replay position=end playing=false speed=1 placed=20
-position=start playing=false speed=1 placed=4
+position=start playing=false speed=1 placed=5
 speed-change replay.speed=4 drivers-in-change=0
 EOF
   )" \

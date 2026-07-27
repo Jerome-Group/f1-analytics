@@ -12,8 +12,8 @@
 // it produces says nothing about when it was reconstructed.
 
 import type { SessionState } from '../../domain/index.ts';
-import { sessionStateFrom } from './adapter.ts';
-import type { DriverRecord, IntervalRecord, LapRecord, PositionRecord } from './records.ts';
+import { lapCompletedAt, sessionStateFrom } from './adapter.ts';
+import type { DriverRecord, IntervalRecord, LapRecord, PositionRecord, StintRecord } from './records.ts';
 
 export interface Timeline {
   /** The Session's first recorded moment, in epoch milliseconds — the far-left of the scrub bar. */
@@ -34,6 +34,7 @@ export function timelineFrom(
   positionRecords: readonly PositionRecord[],
   intervalRecords: readonly IntervalRecord[],
   lapRecords: readonly LapRecord[],
+  stintRecords: readonly StintRecord[],
 ): Timeline {
   const moments = [
     ...positionRecords.map((record) => at(record.date)),
@@ -59,6 +60,9 @@ export function timelineFrom(
         // A lap counts once it has *finished*, so that the last lap and the best of them are the ones
         // actually run by `now` and never one still on the road.
         lapRecords.filter((record) => lapCompleted(record) <= now),
+        // Stints carry no date of their own — a Stint is a span of laps, not a moment — so the whole
+        // strategy is passed and which one is *current* is read off the laps already run by `now`.
+        stintRecords,
       );
     },
   };
@@ -75,13 +79,11 @@ function lapStarted(record: LapRecord): number {
 }
 
 /**
- * When a lap's fact becomes true: its start plus its duration. A lap the recording did not date —
- * every lap in a whole-Session recording, which needs no timeline — counts as always-already run
- * (`-Infinity`), so a Replay of such a recording still shows every completed lap at the end, exactly
- * as a straight read would.
+ * When a lap's fact becomes true: its start plus its duration ([[adapter]], where the Gap trend reads
+ * the same moment). A lap the recording did not date — every lap in a whole-Session recording, which
+ * needs no timeline — counts as always-already run (`-Infinity`), so a Replay of such a recording
+ * still shows every completed lap at the end, exactly as a straight read would.
  */
 function lapCompleted(record: LapRecord): number {
-  const started = lapStarted(record);
-  if (!Number.isFinite(started) || record.lap_duration === null) return Number.NEGATIVE_INFINITY;
-  return started + record.lap_duration * 1000;
+  return lapCompletedAt(record) ?? Number.NEGATIVE_INFINITY;
 }

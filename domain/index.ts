@@ -8,6 +8,7 @@ export type {
   DriverNumber,
   DriverState,
   Flag,
+  Lap,
   Mode,
   RaceControlMessage,
   ReplayClock,

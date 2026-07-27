@@ -75,6 +75,38 @@ export interface Tyre {
  */
 export type DriverState = 'on-track' | 'pit-lane' | 'in-box' | 'out-lap' | 'retired';
 
+/**
+ * One completed lap of a Driver's recent history — the per-lap facts the sparklines are drawn from
+ * (#16), and only those. Nothing on this type updates more than once per lap, which is the whole of
+ * the rule the frequency tiering rests on: a lap-time trend redraws once per Driver per lap, where a
+ * throttle trace would redraw several times a second (CONTEXT.md, "Per-lap tier").
+ *
+ * Every measurement beyond the lap number is optional in the model's usual sense — a lap the feed
+ * timed but never placed against the field carries a `time` and no `gap` — and a lap the feed never
+ * sent at all is simply absent from the Driver's list, so the sparkline breaks across it rather than
+ * drawing a line the race never ran (story 38). The lap number is what makes that break the right
+ * width: it is the axis, not the position in the list.
+ */
+export interface Lap {
+  /** Which lap this is, one-based. The x-axis the lap-time and Gap trends share, so a lap the feed
+   *  skipped keeps its width as a gap in the line rather than being closed over. */
+  number: number;
+  /** The lap's duration in milliseconds — the height of the lap-time trend, and the pace the tyre-age
+   *  trend plots. Absent for a lap still on the road, or one the feed never timed. */
+  time?: number;
+  /** The Gap to the leader as the lap completed, in milliseconds — the height of the Gap trend. A car
+   *  a lap or more down has no duration to plot (CONTEXT.md, "Gap"), so its Gap is absent here rather
+   *  than an enormous time. */
+  gap?: number;
+  /** The tyre's age in laps as the lap ran — the x-axis of pace against tyre age, which falls back
+   *  when a fresh set goes on and the trend starts a new Stint. */
+  tyreAge?: number;
+  /** Which Stint this lap ran in, one-based. The tyre-age trend draws the current set alone — a pit
+   *  stop resets the age, and an earlier set's laps would send the axis backwards — so the renderer
+   *  reads this to know where the current Stint begins rather than inferring it from the age falling. */
+  stint?: number;
+}
+
 export interface Driver {
   number: DriverNumber;
   /** The three-letter code the Timing screen shows — `VER`, `NOR`. */
@@ -125,6 +157,19 @@ export interface Driver {
    * that position has been settled, and for a Driver who started from the pit lane.
    */
   gridPosition?: number;
+  /**
+   * The Driver's recent laps, oldest first — what the per-lap sparklines draw (#16). A window rather
+   * than the whole Session: a trend is read from the last dozen or so laps, and holding only those is
+   * how the per-lap tier stays clear of the per-second cost it exists to avoid. Absent before the
+   * Driver's first completed lap.
+   */
+  recentLaps?: readonly Lap[];
+  /**
+   * How many laps the Driver has completed — the last column of the row. Not the length of
+   * `recentLaps`, which is only the window that is drawn: a Driver forty laps in still shows a dozen.
+   * Absent before their first completed lap.
+   */
+  lapsCompleted?: number;
 }
 
 /** Which mode the screen is in. Chrome only (#3): no Driver fact ever branches on it. */

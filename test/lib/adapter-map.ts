@@ -21,5 +21,6 @@ const state = sessionStateFrom(
   input.position ?? [],
   input.intervals ?? [],
   input.laps ?? [],
+  input.stints ?? [],
 );
 process.stdout.write(`${JSON.stringify(state.drivers)}\n`);

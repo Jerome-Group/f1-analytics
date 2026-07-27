@@ -141,6 +141,36 @@ PY
 
 assert_equals "no Driver state repeats a livery" "" "$shared"
 
+# --- The running page dresses every component the rows render -----------------------------
+#
+# The Driver row is drawn from several components, each with its own stylesheet. A component whose
+# CSS the design system links but web/index.html does not is a row drawn with the browser's defaults
+# — a sparkline as a filled black polygon rather than a line — and nothing else here catches it,
+# because the markup is right and only the page that wears it is wrong.
+
+page="$here/../web/index.html"
+
+undressed="$(python3 - "$design/components/driver-row/driver-row.html" "$page" <<'PY'
+import re, sys
+
+
+def stylesheets(path):
+    return set(re.findall(r'href="([^"]+\.css)"', open(path).read()))
+
+
+# The component stylesheets the Driver row links, by file name, less the tokens every component
+# imports and the preview.css that dresses only the design-system specimen.
+def components(path):
+    return {h.rsplit("/", 1)[-1] for h in stylesheets(path) if "/tokens/" not in h and not h.endswith("preview.css")}
+
+
+print("\n".join(sorted(components(sys.argv[1]) - {h.rsplit("/", 1)[-1] for h in stylesheets(sys.argv[2])})))
+PY
+)"
+
+assert_equals "web/index.html links a stylesheet for every component the Driver row is drawn from" \
+  "" "$undressed"
+
 # --- Every Driver state the spec names is drawn ------------------------------------------
 
 for state in on-track out-lap pit-lane in-box retired; do

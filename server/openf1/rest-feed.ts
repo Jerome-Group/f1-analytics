@@ -16,23 +16,25 @@ import type {
   MeetingRecord,
   PositionRecord,
   SessionRecord,
+  StintRecord,
 } from './records.ts';
 
 /**
  * Read a backfilled Session out of the Stores as a Replay timeline: the whole record log, and the
  * Session state at any moment on it (#15). One read of each collection — a finished Session does not
- * grow — held in memory so scrubbing costs nothing but a filter (timeline.ts). A Race's four streams
- * are on the order of a hundred thousand records with car telemetry left out, which is why only these
- * four are read: identity, standing, separation and laps, the whole of what the Timing screen shows.
+ * grow — held in memory so scrubbing costs nothing but a filter (timeline.ts). A Race's streams are
+ * on the order of a hundred thousand records with car telemetry left out, which is why only these are
+ * read: identity, standing, separation, laps and Stints, the whole of what the Timing screen shows.
  */
 export async function loadTimeline(api: URL, sessionKey: number): Promise<Timeline> {
-  const [drivers, positions, intervals, laps] = await Promise.all([
+  const [drivers, positions, intervals, laps, stints] = await Promise.all([
     collection<DriverRecord>(api, 'drivers', { session_key: sessionKey }),
     collection<PositionRecord>(api, 'position', { session_key: sessionKey }),
     collection<IntervalRecord>(api, 'intervals', { session_key: sessionKey }),
     collection<LapRecord>(api, 'laps', { session_key: sessionKey }),
+    collection<StintRecord>(api, 'stints', { session_key: sessionKey }),
   ]);
-  return timelineFrom(sessionKey, drivers, positions, intervals, laps);
+  return timelineFrom(sessionKey, drivers, positions, intervals, laps, stints);
 }
 
 /**

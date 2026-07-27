@@ -14,6 +14,7 @@ import type {
   Compound,
   Driver,
   DriverState,
+  Lap,
   Sector,
   SectorBests,
   Sectors,
@@ -23,6 +24,7 @@ import type {
 } from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
 import { escapeText } from './escape.ts';
+import { sparkline, type Plot } from './sparkline.ts';
 
 /** The markup inside the timing table: one row per Driver, and no row that is not a Driver. */
 export function timingScreen(state: SessionState): string {
@@ -42,19 +44,22 @@ function driverRow(driver: Driver): string {
     `<span class="driver-name">${tla(driver.code)}</span>`,
     stateCell(state),
     gapCell('gap', driver.gap),
-    '<span class="cell"></span>',
+    gapTrendCell(driver.recentLaps),
     gapCell('interval', driver.interval),
     lapCell('last-lap', driver.lastLap),
-    '<span class="cell"></span>',
+    lapTrendCell(driver.recentLaps, driver.bestLap),
     lapCell('best-lap', driver.bestLap),
     sectorCells(driver.sectors, driver.sectorBests),
     figure('cell--figure speed-trap', driver.speedTrap),
     // Strategy at a glance (#11): what they are on, how old it is, and how often they have stopped.
-    // The row ends at the pit count for now; the sparklines and lap count after it are later work.
     tyreCell(driver.tyre),
     tyreAgeCell(driver.tyre, driver.stintLaps),
     figure('cell--figure stint', driver.stint),
     figure('cell--figure pit-stops', driver.pitStops),
+    // The trends the field can afford for all twenty (#16): pace against the age of this set, and the
+    // count of laps run. Nothing per-second is drawn here — that is the whole reason the line exists.
+    degTrendCell(driver.recentLaps),
+    figure('cell--figure laps', driver.lapsCompleted),
     '</div>',
   ].join('');
 }
@@ -170,6 +175,62 @@ function lapCell(column: string, millis: number | undefined): string {
   return millis === undefined
     ? absent(`${column} cell--figure`)
     : `<span class="${column} cell--figure">${clock(millis)}</span>`;
+}
+
+/**
+ * The lap-time trend (#16): recent laps against the lap axis, read against the Driver's own best as
+ * the dotted rule so the shape means something rather than floating. A lap the feed never timed is
+ * absent from the run rather than drawn at zero, so the line breaks across it.
+ */
+function lapTrendCell(laps: readonly Lap[] | undefined, best: number | undefined): string {
+  return trendCell(sparkline(plots(laps, (lap) => lap.time), 'Lap times, recent laps', best));
+}
+
+/**
+ * The Gap trend (#16): the Gap to the leader over recent laps, read against the closest the Driver
+ * has been within the window. A lap or more down carries no Gap here (session-state, "Lap"), so it is
+ * a break in the line rather than a spike.
+ */
+function gapTrendCell(laps: readonly Lap[] | undefined): string {
+  const points = plots(laps, (lap) => lap.gap);
+  const best = points.length > 0 ? Math.min(...points.map((point) => point.value)) : undefined;
+  return trendCell(sparkline(points, 'Gap to leader, recent laps', best));
+}
+
+/**
+ * The tyre-age trend (#16): pace against the age of the set on the car now, so a stint's degradation
+ * is a line the eye reads without arithmetic. Only the current Stint is drawn — a pit stop resets the
+ * age, and plotting an earlier set's laps would send the axis backwards — and which laps those are is
+ * the Stint the model stamped on each ([[session-state]]), not something re-derived here. There is no
+ * datum, because pace against tyre age is read as a slope, not against a best.
+ */
+function degTrendCell(laps: readonly Lap[] | undefined): string {
+  const recent = laps ?? [];
+  const current = recent[recent.length - 1]?.stint;
+  const points =
+    current === undefined
+      ? []
+      : recent.flatMap((lap) =>
+          lap.stint === current && lap.tyreAge !== undefined && lap.time !== undefined
+            ? [{ at: lap.tyreAge, value: lap.time }]
+            : [],
+        );
+  return trendCell(sparkline(points, 'Pace against tyre age'));
+}
+
+/** The laps that carry the measurement a trend draws, as points on the lap axis. A lap without it is
+ *  left out, so its absence becomes a gap of the right width rather than a value invented for it. */
+function plots(laps: readonly Lap[] | undefined, of: (lap: Lap) => number | undefined): Plot[] {
+  return (laps ?? []).flatMap((lap) => {
+    const value = of(lap);
+    return value === undefined ? [] : [{ at: lap.number, value }];
+  });
+}
+
+/** A sparkline in the cell the row lays out for it — the one place the team colour reaches inside a
+ *  cell, on the head of the run, so the trend says which row it belongs to. */
+function trendCell(drawn: string): string {
+  return `<span class="cell">${drawn}</span>`;
 }
 
 /** The mark for a value the feed has not sent, wearing whatever column's classes it stands in. */

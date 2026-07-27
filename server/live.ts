@@ -66,7 +66,18 @@ const connection = subscribe({
   onStatus: (up) => process.stderr.write(up ? 'connected to the broker\n' : 'lost the broker, reconnecting\n'),
 });
 
-const server = await serveSessionState(source, Number(process.env['F1_PORT'] ?? DEFAULT_PORT), servePage);
+// A Live Session has no clock to move, so the one control it answers is a viewer opening a Driver
+// (#18) — depth for one, out of what the subscription above already holds.
+const server = await serveSessionState(
+  source,
+  Number(process.env['F1_PORT'] ?? DEFAULT_PORT),
+  servePage,
+  (control) => {
+    if (control.type !== 'open-driver') return;
+    feed.open(control.driver);
+    source.update(liveState());
+  },
+);
 
 // One line, and the port is in it: a test harness has nothing else to wait for, and the viewer wants
 // the other address on the same line (mirrors main.ts).

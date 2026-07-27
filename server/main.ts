@@ -12,14 +12,17 @@
 //
 // One clock at a time, shared by every browser, so the encode-once fan-out is untouched: a second
 // browser choosing a different Session re-points the one clock. That is a single-operator tool's
-// bargain, and the reload a picker choice makes gives each browser a clean snapshot regardless.
+// bargain, and the reload a picker choice makes gives each browser a clean snapshot regardless. The
+// Driver a viewer opens is shared on the same terms (#18), and it is the only thing the per-second
+// tier is ever read for.
 //
 //   F1_OPENF1_URL   where the self-hosted OpenF1 API is answering
 //   F1_PORT         the port the browser connects to; nought asks the operating system for one
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { loadTimeline, readCatalogue } from './openf1/rest-feed.ts';
-import type { Timeline } from './openf1/timeline.ts';
+import type { ClientControl, DriverNumber } from '../domain/index.ts';
+import { loadOpened, loadTimeline, readCatalogue } from './openf1/rest-feed.ts';
+import type { OpenedLog, Timeline } from './openf1/timeline.ts';
 import { servePage } from './dashboard.ts';
 import { replayClock } from './replay/clock.ts';
 import { sessionSource } from './session.ts';
@@ -50,7 +53,8 @@ const timelines = new Map<number, Timeline>();
 const first = await loadTimeline(api, sessionKey);
 timelines.set(sessionKey, first);
 const source = sessionSource(first.at(first.end));
-let clock = replayClock(source, first);
+let active = first;
+let clock = replayClock(source, active);
 let activeKey = sessionKey;
 
 async function activate(next: number): Promise<void> {
@@ -61,8 +65,53 @@ async function activate(next: number): Promise<void> {
     timelines.set(next, timeline);
   }
   clock.stop();
-  clock = replayClock(source, timeline);
+  // Whoever was open was open in the Session being left, so the new one starts with nobody open and
+  // no per-second tier on the wire until somebody asks again.
+  active.open(undefined);
+  wanted = undefined;
+  active = timeline;
+  clock = replayClock(source, active);
   activeKey = next;
+}
+
+// One opened Driver beside the one clock, and for the same single-operator bargain (above): the
+// per-second tier is read for the Driver last opened and for nobody else. Their deep streams are
+// cached by Session and Driver, so re-opening one costs nothing and closing costs nothing at all —
+// it is a field taken out of the next frame, which is why closing is instant even here.
+const opened = new Map<string, OpenedLog>();
+let wanted: DriverNumber | undefined;
+
+async function open(driver: DriverNumber | undefined): Promise<void> {
+  wanted = driver;
+  if (driver !== undefined) {
+    const key = `${activeKey}:${driver}`;
+    let log = opened.get(key);
+    if (log === undefined) {
+      try {
+        log = await loadOpened(api, activeKey, driver);
+      } catch (failure) {
+        // The stack being down, or answering a 429, is the ordinary reason this fails. The Session
+        // on screen is unharmed and the twenty rows keep moving, so it is said once and left there.
+        process.stderr.write(`Driver ${driver} could not be opened: ${String(failure)}\n`);
+        return;
+      }
+      opened.set(key, log);
+    }
+    // A viewer who opened somebody else, or closed this one, while the streams were being read gets
+    // what they asked for last rather than what finished loading first.
+    if (wanted !== driver) return;
+    active.open(log);
+  } else {
+    active.open(undefined);
+  }
+  // The clock has not moved; the log beneath it has. Republishing is how the frame the viewer is
+  // already looking at gains — or loses — the depth behind one Driver.
+  clock.refresh();
+}
+
+function control(sent: ClientControl): void {
+  if (sent.type === 'open-driver') void open(sent.driver);
+  else clock.control(sent);
 }
 
 /** The Session a request names, or nothing when it names none — a bare connection keeps the one on. */
@@ -105,7 +154,7 @@ const server = await serveSessionState(
   source,
   Number(process.env['F1_PORT'] ?? DEFAULT_PORT),
   page,
-  (control) => clock.control(control),
+  control,
   (request) => activate(sessionOf(request.url) ?? activeKey),
 );
 

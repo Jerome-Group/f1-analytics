@@ -8,12 +8,7 @@
 // browsers is already here waiting for them: one update, encoded once, sent to all.
 
 import { isDeepStrictEqual } from 'node:util';
-import type { Driver, SessionChange, SessionState } from '../domain/index.ts';
-
-/** The Session-global keys a change can carry — every key of the change but the Drivers. Derived
- * from `SessionChange` so which keys those are is stated once, in the wire protocol (wire.ts), and
- * not restated here where it would drift. */
-type GlobalField = keyof Omit<SessionChange, 'drivers'>;
+import type { Driver, GlobalField, SessionChange, SessionState } from '../domain/index.ts';
 
 export interface SessionSource {
   /** The whole Session as it stands now, for a browser that has just connected. */
@@ -47,22 +42,31 @@ export function sessionSource(initial: SessionState): SessionSource {
 
 /**
  * What moved between one Session state and the next, in the shape the browser folds (wire.ts):
- * every Session-global field that changed, and the Drivers whose facts changed, each whole.
- * `undefined` when nothing moved, so an update that changes nothing sends nothing. `sessionKey` is
- * never compared — a change is always a change to the same Session.
+ * every Session-global field that changed, the ones that are gone, and the Drivers whose facts
+ * changed, each whole. `undefined` when nothing moved, so an update that changes nothing sends
+ * nothing. `sessionKey` is never compared — a change is always a change to the same Session.
  */
 export function computeChange(previous: SessionState, next: SessionState): SessionChange | undefined {
   const change: SessionChange = {};
+  const removed: GlobalField[] = [];
   let moved = false;
 
   for (const field of sessionGlobalFields(previous, next)) {
     const value = next[field];
-    // A field the next state does not carry is a field that has not moved *to* a value, and the wire
-    // has no way to say a field was removed (wire.ts), so it is left out either way.
-    if (value !== undefined && !isDeepStrictEqual(previous[field], value)) {
+    // A field the next state stopped carrying is named as removed rather than left out: a browser
+    // told nothing would go on holding it, and a Driver closed is exactly that case (#18).
+    if (value === undefined) {
+      if (previous[field] !== undefined) removed.push(field);
+      continue;
+    }
+    if (!isDeepStrictEqual(previous[field], value)) {
       assign(change, field, value);
       moved = true;
     }
+  }
+  if (removed.length > 0) {
+    change.removed = removed;
+    moved = true;
   }
 
   const drivers = changedDrivers(previous.drivers, next.drivers);

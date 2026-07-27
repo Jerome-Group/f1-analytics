@@ -9,8 +9,13 @@ export type {
   DriverState,
   Flag,
   Lap,
+  LapDetail,
+  LapSector,
   Mode,
+  OpenedDriver,
   RaceControlMessage,
+  Radio,
+  Reading,
   ReplayClock,
   Sector,
   SectorBests,
@@ -20,12 +25,16 @@ export type {
   SessionClock,
   SessionIdentity,
   SessionState,
+  Stint,
   Tyre,
   Weather,
 } from './session-state.ts';
 export { byPosition } from './ordering.ts';
-export { applyChange, replayControl } from './wire.ts';
+export { applyChange, clientControl } from './wire.ts';
 export type {
+  ClientControl,
+  GlobalField,
+  OpenControl,
   ReplayControl,
   SessionChange,
   SessionChangeMessage,

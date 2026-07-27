@@ -13,8 +13,14 @@ import { replayClock, type Ticker } from '../../server/replay/clock.ts';
 import type { Timeline } from '../../server/openf1/timeline.ts';
 
 // A Session that runs from 0 to 40s. `at` is irrelevant to the clock's own logic, so it returns an
-// empty field — the Drivers are the timeline's business, and it has its own test.
-const timeline: Timeline = { start: 0, end: 40_000, at: () => ({ sessionKey: 1, drivers: [] }) };
+// empty field — the Drivers are the timeline's business, and it has its own test — and opening a
+// Driver puts nothing into a log this one does not keep.
+const timeline: Timeline = {
+  start: 0,
+  end: 40_000,
+  at: () => ({ sessionKey: 1, drivers: [] }),
+  open: () => {},
+};
 
 // A wall-clock the script moves by hand, and a scheduler that hands back its tick to be pulled.
 let wall = 1_000_000;

@@ -4,9 +4,32 @@
 // both hand the rest of the system the same Session state, which is what lets the Timing screen
 // never branch on which one it is looking at (ADR-0003).
 
-import type { Compound, Driver, Lap, Separation, SessionState, Tyre } from '../../domain/index.ts';
+import type {
+  Compound,
+  Driver,
+  DriverNumber,
+  Lap,
+  LapDetail,
+  LapSector,
+  OpenedDriver,
+  Radio,
+  Reading,
+  SectorStatus,
+  Separation,
+  SessionState,
+  Stint,
+  Tyre,
+} from '../../domain/index.ts';
 import { byPosition } from '../../domain/index.ts';
-import type { DriverRecord, IntervalRecord, LapRecord, PositionRecord, StintRecord } from './records.ts';
+import type {
+  CarDataRecord,
+  DriverRecord,
+  IntervalRecord,
+  LapRecord,
+  PositionRecord,
+  StintRecord,
+  TeamRadioRecord,
+} from './records.ts';
 
 export function sessionStateFrom(
   sessionKey: number,
@@ -258,6 +281,144 @@ function driverFrom(
     }
   }
   return driver;
+}
+
+// --- The opened Driver (#18) -------------------------------------------------------------------
+//
+// Depth for one Driver: the Stint history behind the badge on their row, their laps sector by
+// sector, what their engineer said, and the per-second trace. A separate entry point rather than a
+// wider `sessionStateFrom`, because it is asked for separately — nothing below is built for a Driver
+// nobody opened, and that, rather than any filter downstream, is what makes the per-second tier
+// affordable (CONTEXT.md, "Per-second tier").
+
+/**
+ * Everything behind one Driver, from the same laps and Stints the twenty rows are built from plus
+ * the two streams nothing else reads. `lapRecords` is the whole field's, not this Driver's: which
+ * sector times are purple is settled against everyone, exactly as it is for the row (#10). Each part
+ * is left out where the feed gave nothing for it, so a Session with no radio carries no radio rather
+ * than an empty list standing in for one.
+ */
+export function openedDriverFrom(
+  number: DriverNumber,
+  lapRecords: readonly LapRecord[],
+  stintRecords: readonly StintRecord[],
+  radioRecords: readonly TeamRadioRecord[],
+  readings: readonly CarDataRecord[],
+): OpenedDriver {
+  const own = lapRecords
+    .filter((record) => record.driver_number === number)
+    .sort((a, b) => a.lap_number - b.lap_number);
+  const session = bestSectors(lapRecords);
+  const personal = bestSectors(own);
+
+  const opened: OpenedDriver = { number };
+  const stints = stintsOf(stintRecords, number, own[own.length - 1]?.lap_number ?? 0);
+  const radio = radioOf(radioRecords, number);
+  const telemetry = telemetryOf(readings, number);
+  if (own.length > 0) opened.laps = own.map((record) => lapDetailOf(record, session, personal));
+  if (stints.length > 0) opened.stints = stints;
+  if (radio.length > 0) opened.radio = radio;
+  if (telemetry.length > 0) opened.telemetry = telemetry;
+  return opened;
+}
+
+/** Each sector of a lap, in the order they are run. One list, so a sector is read by its number
+ *  everywhere below rather than by three near-identical expressions. */
+const SECTORS: readonly ((record: LapRecord) => number | null | undefined)[] = [
+  (record) => record.duration_sector_1,
+  (record) => record.duration_sector_2,
+  (record) => record.duration_sector_3,
+];
+
+/** The quickest each sector has been over a set of laps — the whole field's for the purple, one
+ *  Driver's for the green. Absent for a sector nobody has a time in yet. */
+function bestSectors(records: readonly LapRecord[]): readonly (number | undefined)[] {
+  return SECTORS.map((of) => {
+    const times = records.flatMap((record) => {
+      const value = of(record);
+      return typeof value === 'number' && value > 0 ? [seconds(value)] : [];
+    });
+    return times.length === 0 ? undefined : Math.min(...times);
+  });
+}
+
+/** One lap of the opened Driver, sector by sector. A sector the feed never timed is a hole in the
+ *  list rather than a nought, and the status is the same purple/green/yellow the row draws. */
+function lapDetailOf(
+  record: LapRecord,
+  session: readonly (number | undefined)[],
+  personal: readonly (number | undefined)[],
+): LapDetail {
+  const sectors: LapSector[] = SECTORS.map((of, index) => {
+    const value = of(record);
+    if (typeof value !== 'number' || value <= 0) return null;
+    const millis = seconds(value);
+    return { millis, status: sectorStatus(millis, session[index], personal[index]) };
+  });
+  const lap: LapDetail = { number: record.lap_number, sectors };
+  if (record.lap_duration !== null) lap.time = seconds(record.lap_duration);
+  return lap;
+}
+
+/** How good a sector time is: the fastest anyone has set is purple, the Driver's own best green,
+ *  anything slower yellow. Compared with `<=` so the lap that *set* a best wears it. */
+function sectorStatus(millis: number, session: number | undefined, personal: number | undefined): SectorStatus {
+  if (session !== undefined && millis <= session) return 'session-best';
+  if (personal !== undefined && millis <= personal) return 'personal-best';
+  return 'set';
+}
+
+/**
+ * The Stint history: every set the Driver has run so far, oldest first. A Stint that has not started
+ * by `lapsRun` is not history yet, and one still running ends at the last lap actually run rather
+ * than at the lap the feed already knows it will end on — a Replay scrubbed back to lap ten must not
+ * show a Stint ending on lap thirty.
+ */
+function stintsOf(records: readonly StintRecord[], number: DriverNumber, lapsRun: number): Stint[] {
+  return records
+    .filter((record) => record.driver_number === number && record.lap_start <= lapsRun)
+    .sort((a, b) => a.stint_number - b.stint_number)
+    .map((record) => {
+      const stint: Stint = {
+        number: record.stint_number,
+        fromLap: record.lap_start,
+        toLap: Math.min(record.lap_end, lapsRun),
+      };
+      const compound = record.compound === null ? undefined : COMPOUNDS[record.compound.toUpperCase()];
+      if (compound !== undefined) stint.compound = compound;
+      if (record.tyre_age_at_start !== null) stint.tyreAgeAtStart = record.tyre_age_at_start;
+      return stint;
+    });
+}
+
+/** The Driver's radio, newest first — what was just said explains what just happened. A clip with
+ *  no recording behind it is not a clip. */
+function radioOf(records: readonly TeamRadioRecord[], number: DriverNumber): Radio[] {
+  return records
+    .flatMap((record) => {
+      const at = Date.parse(record.date);
+      if (record.driver_number !== number || record.recording_url === null || Number.isNaN(at)) return [];
+      return [{ at, url: record.recording_url }];
+    })
+    .sort((a, b) => b.at - a.at);
+}
+
+/** The trace, oldest first: one reading per document, each channel carried across only where the
+ *  feed sent it. Upstream's DRS is deliberately not among them (records.ts). */
+function telemetryOf(records: readonly CarDataRecord[], number: DriverNumber): Reading[] {
+  return records
+    .flatMap((record) => {
+      const at = Date.parse(record.date);
+      if (record.driver_number !== number || Number.isNaN(at)) return [];
+      const reading: Reading = { at };
+      if (typeof record.speed === 'number') reading.speed = record.speed;
+      if (typeof record.throttle === 'number') reading.throttle = record.throttle;
+      if (typeof record.brake === 'number') reading.brake = record.brake;
+      if (typeof record.n_gear === 'number') reading.gear = record.n_gear;
+      if (typeof record.rpm === 'number') reading.rpm = record.rpm;
+      return [reading];
+    })
+    .sort((a, b) => a.at - b.at);
 }
 
 function text(value: string | null | undefined): string | undefined {

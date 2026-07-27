@@ -26,6 +26,13 @@
 
   --column-gap: 12px;
 
+  /* The opened Driver's panel (#18). It is laid over the screen rather than given a share of it:
+     depth is one click away, and the twenty rows keep their whole width the rest of the time. The
+     width is what the telemetry trace needs — a 640 px plot, its label and its current value — and
+     it is deliberately short of half the screen, so the field is still being read while one Driver
+     is open. */
+  --detail-width: 860px;
+
   --strip-columns: 640px 1fr 720px 300px;
 
   --row-columns:

@@ -109,6 +109,14 @@ and to draw as sparklines. Per-second data — car telemetry, live Intervals —
 times a second across the field and is rendered only for a Driver the viewer has opened.
 _Avoid_: hot/cold, fast/slow, high-frequency
 
+**Opened Driver**:
+The one Driver a viewer has clicked into, and the only Driver the Per-second tier is ever sent or
+drawn for. At most one at a time, by construction rather than by policy: the backend reads the deep
+streams for the Driver named and for nobody else, so an unopened Driver's telemetry is never on the
+wire to be discarded. Opening adds depth beside the Timing screen; it never replaces it, and the
+twenty rows go on updating underneath.
+_Avoid_: selected driver, focus, expanded row, detail view, drill-down
+
 ### The two ways of looking at a past Session
 
 **Replay**:

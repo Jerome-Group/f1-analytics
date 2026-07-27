@@ -9,8 +9,8 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
 import type { Duplex } from 'node:stream';
-import type { ReplayControl, SessionChangeMessage, SessionStateMessage } from '../../domain/index.ts';
-import { replayControl } from '../../domain/index.ts';
+import type { ClientControl, SessionChangeMessage, SessionStateMessage } from '../../domain/index.ts';
+import { clientControl } from '../../domain/index.ts';
 import type { SessionSource } from '../session.ts';
 import { clientText, closeFrame, isClose, textFrame } from './frame.ts';
 import { acceptance } from './handshake.ts';
@@ -29,9 +29,9 @@ export interface SessionStateServer {
 /** What a browser gets when it asks this port for a page instead of upgrading to a socket. */
 export type Page = (request: IncomingMessage, response: ServerResponse) => void | Promise<void>;
 
-/** A control a browser sent back up the socket — a viewer moving the Replay clock (#15). A Live
- * Session has none, so the default does nothing and the finished-Session path can leave it out. */
-export type OnControl = (control: ReplayControl) => void;
+/** A control a browser sent back up the socket — a viewer moving the Replay clock (#15), or opening
+ * a Driver (#18). The default does nothing, so a path that offers neither can leave it out. */
+export type OnControl = (control: ClientControl) => void;
 
 /** Given a connecting browser's request, make ready whatever it asked for before it is sent the
  * snapshot — the Session named in its URL, in Replay (#15). Runs before the socket joins the fan-out
@@ -92,10 +92,10 @@ export async function serveSessionState(
         socket.end(closeFrame());
         return;
       }
-      // The only other thing a browser sends is a Replay control; anything the guard does not
-      // recognise is left alone, exactly as an unasked-for frame always has been.
+      // The only other thing a browser sends is a control; anything the guard does not recognise
+      // is left alone, exactly as an unasked-for frame always has been.
       const text = clientText(chunk);
-      const control = text === undefined ? undefined : replayControl(text);
+      const control = text === undefined ? undefined : clientControl(text);
       if (control !== undefined) onControl(control);
     });
 

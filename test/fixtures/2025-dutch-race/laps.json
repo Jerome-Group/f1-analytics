@@ -2,2412 +2,3618 @@
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 30.637,
+    "duration_sector_2": 26.612,
+    "duration_sector_3": 22.797,
     "lap_duration": 80.046,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:41.109000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 26.079,
+    "duration_sector_2": 27.315,
+    "duration_sector_3": 22.91,
     "lap_duration": 76.304,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:05:57.395000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.774,
+    "duration_sector_2": 27.395,
+    "duration_sector_3": 22.87,
     "lap_duration": 76.039,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:13.458000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.638,
+    "duration_sector_2": 27.353,
+    "duration_sector_3": 22.825,
     "lap_duration": 75.816,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:29.350000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.78,
+    "duration_sector_2": 27.305,
+    "duration_sector_3": 22.861,
     "lap_duration": 75.946,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:45.257000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.826,
+    "duration_sector_2": 27.164,
+    "duration_sector_3": 22.758,
     "lap_duration": 75.748,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:00.958000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.58,
+    "duration_sector_2": 27.278,
+    "duration_sector_3": 22.79,
     "lap_duration": 75.648,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:16.641000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.658,
+    "duration_sector_2": 27.421,
+    "duration_sector_3": 22.674,
     "lap_duration": 75.753,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:32.427000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 26.321,
+    "duration_sector_2": 27.522,
+    "duration_sector_3": 22.763,
     "lap_duration": 76.606,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:49.041000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.731,
+    "duration_sector_2": 27.29,
+    "duration_sector_3": 22.779,
     "lap_duration": 75.8,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:04.819000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.646,
+    "duration_sector_2": 27.485,
+    "duration_sector_3": 22.796,
     "lap_duration": 75.927,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:20.723000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.669,
+    "duration_sector_2": 27.539,
+    "duration_sector_3": 22.872,
     "lap_duration": 76.08,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:36.794000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.594,
+    "duration_sector_2": 27.584,
+    "duration_sector_3": 22.953,
     "lap_duration": 76.131,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:19:52.978000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.61,
+    "duration_sector_2": 27.634,
+    "duration_sector_3": 22.79,
     "lap_duration": 76.034,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:09.007000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.678,
+    "duration_sector_2": 27.693,
+    "duration_sector_3": 23.039,
     "lap_duration": 76.41,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:25.330000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.679,
+    "duration_sector_2": 27.559,
+    "duration_sector_3": 22.959,
     "lap_duration": 76.197,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:41.587000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.677,
+    "duration_sector_2": 27.712,
+    "duration_sector_3": 22.808,
     "lap_duration": 76.197,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:24:57.833000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.613,
+    "duration_sector_2": 27.688,
+    "duration_sector_3": 22.855,
     "lap_duration": 76.156,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:13.988000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.616,
+    "duration_sector_2": 27.848,
+    "duration_sector_3": 22.971,
     "lap_duration": 76.435,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:30.322000+00:00",
     "driver_number": 1,
+    "duration_sector_1": 25.975,
+    "duration_sector_2": 27.679,
+    "duration_sector_3": 23.056,
     "lap_duration": 76.71,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 30.884,
+    "duration_sector_2": 27.292,
+    "duration_sector_3": 22.985,
     "lap_duration": 81.161,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:42.224000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 26.261,
+    "duration_sector_2": 27.587,
+    "duration_sector_3": 22.838,
     "lap_duration": 76.686,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:05:58.850000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.743,
+    "duration_sector_2": 27.388,
+    "duration_sector_3": 22.863,
     "lap_duration": 75.994,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:14.839000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.808,
+    "duration_sector_2": 27.482,
+    "duration_sector_3": 22.75,
     "lap_duration": 76.04,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:30.969000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.617,
+    "duration_sector_2": 27.519,
+    "duration_sector_3": 22.709,
     "lap_duration": 75.845,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:46.805000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.486,
+    "duration_sector_2": 27.307,
+    "duration_sector_3": 22.759,
     "lap_duration": 75.552,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:02.358000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.443,
+    "duration_sector_2": 27.175,
+    "duration_sector_3": 22.618,
     "lap_duration": 75.236,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:17.557000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.47,
+    "duration_sector_2": 27.296,
+    "duration_sector_3": 22.364,
     "lap_duration": 75.13,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:32.584000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.324,
+    "duration_sector_2": 27.022,
+    "duration_sector_3": 22.715,
     "lap_duration": 75.061,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:47.722000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.279,
+    "duration_sector_2": 26.928,
+    "duration_sector_3": 22.57,
     "lap_duration": 74.777,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:02.472000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.254,
+    "duration_sector_2": 26.882,
+    "duration_sector_3": 22.572,
     "lap_duration": 74.708,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:17.262000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.329,
+    "duration_sector_2": 26.957,
+    "duration_sector_3": 22.659,
     "lap_duration": 74.945,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:32.144000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.279,
+    "duration_sector_2": 26.944,
+    "duration_sector_3": 22.773,
     "lap_duration": 74.996,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:19:47.159000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.303,
+    "duration_sector_2": 27.026,
+    "duration_sector_3": 22.739,
     "lap_duration": 75.068,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:02.360000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.311,
+    "duration_sector_2": 27.114,
+    "duration_sector_3": 22.741,
     "lap_duration": 75.166,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:17.360000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.381,
+    "duration_sector_2": 27.119,
+    "duration_sector_3": 22.726,
     "lap_duration": 75.226,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:32.610000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.549,
+    "duration_sector_2": 27.124,
+    "duration_sector_3": 22.801,
     "lap_duration": 75.474,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:24:48.075000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.358,
+    "duration_sector_2": 27.26,
+    "duration_sector_3": 22.803,
     "lap_duration": 75.421,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:03.451000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.432,
+    "duration_sector_2": 27.309,
+    "duration_sector_3": 22.806,
     "lap_duration": 75.547,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:19.010000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.529,
+    "duration_sector_2": 27.229,
+    "duration_sector_3": 22.886,
     "lap_duration": 75.644,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:28:34.710000+00:00",
     "driver_number": 4,
+    "duration_sector_1": 25.686,
+    "duration_sector_2": 27.257,
+    "duration_sector_3": 22.861,
     "lap_duration": 75.804,
     "lap_number": 21
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 35.027,
+    "duration_sector_2": 29.237,
+    "duration_sector_3": 23.827,
     "lap_duration": 88.091,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:49.154000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.888,
+    "duration_sector_2": 27.887,
+    "duration_sector_3": 23.159,
     "lap_duration": 77.934,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:07.201000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.481,
+    "duration_sector_2": 27.937,
+    "duration_sector_3": 23.724,
     "lap_duration": 78.142,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:25.265000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.461,
+    "duration_sector_2": 27.738,
+    "duration_sector_3": 22.94,
     "lap_duration": 77.139,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:42.662000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.44,
+    "duration_sector_2": 28.006,
+    "duration_sector_3": 22.949,
     "lap_duration": 77.395,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:59.803000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.202,
+    "duration_sector_2": 27.729,
+    "duration_sector_3": 22.844,
     "lap_duration": 76.775,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:16.517000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.225,
+    "duration_sector_2": 27.967,
+    "duration_sector_3": 22.818,
     "lap_duration": 77.01,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:33.591000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.151,
+    "duration_sector_2": 27.775,
+    "duration_sector_3": 22.758,
     "lap_duration": 76.684,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:50.196000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 25.87,
+    "duration_sector_2": 27.742,
+    "duration_sector_3": 22.981,
     "lap_duration": 76.593,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:06.828000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.204,
+    "duration_sector_2": 27.988,
+    "duration_sector_3": 23.141,
     "lap_duration": 77.333,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:24.248000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.264,
+    "duration_sector_2": 28.081,
+    "duration_sector_3": 23.236,
     "lap_duration": 77.581,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:41.806000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.273,
+    "duration_sector_2": 27.756,
+    "duration_sector_3": 23.235,
     "lap_duration": 77.264,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:59.021000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.173,
+    "duration_sector_2": 27.86,
+    "duration_sector_3": 23.251,
     "lap_duration": 77.284,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:16.329000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.164,
+    "duration_sector_2": 28.026,
+    "duration_sector_3": 23.148,
     "lap_duration": 77.338,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:33.731000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.141,
+    "duration_sector_2": 28.073,
+    "duration_sector_3": 23.151,
     "lap_duration": 77.365,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:50.982000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.246,
+    "duration_sector_2": 28.167,
+    "duration_sector_3": 23.287,
     "lap_duration": 77.7,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:08.789000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.194,
+    "duration_sector_2": 28.021,
+    "duration_sector_3": 23.04,
     "lap_duration": 77.255,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:26.011000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.07,
+    "duration_sector_2": 28.068,
+    "duration_sector_3": 23.07,
     "lap_duration": 77.208,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:43.636000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.11,
+    "duration_sector_2": 28.201,
+    "duration_sector_3": 23.073,
     "lap_duration": 77.384,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:28:00.607000+00:00",
     "driver_number": 5,
+    "duration_sector_1": 26.346,
+    "duration_sector_2": 28.153,
+    "duration_sector_3": 23.053,
     "lap_duration": 77.552,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 31.545,
+    "duration_sector_2": 27.213,
+    "duration_sector_3": 23.147,
     "lap_duration": 81.905,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:42.968000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 26.203,
+    "duration_sector_2": 27.711,
+    "duration_sector_3": 22.636,
     "lap_duration": 76.55,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:05:59.529000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 26.1,
+    "duration_sector_2": 27.753,
+    "duration_sector_3": 22.776,
     "lap_duration": 76.629,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:16.081000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.855,
+    "duration_sector_2": 27.557,
+    "duration_sector_3": 22.665,
     "lap_duration": 76.077,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:32.266000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.76,
+    "duration_sector_2": 27.557,
+    "duration_sector_3": 22.683,
     "lap_duration": 76.0,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:48.166000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.601,
+    "duration_sector_2": 27.634,
+    "duration_sector_3": 22.67,
     "lap_duration": 75.905,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:04.132000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.466,
+    "duration_sector_2": 27.501,
+    "duration_sector_3": 22.622,
     "lap_duration": 75.589,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:19.739000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.464,
+    "duration_sector_2": 27.455,
+    "duration_sector_3": 22.62,
     "lap_duration": 75.539,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:35.236000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.456,
+    "duration_sector_2": 27.431,
+    "duration_sector_3": 22.713,
     "lap_duration": 75.6,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:50.807000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.69,
+    "duration_sector_2": 27.669,
+    "duration_sector_3": 22.716,
     "lap_duration": 76.075,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:06.997000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.582,
+    "duration_sector_2": 27.528,
+    "duration_sector_3": 22.767,
     "lap_duration": 75.877,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:22.828000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.55,
+    "duration_sector_2": 27.657,
+    "duration_sector_3": 22.859,
     "lap_duration": 76.066,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:38.901000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.577,
+    "duration_sector_2": 27.608,
+    "duration_sector_3": 22.813,
     "lap_duration": 75.998,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:19:54.853000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.556,
+    "duration_sector_2": 27.706,
+    "duration_sector_3": 22.813,
     "lap_duration": 76.075,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:10.935000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.625,
+    "duration_sector_2": 27.874,
+    "duration_sector_3": 22.936,
     "lap_duration": 76.435,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:27.364000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.605,
+    "duration_sector_2": 27.821,
+    "duration_sector_3": 22.841,
     "lap_duration": 76.267,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:43.700000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.652,
+    "duration_sector_2": 27.922,
+    "duration_sector_3": 22.941,
     "lap_duration": 76.515,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:00.128000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.691,
+    "duration_sector_2": 27.843,
+    "duration_sector_3": 22.844,
     "lap_duration": 76.378,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:16.482000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.578,
+    "duration_sector_2": 27.906,
+    "duration_sector_3": 22.874,
     "lap_duration": 76.358,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:32.854000+00:00",
     "driver_number": 6,
+    "duration_sector_1": 25.663,
+    "duration_sector_2": 27.928,
+    "duration_sector_3": 22.993,
     "lap_duration": 76.584,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 34.139,
+    "duration_sector_2": 28.73,
+    "duration_sector_3": 23.981,
     "lap_duration": 86.85,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:47.913000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.71,
+    "duration_sector_2": 27.773,
+    "duration_sector_3": 23.107,
     "lap_duration": 77.59,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:05.401000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.071,
+    "duration_sector_2": 27.735,
+    "duration_sector_3": 22.898,
     "lap_duration": 76.704,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:22.131000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.161,
+    "duration_sector_2": 27.956,
+    "duration_sector_3": 23.411,
     "lap_duration": 77.528,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:39.704000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.792,
+    "duration_sector_2": 27.689,
+    "duration_sector_3": 23.061,
     "lap_duration": 77.542,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:57.226000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.126,
+    "duration_sector_2": 27.695,
+    "duration_sector_3": 22.869,
     "lap_duration": 76.69,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:13.923000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.018,
+    "duration_sector_2": 27.786,
+    "duration_sector_3": 22.93,
     "lap_duration": 76.734,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:30.636000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.031,
+    "duration_sector_2": 27.78,
+    "duration_sector_3": 22.955,
     "lap_duration": 76.766,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:47.459000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.06,
+    "duration_sector_2": 27.853,
+    "duration_sector_3": 22.93,
     "lap_duration": 76.843,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:04.243000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.025,
+    "duration_sector_2": 27.918,
+    "duration_sector_3": 23.083,
     "lap_duration": 77.026,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:21.328000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.048,
+    "duration_sector_2": 27.807,
+    "duration_sector_3": 23.157,
     "lap_duration": 77.012,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:38.249000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 25.911,
+    "duration_sector_2": 27.788,
+    "duration_sector_3": 23.232,
     "lap_duration": 76.931,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:55.284000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 25.925,
+    "duration_sector_2": 27.733,
+    "duration_sector_3": 23.117,
     "lap_duration": 76.775,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:11.980000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.224,
+    "duration_sector_2": 27.915,
+    "duration_sector_3": 23.178,
     "lap_duration": 77.317,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:29.299000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.077,
+    "duration_sector_2": 27.881,
+    "duration_sector_3": 23.055,
     "lap_duration": 77.013,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:46.342000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.161,
+    "duration_sector_2": 27.745,
+    "duration_sector_3": 23.346,
     "lap_duration": 77.252,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:03.580000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.047,
+    "duration_sector_2": 27.914,
+    "duration_sector_3": 23.282,
     "lap_duration": 77.243,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:20.862000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 25.948,
+    "duration_sector_2": 27.838,
+    "duration_sector_3": 22.993,
     "lap_duration": 76.779,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:37.599000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.116,
+    "duration_sector_2": 28.152,
+    "duration_sector_3": 23.215,
     "lap_duration": 77.483,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:55.036000+00:00",
     "driver_number": 10,
+    "duration_sector_1": 26.371,
+    "duration_sector_2": 27.871,
+    "duration_sector_3": 23.331,
     "lap_duration": 77.573,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 33.27,
+    "duration_sector_2": 29.202,
+    "duration_sector_3": 23.412,
     "lap_duration": 85.884,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:46.947000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.536,
+    "duration_sector_2": 28.129,
+    "duration_sector_3": 22.788,
     "lap_duration": 77.453,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:04.375000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 25.977,
+    "duration_sector_2": 27.948,
+    "duration_sector_3": 22.712,
     "lap_duration": 76.637,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:21.004000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.162,
+    "duration_sector_2": 27.997,
+    "duration_sector_3": 22.873,
     "lap_duration": 77.032,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:38.029000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.087,
+    "duration_sector_2": 28.146,
+    "duration_sector_3": 22.827,
     "lap_duration": 77.06,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:55.166000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.147,
+    "duration_sector_2": 27.778,
+    "duration_sector_3": 22.746,
     "lap_duration": 76.671,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:11.798000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.022,
+    "duration_sector_2": 27.933,
+    "duration_sector_3": 22.746,
     "lap_duration": 76.701,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:28.404000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 25.929,
+    "duration_sector_2": 27.888,
+    "duration_sector_3": 22.922,
     "lap_duration": 76.739,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:45.184000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.01,
+    "duration_sector_2": 27.849,
+    "duration_sector_3": 22.792,
     "lap_duration": 76.651,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:01.874000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.176,
+    "duration_sector_2": 27.678,
+    "duration_sector_3": 22.839,
     "lap_duration": 76.693,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:18.526000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.452,
+    "duration_sector_2": 27.735,
+    "duration_sector_3": 22.806,
     "lap_duration": 76.993,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:35.516000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.144,
+    "duration_sector_2": 27.781,
+    "duration_sector_3": 22.962,
     "lap_duration": 76.887,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:52.483000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.192,
+    "duration_sector_2": 27.715,
+    "duration_sector_3": 22.921,
     "lap_duration": 76.828,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:09.226000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.162,
+    "duration_sector_2": 27.898,
+    "duration_sector_3": 23.041,
     "lap_duration": 77.101,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:26.317000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.043,
+    "duration_sector_2": 27.797,
+    "duration_sector_3": 23.143,
     "lap_duration": 76.983,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:43.311000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.129,
+    "duration_sector_2": 27.982,
+    "duration_sector_3": 23.113,
     "lap_duration": 77.224,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:00.630000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.312,
+    "duration_sector_2": 27.734,
+    "duration_sector_3": 22.924,
     "lap_duration": 76.97,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:17.634000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.184,
+    "duration_sector_2": 27.878,
+    "duration_sector_3": 22.975,
     "lap_duration": 77.037,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:34.646000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 26.534,
+    "duration_sector_2": 27.877,
+    "duration_sector_3": 23.078,
     "lap_duration": 77.489,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:52.046000+00:00",
     "driver_number": 12,
+    "duration_sector_1": 25.929,
+    "duration_sector_2": 27.623,
+    "duration_sector_3": 23.089,
     "lap_duration": 76.641,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 33.819,
+    "duration_sector_2": 28.863,
+    "duration_sector_3": 23.637,
     "lap_duration": 86.319,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:47.382000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.451,
+    "duration_sector_2": 27.812,
+    "duration_sector_3": 23.042,
     "lap_duration": 77.305,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:04.804000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.257,
+    "duration_sector_2": 27.669,
+    "duration_sector_3": 22.949,
     "lap_duration": 76.875,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:21.525000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.132,
+    "duration_sector_2": 27.86,
+    "duration_sector_3": 23.133,
     "lap_duration": 77.125,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:39.075000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.148,
+    "duration_sector_2": 27.779,
+    "duration_sector_3": 23.092,
     "lap_duration": 77.019,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:55.694000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.202,
+    "duration_sector_2": 27.6,
+    "duration_sector_3": 22.946,
     "lap_duration": 76.748,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:12.470000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.153,
+    "duration_sector_2": 27.809,
+    "duration_sector_3": 22.827,
     "lap_duration": 76.789,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:29.261000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.14,
+    "duration_sector_2": 27.667,
+    "duration_sector_3": 22.919,
     "lap_duration": 76.726,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:46.042000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.041,
+    "duration_sector_2": 27.762,
+    "duration_sector_3": 22.93,
     "lap_duration": 76.733,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:02.670000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.014,
+    "duration_sector_2": 27.878,
+    "duration_sector_3": 22.951,
     "lap_duration": 76.843,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:19.572000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 25.972,
+    "duration_sector_2": 27.915,
+    "duration_sector_3": 22.907,
     "lap_duration": 76.794,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:36.415000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 25.897,
+    "duration_sector_2": 27.722,
+    "duration_sector_3": 23.129,
     "lap_duration": 76.748,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:53.124000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.097,
+    "duration_sector_2": 27.783,
+    "duration_sector_3": 23.176,
     "lap_duration": 77.056,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:10.211000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.106,
+    "duration_sector_2": 27.986,
+    "duration_sector_3": 22.921,
     "lap_duration": 77.013,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:27.207000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 25.892,
+    "duration_sector_2": 27.938,
+    "duration_sector_3": 23.008,
     "lap_duration": 76.838,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:44.030000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.072,
+    "duration_sector_2": 28.062,
+    "duration_sector_3": 23.184,
     "lap_duration": 77.318,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:01.306000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 26.204,
+    "duration_sector_2": 27.868,
+    "duration_sector_3": 22.952,
     "lap_duration": 77.024,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:18.393000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 25.995,
+    "duration_sector_2": 27.991,
+    "duration_sector_3": 25.65,
     "lap_duration": 79.636,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:37.903000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 41.609,
+    "duration_sector_2": 26.287,
+    "duration_sector_3": 22.541,
     "lap_duration": 90.437,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:28:08.450000+00:00",
     "driver_number": 14,
+    "duration_sector_1": 25.602,
+    "duration_sector_2": 26.731,
+    "duration_sector_3": 22.72,
     "lap_duration": 75.053,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 31.764,
+    "duration_sector_2": 27.606,
+    "duration_sector_3": 22.764,
     "lap_duration": 82.134,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:43.197000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 26.543,
+    "duration_sector_2": 27.78,
+    "duration_sector_3": 22.753,
     "lap_duration": 77.076,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:00.242000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 26.18,
+    "duration_sector_2": 27.529,
+    "duration_sector_3": 22.586,
     "lap_duration": 76.295,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:16.565000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 26.268,
+    "duration_sector_2": 27.507,
+    "duration_sector_3": 22.567,
     "lap_duration": 76.342,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:32.866000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.967,
+    "duration_sector_2": 27.413,
+    "duration_sector_3": 22.658,
     "lap_duration": 76.038,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:48.902000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.962,
+    "duration_sector_2": 27.338,
+    "duration_sector_3": 22.569,
     "lap_duration": 75.869,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:04.792000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.861,
+    "duration_sector_2": 27.084,
+    "duration_sector_3": 22.417,
     "lap_duration": 75.362,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:20.203000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.939,
+    "duration_sector_2": 27.195,
+    "duration_sector_3": 22.65,
     "lap_duration": 75.784,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:35.967000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.841,
+    "duration_sector_2": 27.241,
+    "duration_sector_3": 22.888,
     "lap_duration": 75.97,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:52.012000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.745,
+    "duration_sector_2": 27.172,
+    "duration_sector_3": 22.629,
     "lap_duration": 75.546,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:07.399000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.929,
+    "duration_sector_2": 27.29,
+    "duration_sector_3": 22.553,
     "lap_duration": 75.772,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:23.247000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.94,
+    "duration_sector_2": 27.499,
+    "duration_sector_3": 22.711,
     "lap_duration": 76.15,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:39.433000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.935,
+    "duration_sector_2": 27.403,
+    "duration_sector_3": 22.837,
     "lap_duration": 76.175,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:19:55.556000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.96,
+    "duration_sector_2": 27.449,
+    "duration_sector_3": 22.799,
     "lap_duration": 76.208,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:11.829000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.859,
+    "duration_sector_2": 27.781,
+    "duration_sector_3": 22.893,
     "lap_duration": 76.533,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:28.327000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.868,
+    "duration_sector_2": 27.773,
+    "duration_sector_3": 23.101,
     "lap_duration": 76.742,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:44.953000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.833,
+    "duration_sector_2": 27.712,
+    "duration_sector_3": 23.044,
     "lap_duration": 76.589,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:01.810000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.844,
+    "duration_sector_2": 27.54,
+    "duration_sector_3": 22.881,
     "lap_duration": 76.265,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:17.883000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.794,
+    "duration_sector_2": 27.577,
+    "duration_sector_3": 22.809,
     "lap_duration": 76.18,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:34.061000+00:00",
     "driver_number": 16,
+    "duration_sector_1": 25.991,
+    "duration_sector_2": 27.614,
+    "duration_sector_3": 23.006,
     "lap_duration": 76.611,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 34.861,
+    "duration_sector_2": 29.325,
+    "duration_sector_3": 24.471,
     "lap_duration": 88.657,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:49.720000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.754,
+    "duration_sector_2": 27.915,
+    "duration_sector_3": 23.151,
     "lap_duration": 77.82,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:07.575000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.335,
+    "duration_sector_2": 27.701,
+    "duration_sector_3": 23.3,
     "lap_duration": 77.336,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:24.865000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.182,
+    "duration_sector_2": 27.498,
+    "duration_sector_3": 22.811,
     "lap_duration": 76.491,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:41.497000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.355,
+    "duration_sector_2": 28.025,
+    "duration_sector_3": 23.02,
     "lap_duration": 77.4,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:58.804000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.322,
+    "duration_sector_2": 27.782,
+    "duration_sector_3": 22.83,
     "lap_duration": 76.934,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:15.751000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.258,
+    "duration_sector_2": 27.999,
+    "duration_sector_3": 22.823,
     "lap_duration": 77.08,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:32.744000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.103,
+    "duration_sector_2": 27.744,
+    "duration_sector_3": 25.916,
     "lap_duration": 79.763,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:52.527000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 42.282,
+    "duration_sector_2": 26.437,
+    "duration_sector_3": 22.823,
     "lap_duration": 91.542,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:24.037000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.784,
+    "duration_sector_2": 26.599,
+    "duration_sector_3": 22.859,
     "lap_duration": 75.242,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:39.329000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.815,
+    "duration_sector_2": 26.942,
+    "duration_sector_3": 22.959,
     "lap_duration": 75.716,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:55.078000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.017,
+    "duration_sector_2": 26.895,
+    "duration_sector_3": 22.968,
     "lap_duration": 75.88,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:19:10.949000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.854,
+    "duration_sector_2": 26.773,
+    "duration_sector_3": 22.841,
     "lap_duration": 75.468,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:26.431000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.775,
+    "duration_sector_2": 26.951,
+    "duration_sector_3": 22.926,
     "lap_duration": 75.652,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:42.143000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.793,
+    "duration_sector_2": 27.175,
+    "duration_sector_3": 22.984,
     "lap_duration": 75.952,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:57.987000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.036,
+    "duration_sector_2": 27.205,
+    "duration_sector_3": 22.96,
     "lap_duration": 76.201,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:14.262000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.946,
+    "duration_sector_2": 27.236,
+    "duration_sector_3": 22.972,
     "lap_duration": 76.154,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:30.306000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.891,
+    "duration_sector_2": 27.405,
+    "duration_sector_3": 23.018,
     "lap_duration": 76.314,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:46.682000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 25.967,
+    "duration_sector_2": 27.432,
+    "duration_sector_3": 23.051,
     "lap_duration": 76.45,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:28:03.169000+00:00",
     "driver_number": 18,
+    "duration_sector_1": 26.317,
+    "duration_sector_2": 27.788,
+    "duration_sector_3": 23.216,
     "lap_duration": 77.321,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 33.36,
+    "duration_sector_2": 28.52,
+    "duration_sector_3": 23.321,
     "lap_duration": 85.201,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:46.264000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.841,
+    "duration_sector_2": 27.919,
+    "duration_sector_3": 22.538,
     "lap_duration": 77.298,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:03.658000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.316,
+    "duration_sector_2": 27.784,
+    "duration_sector_3": 22.737,
     "lap_duration": 76.837,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:20.504000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.31,
+    "duration_sector_2": 28.032,
+    "duration_sector_3": 22.686,
     "lap_duration": 77.028,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:37.552000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.232,
+    "duration_sector_2": 28.051,
+    "duration_sector_3": 22.635,
     "lap_duration": 76.918,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:54.357000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.291,
+    "duration_sector_2": 27.815,
+    "duration_sector_3": 22.59,
     "lap_duration": 76.696,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:11.082000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.103,
+    "duration_sector_2": 27.964,
+    "duration_sector_3": 22.569,
     "lap_duration": 76.636,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:27.807000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.183,
+    "duration_sector_2": 27.949,
+    "duration_sector_3": 22.902,
     "lap_duration": 77.034,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:44.783000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.013,
+    "duration_sector_2": 27.869,
+    "duration_sector_3": 22.854,
     "lap_duration": 76.736,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:01.490000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 25.896,
+    "duration_sector_2": 27.847,
+    "duration_sector_3": 23.048,
     "lap_duration": 76.791,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:18.368000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 25.993,
+    "duration_sector_2": 27.822,
+    "duration_sector_3": 22.994,
     "lap_duration": 76.809,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:35.125000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.078,
+    "duration_sector_2": 27.88,
+    "duration_sector_3": 23.009,
     "lap_duration": 76.967,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:52.030000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 25.938,
+    "duration_sector_2": 27.806,
+    "duration_sector_3": 23.05,
     "lap_duration": 76.794,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:09.051000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.075,
+    "duration_sector_2": 27.913,
+    "duration_sector_3": 23.025,
     "lap_duration": 77.013,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:25.879000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 25.988,
+    "duration_sector_2": 27.81,
+    "duration_sector_3": 23.176,
     "lap_duration": 76.974,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:42.858000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.126,
+    "duration_sector_2": 27.992,
+    "duration_sector_3": 23.24,
     "lap_duration": 77.358,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:00.230000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.248,
+    "duration_sector_2": 27.633,
+    "duration_sector_3": 23.076,
     "lap_duration": 76.957,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:17.220000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.13,
+    "duration_sector_2": 27.918,
+    "duration_sector_3": 23.062,
     "lap_duration": 77.11,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:34.310000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 26.257,
+    "duration_sector_2": 27.971,
+    "duration_sector_3": 25.791,
     "lap_duration": 80.019,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:54.276000+00:00",
     "driver_number": 22,
+    "duration_sector_1": 43.833,
+    "duration_sector_2": 26.893,
+    "duration_sector_3": 22.707,
     "lap_duration": 93.433,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 33.099,
+    "duration_sector_2": 28.307,
+    "duration_sector_3": 23.575,
     "lap_duration": 84.981,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:46.044000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 26.674,
+    "duration_sector_2": 27.716,
+    "duration_sector_3": 22.755,
     "lap_duration": 77.145,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:03.095000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 26.172,
+    "duration_sector_2": 27.707,
+    "duration_sector_3": 22.944,
     "lap_duration": 76.823,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:20.081000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 26.231,
+    "duration_sector_2": 27.822,
+    "duration_sector_3": 22.837,
     "lap_duration": 76.89,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:36.923000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 26.243,
+    "duration_sector_2": 27.911,
+    "duration_sector_3": 22.929,
     "lap_duration": 77.083,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:53.926000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 26.107,
+    "duration_sector_2": 27.639,
+    "duration_sector_3": 22.887,
     "lap_duration": 76.633,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:10.621000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.968,
+    "duration_sector_2": 27.756,
+    "duration_sector_3": 22.846,
     "lap_duration": 76.57,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:27.116000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.917,
+    "duration_sector_2": 27.836,
+    "duration_sector_3": 22.888,
     "lap_duration": 76.641,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:43.855000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.871,
+    "duration_sector_2": 27.799,
+    "duration_sector_3": 22.841,
     "lap_duration": 76.511,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:00.258000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.857,
+    "duration_sector_2": 27.893,
+    "duration_sector_3": 22.885,
     "lap_duration": 76.635,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:16.884000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.795,
+    "duration_sector_2": 27.961,
+    "duration_sector_3": 22.854,
     "lap_duration": 76.61,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:33.618000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.777,
+    "duration_sector_2": 27.888,
+    "duration_sector_3": 22.949,
     "lap_duration": 76.614,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:50.280000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.764,
+    "duration_sector_2": 27.878,
+    "duration_sector_3": 22.95,
     "lap_duration": 76.592,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:06.708000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.985,
+    "duration_sector_2": 28.031,
+    "duration_sector_3": 22.917,
     "lap_duration": 76.933,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:23.723000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.772,
+    "duration_sector_2": 27.913,
+    "duration_sector_3": 23.071,
     "lap_duration": 76.756,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:40.420000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.759,
+    "duration_sector_2": 27.863,
+    "duration_sector_3": 22.931,
     "lap_duration": 76.553,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:56.987000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.768,
+    "duration_sector_2": 27.894,
+    "duration_sector_3": 22.926,
     "lap_duration": 76.588,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:13.562000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.72,
+    "duration_sector_2": 27.879,
+    "duration_sector_3": 22.929,
     "lap_duration": 76.528,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:30.106000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.703,
+    "duration_sector_2": 27.986,
+    "duration_sector_3": 22.976,
     "lap_duration": 76.665,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:46.788000+00:00",
     "driver_number": 23,
+    "duration_sector_1": 25.876,
+    "duration_sector_2": 27.88,
+    "duration_sector_3": 22.948,
     "lap_duration": 76.704,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 34.698,
+    "duration_sector_2": 29.183,
+    "duration_sector_3": 23.985,
     "lap_duration": 87.866,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:48.929000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.936,
+    "duration_sector_2": 27.777,
+    "duration_sector_3": 22.833,
     "lap_duration": 77.546,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:06.539000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.335,
+    "duration_sector_2": 27.388,
+    "duration_sector_3": 22.937,
     "lap_duration": 76.66,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:23.039000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.317,
+    "duration_sector_2": 27.814,
+    "duration_sector_3": 23.119,
     "lap_duration": 77.25,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:40.728000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.731,
+    "duration_sector_2": 27.774,
+    "duration_sector_3": 22.846,
     "lap_duration": 77.351,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:57.671000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.104,
+    "duration_sector_2": 27.705,
+    "duration_sector_3": 22.789,
     "lap_duration": 76.598,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:14.282000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.478,
+    "duration_sector_2": 27.674,
+    "duration_sector_3": 22.928,
     "lap_duration": 77.08,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:31.389000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.15,
+    "duration_sector_2": 27.637,
+    "duration_sector_3": 22.961,
     "lap_duration": 76.748,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:48.157000+00:00",
     "driver_number": 27,
+    "duration_sector_1": null,
+    "duration_sector_2": 27.794,
+    "duration_sector_3": 22.956,
     "lap_duration": 76.9,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:05.059000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.425,
+    "duration_sector_2": 27.628,
+    "duration_sector_3": 23.012,
     "lap_duration": 77.065,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:22.253000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.14,
+    "duration_sector_2": 27.903,
+    "duration_sector_3": 23.105,
     "lap_duration": 77.148,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:39.308000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.097,
+    "duration_sector_2": 27.781,
+    "duration_sector_3": 23.194,
     "lap_duration": 77.072,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:56.427000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.272,
+    "duration_sector_2": 27.834,
+    "duration_sector_3": 23.359,
     "lap_duration": 77.465,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:13.809000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.407,
+    "duration_sector_2": 27.705,
+    "duration_sector_3": 23.061,
     "lap_duration": 77.173,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:30.973000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.204,
+    "duration_sector_2": 27.821,
+    "duration_sector_3": 23.235,
     "lap_duration": 77.26,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:48.330000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.371,
+    "duration_sector_2": 27.986,
+    "duration_sector_3": 23.287,
     "lap_duration": 77.644,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:05.847000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.178,
+    "duration_sector_2": 27.836,
+    "duration_sector_3": 22.931,
     "lap_duration": 76.945,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:22.812000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.044,
+    "duration_sector_2": 27.912,
+    "duration_sector_3": 23.206,
     "lap_duration": 77.162,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:40.013000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 26.178,
+    "duration_sector_2": 27.844,
+    "duration_sector_3": 25.235,
     "lap_duration": 79.257,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:59.388000+00:00",
     "driver_number": 27,
+    "duration_sector_1": 43.137,
+    "duration_sector_2": 27.879,
+    "duration_sector_3": 23.01,
     "lap_duration": 94.026,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 32.675,
+    "duration_sector_2": 27.865,
+    "duration_sector_3": 23.421,
     "lap_duration": 83.961,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:45.024000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.557,
+    "duration_sector_2": 27.387,
+    "duration_sector_3": 22.975,
     "lap_duration": 76.919,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:02.051000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.189,
+    "duration_sector_2": 27.514,
+    "duration_sector_3": 23.006,
     "lap_duration": 76.709,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:18.626000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.084,
+    "duration_sector_2": 27.48,
+    "duration_sector_3": 22.808,
     "lap_duration": 76.372,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:35.093000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.191,
+    "duration_sector_2": 27.476,
+    "duration_sector_3": 22.741,
     "lap_duration": 76.408,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:51.337000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.078,
+    "duration_sector_2": 27.435,
+    "duration_sector_3": 22.92,
     "lap_duration": 76.433,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:07.898000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 25.95,
+    "duration_sector_2": 27.248,
+    "duration_sector_3": 23.039,
     "lap_duration": 76.237,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:24.053000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 25.867,
+    "duration_sector_2": 27.388,
+    "duration_sector_3": 22.948,
     "lap_duration": 76.203,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:40.341000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 25.935,
+    "duration_sector_2": 27.265,
+    "duration_sector_3": 22.953,
     "lap_duration": 76.153,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:56.403000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.005,
+    "duration_sector_2": 27.551,
+    "duration_sector_3": 22.797,
     "lap_duration": 76.353,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:12.753000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 25.924,
+    "duration_sector_2": 27.5,
+    "duration_sector_3": 22.872,
     "lap_duration": 76.296,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:29.128000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.006,
+    "duration_sector_2": 27.559,
+    "duration_sector_3": 22.962,
     "lap_duration": 76.527,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:45.632000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 25.817,
+    "duration_sector_2": 27.47,
+    "duration_sector_3": 23.041,
     "lap_duration": 76.328,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:01.929000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 25.892,
+    "duration_sector_2": 27.609,
+    "duration_sector_3": 23.059,
     "lap_duration": 76.56,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:18.531000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 25.962,
+    "duration_sector_2": 27.639,
+    "duration_sector_3": 23.163,
     "lap_duration": 76.764,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:35.320000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.018,
+    "duration_sector_2": 27.734,
+    "duration_sector_3": 23.127,
     "lap_duration": 76.879,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:52.109000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.047,
+    "duration_sector_2": 27.629,
+    "duration_sector_3": 22.999,
     "lap_duration": 76.675,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:08.833000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.013,
+    "duration_sector_2": 27.553,
+    "duration_sector_3": 22.938,
     "lap_duration": 76.504,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:25.299000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.018,
+    "duration_sector_2": 27.751,
+    "duration_sector_3": 23.252,
     "lap_duration": 77.021,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:42.400000+00:00",
     "driver_number": 30,
+    "duration_sector_1": 26.319,
+    "duration_sector_2": 27.923,
+    "duration_sector_3": 23.249,
     "lap_duration": 77.491,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 34.432,
+    "duration_sector_2": 29.132,
+    "duration_sector_3": 24.024,
     "lap_duration": 87.588,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:48.651000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.915,
+    "duration_sector_2": 27.624,
+    "duration_sector_3": 23.116,
     "lap_duration": 77.655,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:06.443000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.994,
+    "duration_sector_2": 27.413,
+    "duration_sector_3": 22.999,
     "lap_duration": 77.406,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:23.796000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.364,
+    "duration_sector_2": 27.812,
+    "duration_sector_3": 23.016,
     "lap_duration": 77.192,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:41.057000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.552,
+    "duration_sector_2": 28.103,
+    "duration_sector_3": 22.886,
     "lap_duration": 77.541,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:58.456000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.24,
+    "duration_sector_2": 27.589,
+    "duration_sector_3": 22.865,
     "lap_duration": 76.694,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:15.189000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.392,
+    "duration_sector_2": 27.758,
+    "duration_sector_3": 22.914,
     "lap_duration": 77.064,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:32.271000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.093,
+    "duration_sector_2": 27.566,
+    "duration_sector_3": 23.014,
     "lap_duration": 76.673,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:48.914000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.38,
+    "duration_sector_2": 27.765,
+    "duration_sector_3": 22.94,
     "lap_duration": 77.085,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:05.932000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.204,
+    "duration_sector_2": 27.818,
+    "duration_sector_3": 23.05,
     "lap_duration": 77.072,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:23.083000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.184,
+    "duration_sector_2": 27.962,
+    "duration_sector_3": 23.025,
     "lap_duration": 77.171,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:40.261000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.142,
+    "duration_sector_2": 27.92,
+    "duration_sector_3": 23.241,
     "lap_duration": 77.303,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:57.544000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.21,
+    "duration_sector_2": 27.823,
+    "duration_sector_3": 23.343,
     "lap_duration": 77.376,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:14.844000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.329,
+    "duration_sector_2": 27.919,
+    "duration_sector_3": 23.117,
     "lap_duration": 77.365,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:32.274000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.245,
+    "duration_sector_2": 27.908,
+    "duration_sector_3": 23.386,
     "lap_duration": 77.539,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:49.787000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.366,
+    "duration_sector_2": 27.869,
+    "duration_sector_3": 23.324,
     "lap_duration": 77.559,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:07.428000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.321,
+    "duration_sector_2": 27.65,
+    "duration_sector_3": 23.274,
     "lap_duration": 77.245,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:24.605000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.351,
+    "duration_sector_2": 27.794,
+    "duration_sector_3": 23.285,
     "lap_duration": 77.43,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:42.324000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.175,
+    "duration_sector_2": 27.79,
+    "duration_sector_3": 23.224,
     "lap_duration": 77.189,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:59.107000+00:00",
     "driver_number": 31,
+    "duration_sector_1": 26.746,
+    "duration_sector_2": 27.751,
+    "duration_sector_3": 23.134,
     "lap_duration": 77.631,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 34.352,
+    "duration_sector_2": 28.947,
+    "duration_sector_3": 23.92,
     "lap_duration": 87.219,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:48.282000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.856,
+    "duration_sector_2": 27.72,
+    "duration_sector_3": 23.051,
     "lap_duration": 77.627,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:05.905000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.382,
+    "duration_sector_2": 27.546,
+    "duration_sector_3": 22.815,
     "lap_duration": 76.743,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:22.626000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.317,
+    "duration_sector_2": 27.79,
+    "duration_sector_3": 23.014,
     "lap_duration": 77.121,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:40.489000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.059,
+    "duration_sector_2": 27.703,
+    "duration_sector_3": 22.844,
     "lap_duration": 76.606,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:56.243000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.301,
+    "duration_sector_2": 27.89,
+    "duration_sector_3": 22.709,
     "lap_duration": 76.9,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:13.251000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.161,
+    "duration_sector_2": 27.769,
+    "duration_sector_3": 22.766,
     "lap_duration": 76.696,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:29.996000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.133,
+    "duration_sector_2": 27.858,
+    "duration_sector_3": 22.751,
     "lap_duration": 76.742,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:46.698000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.193,
+    "duration_sector_2": 27.759,
+    "duration_sector_3": 22.836,
     "lap_duration": 76.788,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:03.408000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.16,
+    "duration_sector_2": 27.76,
+    "duration_sector_3": 23.061,
     "lap_duration": 76.981,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:20.543000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.094,
+    "duration_sector_2": 27.882,
+    "duration_sector_3": 22.844,
     "lap_duration": 76.82,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:37.330000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 25.997,
+    "duration_sector_2": 27.972,
+    "duration_sector_3": 23.098,
     "lap_duration": 77.067,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:54.246000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.03,
+    "duration_sector_2": 27.965,
+    "duration_sector_3": 23.238,
     "lap_duration": 77.233,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:11.543000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.034,
+    "duration_sector_2": 27.95,
+    "duration_sector_3": 23.09,
     "lap_duration": 77.074,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:28.567000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.062,
+    "duration_sector_2": 27.792,
+    "duration_sector_3": 23.295,
     "lap_duration": 77.149,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:45.733000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 27.505,
+    "duration_sector_2": 28.006,
+    "duration_sector_3": 23.24,
     "lap_duration": 78.751,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:04.481000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.089,
+    "duration_sector_2": 27.806,
+    "duration_sector_3": 22.904,
     "lap_duration": 76.799,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:21.271000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.049,
+    "duration_sector_2": 28.148,
+    "duration_sector_3": 23.24,
     "lap_duration": 77.437,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:38.846000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 26.056,
+    "duration_sector_2": 28.015,
+    "duration_sector_3": 25.426,
     "lap_duration": 79.497,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:58.121000+00:00",
     "driver_number": 43,
+    "duration_sector_1": 42.711,
+    "duration_sector_2": 26.911,
+    "duration_sector_3": 22.774,
     "lap_duration": 92.396,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 32.389,
+    "duration_sector_2": 27.712,
+    "duration_sector_3": 23.269,
     "lap_duration": 83.37,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:44.433000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 26.405,
+    "duration_sector_2": 27.548,
+    "duration_sector_3": 22.763,
     "lap_duration": 76.716,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:01.268000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 26.112,
+    "duration_sector_2": 27.692,
+    "duration_sector_3": 22.645,
     "lap_duration": 76.449,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:17.751000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 26.331,
+    "duration_sector_2": 27.56,
+    "duration_sector_3": 22.679,
     "lap_duration": 76.57,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:34.231000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 26.2,
+    "duration_sector_2": 27.394,
+    "duration_sector_3": 22.838,
     "lap_duration": 76.432,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:50.642000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.949,
+    "duration_sector_2": 27.151,
+    "duration_sector_3": 22.584,
     "lap_duration": 75.684,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:06.431000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.946,
+    "duration_sector_2": 27.467,
+    "duration_sector_3": 22.623,
     "lap_duration": 76.036,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:22.352000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.826,
+    "duration_sector_2": 27.457,
+    "duration_sector_3": 22.679,
     "lap_duration": 75.962,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:38.367000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.855,
+    "duration_sector_2": 27.24,
+    "duration_sector_3": 22.761,
     "lap_duration": 75.856,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:54.215000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.95,
+    "duration_sector_2": 27.421,
+    "duration_sector_3": 22.743,
     "lap_duration": 76.114,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:10.389000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 26.071,
+    "duration_sector_2": 27.54,
+    "duration_sector_3": 22.947,
     "lap_duration": 76.558,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:26.962000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.917,
+    "duration_sector_2": 27.44,
+    "duration_sector_3": 22.814,
     "lap_duration": 76.171,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:43.081000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.817,
+    "duration_sector_2": 27.566,
+    "duration_sector_3": 23.097,
     "lap_duration": 76.48,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:19:59.585000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.978,
+    "duration_sector_2": 27.577,
+    "duration_sector_3": 23.029,
     "lap_duration": 76.584,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:16.174000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.851,
+    "duration_sector_2": 27.537,
+    "duration_sector_3": 22.983,
     "lap_duration": 76.371,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:32.429000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.795,
+    "duration_sector_2": 27.358,
+    "duration_sector_3": 22.972,
     "lap_duration": 76.125,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:48.645000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.87,
+    "duration_sector_2": 27.371,
+    "duration_sector_3": 22.938,
     "lap_duration": 76.179,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:04.916000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.716,
+    "duration_sector_2": 27.559,
+    "duration_sector_3": 22.753,
     "lap_duration": 76.028,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:20.908000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.706,
+    "duration_sector_2": 27.698,
+    "duration_sector_3": 22.767,
     "lap_duration": 76.171,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:37.051000+00:00",
     "driver_number": 44,
+    "duration_sector_1": 25.935,
+    "duration_sector_2": 27.753,
+    "duration_sector_3": 22.873,
     "lap_duration": 76.561,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 32.927,
+    "duration_sector_2": 28.324,
+    "duration_sector_3": 23.268,
     "lap_duration": 84.519,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:45.582000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 26.659,
+    "duration_sector_2": 27.293,
+    "duration_sector_3": 23.022,
     "lap_duration": 76.974,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:02.507000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 26.147,
+    "duration_sector_2": 27.751,
+    "duration_sector_3": 22.853,
     "lap_duration": 76.751,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:19.350000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 26.189,
+    "duration_sector_2": 27.782,
+    "duration_sector_3": 22.842,
     "lap_duration": 76.813,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:36.070000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 26.247,
+    "duration_sector_2": 27.541,
+    "duration_sector_3": 23.016,
     "lap_duration": 76.804,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:52.917000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 26.15,
+    "duration_sector_2": 27.45,
+    "duration_sector_3": 22.915,
     "lap_duration": 76.515,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:09.427000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 26.035,
+    "duration_sector_2": 27.44,
+    "duration_sector_3": 22.87,
     "lap_duration": 76.345,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:25.842000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.865,
+    "duration_sector_2": 27.481,
+    "duration_sector_3": 22.858,
     "lap_duration": 76.204,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:42.008000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.659,
+    "duration_sector_2": 27.699,
+    "duration_sector_3": 22.934,
     "lap_duration": 76.292,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:58.340000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.856,
+    "duration_sector_2": 27.474,
+    "duration_sector_3": 22.855,
     "lap_duration": 76.185,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:14.485000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.91,
+    "duration_sector_2": 27.619,
+    "duration_sector_3": 22.933,
     "lap_duration": 76.462,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:30.902000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.898,
+    "duration_sector_2": 27.686,
+    "duration_sector_3": 23.011,
     "lap_duration": 76.595,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:47.543000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.918,
+    "duration_sector_2": 27.636,
+    "duration_sector_3": 23.067,
     "lap_duration": 76.621,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:04.144000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.925,
+    "duration_sector_2": 27.746,
+    "duration_sector_3": 22.978,
     "lap_duration": 76.649,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:20.743000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.884,
+    "duration_sector_2": 27.747,
+    "duration_sector_3": 23.097,
     "lap_duration": 76.728,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:37.586000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.809,
+    "duration_sector_2": 27.787,
+    "duration_sector_3": 23.124,
     "lap_duration": 76.72,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:54.274000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.911,
+    "duration_sector_2": 27.83,
+    "duration_sector_3": 22.993,
     "lap_duration": 76.734,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:10.992000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.944,
+    "duration_sector_2": 27.735,
+    "duration_sector_3": 22.935,
     "lap_duration": 76.614,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:27.547000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.826,
+    "duration_sector_2": 27.809,
+    "duration_sector_3": 22.995,
     "lap_duration": 76.63,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:44.218000+00:00",
     "driver_number": 55,
+    "duration_sector_1": 25.959,
+    "duration_sector_2": 27.967,
+    "duration_sector_3": 23.007,
     "lap_duration": 76.933,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 31.881,
+    "duration_sector_2": 27.771,
+    "duration_sector_3": 23.128,
     "lap_duration": 82.78,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:43.843000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 26.327,
+    "duration_sector_2": 27.626,
+    "duration_sector_3": 22.735,
     "lap_duration": 76.688,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:00.555000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 26.403,
+    "duration_sector_2": 27.526,
+    "duration_sector_3": 22.647,
     "lap_duration": 76.576,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:17.181000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 26.398,
+    "duration_sector_2": 27.401,
+    "duration_sector_3": 22.672,
     "lap_duration": 76.471,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:33.657000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 26.022,
+    "duration_sector_2": 27.406,
+    "duration_sector_3": 22.666,
     "lap_duration": 76.094,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:49.670000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.937,
+    "duration_sector_2": 27.378,
+    "duration_sector_3": 22.647,
     "lap_duration": 75.962,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:05.677000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.82,
+    "duration_sector_2": 27.383,
+    "duration_sector_3": 22.804,
     "lap_duration": 76.007,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:21.671000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.744,
+    "duration_sector_2": 27.349,
+    "duration_sector_3": 22.864,
     "lap_duration": 75.957,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:37.627000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.699,
+    "duration_sector_2": 27.36,
+    "duration_sector_3": 22.926,
     "lap_duration": 75.985,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:53.590000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.762,
+    "duration_sector_2": 27.393,
+    "duration_sector_3": 22.941,
     "lap_duration": 76.096,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:09.656000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.652,
+    "duration_sector_2": 27.625,
+    "duration_sector_3": 22.921,
     "lap_duration": 76.198,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:25.936000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.749,
+    "duration_sector_2": 27.704,
+    "duration_sector_3": 22.887,
     "lap_duration": 76.34,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:42.231000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.827,
+    "duration_sector_2": 27.471,
+    "duration_sector_3": 22.93,
     "lap_duration": 76.228,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:19:58.451000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.811,
+    "duration_sector_2": 27.631,
+    "duration_sector_3": 23.063,
     "lap_duration": 76.505,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:14.916000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.732,
+    "duration_sector_2": 27.563,
+    "duration_sector_3": 22.878,
     "lap_duration": 76.173,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:31.108000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.746,
+    "duration_sector_2": 27.558,
+    "duration_sector_3": 22.863,
     "lap_duration": 76.167,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:47.347000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.86,
+    "duration_sector_2": 27.618,
+    "duration_sector_3": 22.941,
     "lap_duration": 76.419,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:03.791000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.782,
+    "duration_sector_2": 27.738,
+    "duration_sector_3": 22.875,
     "lap_duration": 76.395,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:20.264000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.723,
+    "duration_sector_2": 27.744,
+    "duration_sector_3": 22.756,
     "lap_duration": 76.223,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:36.402000+00:00",
     "driver_number": 63,
+    "duration_sector_1": 25.978,
+    "duration_sector_2": 27.661,
+    "duration_sector_3": 22.934,
     "lap_duration": 76.573,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 29.948,
+    "duration_sector_2": 26.267,
+    "duration_sector_3": 22.725,
     "lap_duration": 78.94,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:40.003000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.785,
+    "duration_sector_2": 27.034,
+    "duration_sector_3": 22.926,
     "lap_duration": 75.745,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:05:55.911000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.895,
+    "duration_sector_2": 27.031,
+    "duration_sector_3": 22.808,
     "lap_duration": 75.734,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:11.552000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.789,
+    "duration_sector_2": 26.83,
+    "duration_sector_3": 22.841,
     "lap_duration": 75.46,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:27.023000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.633,
+    "duration_sector_2": 27.103,
+    "duration_sector_3": 22.638,
     "lap_duration": 75.374,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:09:42.463000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.673,
+    "duration_sector_2": 27.006,
+    "duration_sector_3": 22.572,
     "lap_duration": 75.251,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:10:57.698000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.577,
+    "duration_sector_2": 26.951,
+    "duration_sector_3": 22.68,
     "lap_duration": 75.208,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:12.909000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.547,
+    "duration_sector_2": 27.121,
+    "duration_sector_3": 22.603,
     "lap_duration": 75.271,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:28.201000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.409,
+    "duration_sector_2": 27.019,
+    "duration_sector_3": 22.593,
     "lap_duration": 75.021,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:14:43.198000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.49,
+    "duration_sector_2": 27.0,
+    "duration_sector_3": 22.627,
     "lap_duration": 75.117,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:15:58.329000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.409,
+    "duration_sector_2": 26.962,
+    "duration_sector_3": 22.53,
     "lap_duration": 74.901,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:13.153000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.474,
+    "duration_sector_2": 27.098,
+    "duration_sector_3": 22.678,
     "lap_duration": 75.25,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:28.399000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.303,
+    "duration_sector_2": 27.077,
+    "duration_sector_3": 22.681,
     "lap_duration": 75.061,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:19:43.481000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.45,
+    "duration_sector_2": 27.176,
+    "duration_sector_3": 22.813,
     "lap_duration": 75.439,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:20:58.969000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.48,
+    "duration_sector_2": 27.129,
+    "duration_sector_3": 22.74,
     "lap_duration": 75.349,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:14.316000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.418,
+    "duration_sector_2": 27.048,
+    "duration_sector_3": 22.748,
     "lap_duration": 75.214,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:23:29.560000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.544,
+    "duration_sector_2": 27.225,
+    "duration_sector_3": 22.761,
     "lap_duration": 75.53,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:24:45.045000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.371,
+    "duration_sector_2": 27.176,
+    "duration_sector_3": 22.742,
     "lap_duration": 75.289,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:00.387000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.482,
+    "duration_sector_2": 27.237,
+    "duration_sector_3": 22.768,
     "lap_duration": 75.487,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:27:15.859000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.436,
+    "duration_sector_2": 27.346,
+    "duration_sector_3": 22.82,
     "lap_duration": 75.602,
     "lap_number": 20
   },
   {
     "date_start": "2025-08-31T13:28:31.391000+00:00",
     "driver_number": 81,
+    "duration_sector_1": 25.459,
+    "duration_sector_2": 27.294,
+    "duration_sector_3": 22.82,
     "lap_duration": 75.573,
     "lap_number": 21
   },
   {
     "date_start": "2025-08-31T13:03:21.064000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 41.47,
+    "duration_sector_2": 27.18,
+    "duration_sector_3": 23.101,
     "lap_duration": 91.751,
     "lap_number": 1
   },
   {
     "date_start": "2025-08-31T13:04:52.814000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.409,
+    "duration_sector_2": 27.377,
+    "duration_sector_3": 23.14,
     "lap_duration": 76.926,
     "lap_number": 2
   },
   {
     "date_start": "2025-08-31T13:06:09.958000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.188,
+    "duration_sector_2": 27.763,
+    "duration_sector_3": 23.161,
     "lap_duration": 77.112,
     "lap_number": 3
   },
   {
     "date_start": "2025-08-31T13:07:26.949000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.252,
+    "duration_sector_2": 27.617,
+    "duration_sector_3": 23.157,
     "lap_duration": 77.026,
     "lap_number": 4
   },
   {
     "date_start": "2025-08-31T13:08:44.178000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.174,
+    "duration_sector_2": 27.782,
+    "duration_sector_3": 22.985,
     "lap_duration": 76.941,
     "lap_number": 5
   },
   {
     "date_start": "2025-08-31T13:10:00.868000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.363,
+    "duration_sector_2": 27.682,
+    "duration_sector_3": 23.105,
     "lap_duration": 77.15,
     "lap_number": 6
   },
   {
     "date_start": "2025-08-31T13:11:18.001000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.018,
+    "duration_sector_2": 27.873,
+    "duration_sector_3": 23.07,
     "lap_duration": 76.961,
     "lap_number": 7
   },
   {
     "date_start": "2025-08-31T13:12:34.960000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.048,
+    "duration_sector_2": 27.688,
+    "duration_sector_3": 23.083,
     "lap_duration": 76.819,
     "lap_number": 8
   },
   {
     "date_start": "2025-08-31T13:13:51.731000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 25.954,
+    "duration_sector_2": 27.777,
+    "duration_sector_3": 23.07,
     "lap_duration": 76.801,
     "lap_number": 9
   },
   {
     "date_start": "2025-08-31T13:15:08.683000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 25.89,
+    "duration_sector_2": 27.761,
+    "duration_sector_3": 23.079,
     "lap_duration": 76.73,
     "lap_number": 10
   },
   {
     "date_start": "2025-08-31T13:16:25.344000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.127,
+    "duration_sector_2": 28.001,
+    "duration_sector_3": 23.099,
     "lap_duration": 77.227,
     "lap_number": 11
   },
   {
     "date_start": "2025-08-31T13:17:42.609000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.146,
+    "duration_sector_2": 27.909,
+    "duration_sector_3": 23.058,
     "lap_duration": 77.113,
     "lap_number": 12
   },
   {
     "date_start": "2025-08-31T13:18:59.697000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.419,
+    "duration_sector_2": 27.752,
+    "duration_sector_3": 23.056,
     "lap_duration": 77.227,
     "lap_number": 13
   },
   {
     "date_start": "2025-08-31T13:20:16.987000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.217,
+    "duration_sector_2": 28.089,
+    "duration_sector_3": 23.099,
     "lap_duration": 77.405,
     "lap_number": 14
   },
   {
     "date_start": "2025-08-31T13:21:34.386000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.333,
+    "duration_sector_2": 27.866,
+    "duration_sector_3": 23.146,
     "lap_duration": 77.345,
     "lap_number": 15
   },
   {
     "date_start": "2025-08-31T13:22:51.635000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.267,
+    "duration_sector_2": 28.038,
+    "duration_sector_3": 23.049,
     "lap_duration": 77.354,
     "lap_number": 16
   },
   {
     "date_start": "2025-08-31T13:24:09.008000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.314,
+    "duration_sector_2": 28.151,
+    "duration_sector_3": 22.858,
     "lap_duration": 77.323,
     "lap_number": 17
   },
   {
     "date_start": "2025-08-31T13:25:26.291000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.483,
+    "duration_sector_2": 27.979,
+    "duration_sector_3": 22.919,
     "lap_duration": 77.381,
     "lap_number": 18
   },
   {
     "date_start": "2025-08-31T13:26:43.957000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.38,
+    "duration_sector_2": 28.169,
+    "duration_sector_3": 23.091,
     "lap_duration": 77.64,
     "lap_number": 19
   },
   {
     "date_start": "2025-08-31T13:28:01.388000+00:00",
     "driver_number": 87,
+    "duration_sector_1": 26.258,
+    "duration_sector_2": 28.096,
+    "duration_sector_3": 23.003,
     "lap_duration": 77.357,
     "lap_number": 20
   }

@@ -11,11 +11,10 @@
 // nothing is drawn that would have to claim a value the feed has not sent (story 38).
 
 import type {
-  Compound,
   Driver,
+  DriverNumber,
   DriverState,
   Lap,
-  Sector,
   SectorBests,
   Sectors,
   Separation,
@@ -24,19 +23,28 @@ import type {
 } from '../domain/index.ts';
 import { teamColour } from './team-colour.ts';
 import { escapeText } from './escape.ts';
+import { timeText } from './time-text.ts';
+import { sectorTime } from './sector.ts';
+import { tyreBadge } from './tyre.ts';
 import { sparkline, type Plot } from './sparkline.ts';
 
-/** The markup inside the timing table: one row per Driver, and no row that is not a Driver. */
-export function timingScreen(state: SessionState): string {
-  return state.drivers.map(driverRow).join('\n');
+/**
+ * The markup inside the timing table: one row per Driver, and no row that is not a Driver. `opened`
+ * is the Driver a viewer has opened (#18), which the rows carry only so the one behind the panel is
+ * marked — the twenty rows are rendered identically whether a Driver is open or not, which is what
+ * keeps them updating while one is.
+ */
+export function timingScreen(state: SessionState, opened?: DriverNumber): string {
+  return state.drivers.map((driver) => driverRow(driver, driver.number === opened)).join('\n');
 }
 
-function driverRow(driver: Driver): string {
+function driverRow(driver: Driver, isOpen: boolean): string {
   // The row wears its state, so pit lane, box, out lap and retired change the whole row and not
   // only a chip (#12). On track is the ordinary state and the default, drawn quietly.
   const state = driver.state ?? 'on-track';
   return [
-    `<div class="driver-row" data-state="${state}" style="--team-colour: ${teamColour(driver.team)}">`,
+    `<div class="driver-row" data-state="${state}" data-driver="${driver.number}"` +
+      ` aria-expanded="${isOpen}" style="--team-colour: ${teamColour(driver.team)}">`,
     figure('position', driver.position),
     positionChangeCell(driver.gridPosition, driver.position),
     '<span class="team-bar"></span>',
@@ -106,44 +114,19 @@ function stateCell(state: DriverState): string {
  * even while the live sector is still absent.
  */
 function sectorCells(sectors: Sectors | undefined, bests: SectorBests | undefined): string {
-  return [0, 1, 2].map((i) => sectorCell(sectors?.[i]) + sectorBestCell(bests?.[i])).join('');
-}
-
-/**
- * One sector, coloured purple, green or yellow to a meaning everyone already knows (#10). The
- * status is settled above the row against the whole field; this only draws the colour it is given,
- * so the row never has to know what anyone else did.
- */
-function sectorCell(sector: Sector | undefined): string {
-  if (sector === undefined) return '<span class="sector-time" data-status="absent">&mdash;</span>';
-  return `<span class="sector-time" data-status="${sector.status}">${clock(sector.millis)}</span>`;
+  return [0, 1, 2].map((i) => sectorTime(sectors?.[i]) + sectorBestCell(bests?.[i])).join('');
 }
 
 /** The Driver's own best in one sector, drawn secondary beside the live time, or the absent mark. */
 function sectorBestCell(millis: number | undefined): string {
   return millis === undefined
     ? absent('cell--figure-secondary')
-    : `<span class="cell--figure-secondary">${clock(millis)}</span>`;
+    : `<span class="cell--figure-secondary">${timeText(millis)}</span>`;
 }
 
-/** The compound letter drawn inside the tyre's ring — the sidewall marking, not a coloured dot. */
-const COMPOUND_LETTER: Record<Compound, string> = {
-  soft: 'S',
-  medium: 'M',
-  hard: 'H',
-  intermediate: 'I',
-  wet: 'W',
-};
-
-/**
- * The tyre a Driver is on, drawn as its compound ring (#11). A set the feed has not named yet is
- * the unknown ring rather than a blank cell, so an unknown compound reads as unknown and never as
- * an empty seat.
- */
+/** The tyre a Driver is on, drawn as its compound ring (#11), in the cell the row lays out for it. */
 function tyreCell(tyre: Tyre | undefined): string {
-  const compound = tyre === undefined ? 'unknown' : tyre.compound;
-  const letter = tyre === undefined ? '?' : COMPOUND_LETTER[tyre.compound];
-  return `<span class="cell--centred"><span class="tyre-badge" data-compound="${compound}">${letter}</span></span>`;
+  return `<span class="cell--centred">${tyreBadge(tyre?.compound)}</span>`;
 }
 
 /**
@@ -166,7 +149,7 @@ function tyreAgeCell(tyre: Tyre | undefined, stintLaps: number | undefined): str
  */
 function gapCell(column: string, separation: Separation | undefined): string {
   if (separation === undefined) return absent(`${column} cell--figure`);
-  const shown = 'laps' in separation ? lapsDown(separation.laps) : `+${clock(separation.millis)}`;
+  const shown = 'laps' in separation ? lapsDown(separation.laps) : `+${timeText(separation.millis)}`;
   return `<span class="${column} cell--figure">${shown}</span>`;
 }
 
@@ -174,7 +157,7 @@ function gapCell(column: string, separation: Separation | undefined): string {
 function lapCell(column: string, millis: number | undefined): string {
   return millis === undefined
     ? absent(`${column} cell--figure`)
-    : `<span class="${column} cell--figure">${clock(millis)}</span>`;
+    : `<span class="${column} cell--figure">${timeText(millis)}</span>`;
 }
 
 /**
@@ -240,19 +223,6 @@ function absent(classes: string): string {
 
 function lapsDown(laps: number): string {
   return `+${laps} ${laps === 1 ? 'LAP' : 'LAPS'}`;
-}
-
-/**
- * Milliseconds as the timing screen reads them: `2.418`, `12.345`, and `1:02.550` once a minute
- * is crossed. The minutes place is dropped below a minute and the seconds are only padded once
- * there is a minute in front of them to pad against — a lone `2.418`, but a `1:02.550`.
- */
-function clock(millis: number): string {
-  const minutes = Math.floor(millis / 60_000);
-  const seconds = Math.floor((millis % 60_000) / 1000);
-  const thousandths = String(millis % 1000).padStart(3, '0');
-  if (minutes === 0) return `${seconds}.${thousandths}`;
-  return `${minutes}:${String(seconds).padStart(2, '0')}.${thousandths}`;
 }
 
 function tla(code: string | undefined): string {

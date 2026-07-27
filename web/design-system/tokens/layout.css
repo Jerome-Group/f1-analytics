@@ -26,6 +26,29 @@
 
   --column-gap: 12px;
 
+  /* The opened Driver's panel (#18). It is laid over the screen rather than given a share of it:
+     depth is one click away, and the twenty rows keep their whole width the rest of the time. The
+     width is what the telemetry trace needs — a 640 px plot, its label and its current value — and
+     it is deliberately short of half the screen, so the field is still being read while one Driver
+     is open. */
+  --opened-driver-width: 860px;
+
+  /* The panel's own track lists, here for the same reason the row's is: a list restated inside a
+     component is invisible in review and cannot be corrected in one place (docs/adr/0010). */
+  --opened-stint-columns: 28px 40px 140px 1fr;
+  --opened-lap-columns: 48px 108px repeat(3, 88px);
+  --trace-columns: 88px 88px 1fr;
+  --opened-radio-columns: 88px 1fr;
+
+  /* A lap line is shorter than a Driver row: the panel shows a whole race of them, and the section
+     is capped at the same twelve the row's sparklines draw so it never swallows the ones below. */
+  --opened-lap-height: 30px;
+  --opened-laps-shown: 12;
+
+  /* One channel of the telemetry trace. The renderer draws its SVG to the same height (web/trace.ts),
+     as the sparkline does with its own. */
+  --trace-plot-height: 44px;
+
   --strip-columns: 640px 1fr 720px 300px;
 
   --row-columns:

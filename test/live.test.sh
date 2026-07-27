@@ -20,7 +20,12 @@ source "$here/lib/assert.sh"
 # accumulate, or a lap would be counted twice and a stale Stint would shadow the current one.
 
 accumulate() {
-  node "$here/lib/live-map.ts"
+  node "$here/lib/live-map.ts" "$@" | sed -n '2p'
+}
+
+# The topics the live path subscribes to, off the same harness.
+topics() {
+  node "$here/lib/live-map.ts" </dev/null | sed -n '1p'
 }
 
 # A lap re-published: first with no duration (on the road), then completed. And a second lap. One
@@ -99,6 +104,50 @@ for collection in ("drivers", "position", "intervals", "laps", "stints"):
 
 assert_equals "the live feed and the REST feed build the identical Drivers through the one Adapter" \
   "$rest_drivers" "$live_drivers"
+
+# --- Opening a Driver on the live path (#18) --------------------------------------------------
+# The live feed answers the same control the Replay does, out of what it has subscribed to. That is
+# the whole of what #18 leaves for #42: the depth is built by the same Adapter here as there, and the
+# only thing the trace waits for is a topic.
+
+opened_lines='v1/drivers	{"driver_number":1,"name_acronym":"VER","team_name":"Red Bull Racing","session_key":9}
+v1/laps	{"driver_number":1,"lap_number":1,"lap_duration":90.0,"duration_sector_1":30.0,"duration_sector_2":31.0,"duration_sector_3":29.0,"session_key":9}
+v1/stints	{"driver_number":1,"stint_number":1,"lap_start":1,"lap_end":1,"compound":"MEDIUM","tyre_age_at_start":0,"session_key":9}
+v1/team_radio	{"driver_number":1,"date":"2025-08-31T13:29:00Z","recording_url":"https://livetiming.formula1.com/x.mp3","session_key":9}'
+
+depth_of() {
+  python3 -c '
+import json, sys
+
+state = json.load(sys.stdin)
+opened = state.get("opened")
+if opened is None:
+    print("nobody open")
+else:
+    print("driver=" + str(opened["number"]),
+          "stints=" + str(len(opened.get("stints", []))),
+          "laps=" + str(len(opened.get("laps", []))),
+          "sectors=" + str(len(opened.get("laps", [{}])[0].get("sectors", []))),
+          "radio=" + str(len(opened.get("radio", []))),
+          "telemetry=" + str(len(opened.get("telemetry", []))))
+'
+}
+
+# Nobody open is the ordinary state of a Live Session, and it carries no depth for anyone — the same
+# criterion seam 1 checks of a Replay, on the path where the per-second tier would actually cost.
+assert_equals "a Live Session with nobody open carries no depth for any Driver" \
+  "nobody open" "$(printf '%b\n' "$opened_lines" | accumulate | depth_of)"
+
+# Opened: the Stint, the lap sector by sector and the radio, all out of the subscription above. The
+# trace is empty because `v1/car_data` is not subscribed to, which is #42 and not a failure here.
+assert_equals "an opened Driver carries the depth the live subscription holds, and no trace" \
+  "driver=1 stints=1 laps=1 sectors=3 radio=1 telemetry=0" \
+  "$(printf '%b\n' "$opened_lines" | accumulate 1 | depth_of)"
+
+# The boundary between this ticket and #42, written down where it can be checked: the per-second
+# tier is not subscribed to at all, so it cannot arrive and be discarded.
+assert_equals "the live path subscribes to every stream the screen shows, and not to car telemetry" \
+  "v1/drivers v1/position v1/intervals v1/laps v1/stints v1/team_radio" "$(topics)"
 
 # --- A dropped connection reconnects (#17) ----------------------------------------------------
 # The connection half of "reconnects without losing accumulated Session state": the broker publishes,

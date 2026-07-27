@@ -80,6 +80,14 @@ export interface LapRecord {
    * recordings cut for a whole-Session read, which the timeline treats as always-already run.
    */
   date_start?: string | null;
+  /**
+   * The three sectors of the lap, in seconds, each `null` until the Driver crossed that line. Read
+   * only for the Driver a viewer has opened (#18): the twenty-row screen has width for the lap in
+   * progress and no more, and lap-by-lap sectors for the whole field is depth nobody asked for.
+   */
+  duration_sector_1?: number | null;
+  duration_sector_2?: number | null;
+  duration_sector_3?: number | null;
 }
 
 /**
@@ -99,4 +107,36 @@ export interface StintRecord {
   compound: string | null;
   /** The laps already on the set when it was fitted: nought for a fresh set, more for a scrubbed one. */
   tyre_age_at_start: number | null;
+}
+
+/** One team radio clip, from `/v1/team_radio`: when it was broadcast, and where the recording is. */
+export interface TeamRadioRecord {
+  driver_number: number;
+  /** ISO 8601, when it was broadcast. */
+  date: string;
+  recording_url: string | null;
+}
+
+/**
+ * One reading of one car, from `/v1/car_data` — the whole of the per-second tier, and by some margin
+ * the largest stream upstream has: a Race carries around seven hundred thousand of these against a
+ * thousand-odd laps (docs/measurements/a-race-session-on-disk.md). That ratio is why this record is
+ * only ever read for a Driver a viewer has opened, and why the reader takes a window rather than a
+ * Session (timeline.ts).
+ *
+ * `drs` is deliberately not read. It is a Gated stream during a Live window (CONTEXT.md) and the
+ * trace is drawn without it, so nothing has to be taken away when it is missing.
+ */
+export interface CarDataRecord {
+  driver_number: number;
+  /** ISO 8601, when the reading was taken. */
+  date: string;
+  /** Road speed, km/h. */
+  speed?: number | null;
+  /** Throttle, as a percentage of full. */
+  throttle?: number | null;
+  /** Brake, as a percentage of full — upstream sends nought or a hundred, not a pressure. */
+  brake?: number | null;
+  n_gear?: number | null;
+  rpm?: number | null;
 }

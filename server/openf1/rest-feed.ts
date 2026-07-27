@@ -8,8 +8,9 @@
 
 import type { Catalogue } from '../../domain/index.ts';
 import { catalogueFrom } from './catalogue.ts';
-import { timelineFrom, type Timeline } from './timeline.ts';
+import { timelineFrom, type OpenedLog, type Timeline } from './timeline.ts';
 import type {
+  CarDataRecord,
   DriverRecord,
   IntervalRecord,
   LapRecord,
@@ -17,6 +18,7 @@ import type {
   PositionRecord,
   SessionRecord,
   StintRecord,
+  TeamRadioRecord,
 } from './records.ts';
 
 /**
@@ -35,6 +37,22 @@ export async function loadTimeline(api: URL, sessionKey: number): Promise<Timeli
     collection<StintRecord>(api, 'stints', { session_key: sessionKey }),
   ]);
   return timelineFrom(sessionKey, drivers, positions, intervals, laps, stints);
+}
+
+/**
+ * The two streams a Driver has to be opened before anything reads (#18) — their radio, and the
+ * per-second tier. Both are asked for one Driver at a time, which is the whole point: `/v1/car_data`
+ * holds around seven hundred thousand readings for a Race across the field
+ * (docs/measurements/a-race-session-on-disk.md), and one Driver's share of that is a request a
+ * dashboard can make while a Session runs. Twenty of them is not.
+ */
+export async function loadOpened(api: URL, sessionKey: number, driver: number): Promise<OpenedLog> {
+  const where = { session_key: sessionKey, driver_number: driver };
+  const [radio, carData] = await Promise.all([
+    collection<TeamRadioRecord>(api, 'team_radio', where),
+    collection<CarDataRecord>(api, 'car_data', where),
+  ]);
+  return { driver, radio, carData };
 }
 
 /**

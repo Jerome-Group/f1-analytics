@@ -10,15 +10,23 @@
 // and the socket reopens on its own, its fresh snapshot restoring the whole Session so a reload is
 // never needed.
 
-import type { ReplayClock, ReplayControl, SessionState, WireMessage } from '../domain/index.ts';
+import type {
+  ClientControl,
+  DriverNumber,
+  ReplayClock,
+  SessionState,
+  WireMessage,
+} from '../domain/index.ts';
 import { applyChange } from '../domain/index.ts';
 import { timingScreen } from './timing-screen.ts';
+import { openedDriverPanel } from './opened-driver.ts';
 import { sessionStrip } from './session-strip.ts';
 import { replayControls, replayElapsed } from './replay-controls.ts';
 import { mount } from './mount.ts';
 
 const strip = mount('.session-strip-mount', 'session strip');
 const table = mount('.timing-table', 'timing table');
+const panel = mount('.opened-driver-mount', 'opened Driver');
 const controls = mount('.replay-controls-mount', 'replay controls');
 const connection = mount('.connection-status', 'connection status');
 
@@ -30,11 +38,45 @@ const REOPEN_AFTER_MS = 1000;
 let state: SessionState | undefined;
 let socket: WebSocket | undefined;
 
+/**
+ * Which Driver the viewer has opened (#18). Held here rather than read off the Session, because it
+ * is the viewer's choice and not the Session's fact: the panel appears the instant it is clicked,
+ * before the server has read a single per-second reading, and it goes the instant it is closed
+ * without waiting for anybody to agree. That is the whole of "closing is instant".
+ */
+let opened: DriverNumber | undefined;
+
 function render(): void {
   if (state === undefined) return;
   strip.innerHTML = sessionStrip(state);
-  table.innerHTML = timingScreen(state);
+  // The twenty rows are built the same way whether a Driver is open or not, which is what keeps
+  // them updating while one is: the panel is another mount, not a branch in the table.
+  table.innerHTML = timingScreen(state, opened);
+  panel.innerHTML = openedDriverPanel(state, opened);
   drawControls(state.replay);
+}
+
+// Opening is a click anywhere on a row, closing a click on the panel's own button — and either way
+// the screen is redrawn from what the browser already holds before the socket is told anything.
+// Delegated from the mounts, which survive `render` rewriting their contents.
+table.addEventListener('click', (event) => {
+  const row = (event.target as Element | null)?.closest('[data-driver]');
+  const driver = Number(row?.getAttribute('data-driver'));
+  if (row === null || row === undefined || !Number.isFinite(driver)) return;
+  open(driver === opened ? undefined : driver);
+});
+panel.addEventListener('click', (event) => {
+  if ((event.target as Element | null)?.closest('[data-action="close-driver"]') !== null) open(undefined);
+});
+// Escape closes, because a panel laid over the screen has to be dismissible without aiming at it.
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && opened !== undefined) open(undefined);
+});
+
+function open(driver: DriverNumber | undefined): void {
+  opened = driver;
+  render();
+  send({ type: 'open-driver', ...(driver === undefined ? {} : { driver }) });
 }
 
 // The clock republishes several times a second while playing, so the controls are *updated*, not
@@ -75,7 +117,7 @@ function drawControls(clock: ReplayClock | undefined): void {
   }
 }
 
-function send(control: ReplayControl): void {
+function send(control: ClientControl): void {
   if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(control));
 }
 
@@ -128,7 +170,13 @@ function connect(): void {
   // socket names it too, so the server knows which one to play back before it sends the first frame.
   socket = new WebSocket(`ws://${location.host}/${location.search}`);
 
-  socket.addEventListener('open', () => showConnection('live'));
+  socket.addEventListener('open', () => {
+    showConnection('live');
+    // A reconnect is a fresh snapshot of a Session this browser is already looking at, and the
+    // Driver it had open is still open on screen — so it is asked for again rather than quietly
+    // becoming a panel the server has stopped feeding.
+    if (opened !== undefined) send({ type: 'open-driver', driver: opened });
+  });
   socket.addEventListener('message', (event: MessageEvent<string>) => {
     receive(JSON.parse(event.data) as WireMessage);
   });

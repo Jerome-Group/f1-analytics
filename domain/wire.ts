@@ -5,8 +5,12 @@
 // a dropped connection costs nothing — and the fold rule below is the guarantee that the two paths
 // meet: snapshot-then-changes and a reconnected snapshot land on the identical Session.
 
-import type { Driver, SessionState } from './session-state.ts';
+import type { Driver, DriverNumber, SessionState } from './session-state.ts';
 import { byPosition } from './ordering.ts';
+
+/** The Session-global keys a change can carry or remove — every key of the Session but its identity
+ * and its Drivers. Stated once here, so `server/` and the fold below cannot disagree about which. */
+export type GlobalField = keyof Omit<SessionState, 'sessionKey' | 'drivers'>;
 
 /**
  * The whole Session so far, sent when a browser connects and again whenever it reconnects. The one
@@ -24,11 +28,14 @@ export interface SessionStateMessage {
  * stopped sending goes absent rather than lingering (story 38). `sessionKey` is not here: a change
  * never re-keys the Session it is a change to.
  *
- * A change never *removes* a Session-global field. No feed does that yet, and the wire has no way to
- * say it — the day one needs to, this is where it is said.
+ * `removed` is the other direction: the Session-global fields that are gone rather than moved. A
+ * closed Driver is the first thing to need it (#18) — a browser left holding the last opened
+ * Driver's telemetry would draw a trace of seconds the Session has since left behind, which is
+ * story 38 again, one field up. There is no such list for Drivers: the field only grows.
  */
 export type SessionChange = Partial<Omit<SessionState, 'sessionKey' | 'drivers'>> & {
   drivers?: readonly Driver[];
+  removed?: readonly GlobalField[];
 };
 
 /** A change, tagged so the browser knows to fold it rather than replace with it. */
@@ -41,9 +48,7 @@ export interface SessionChangeMessage {
 export type WireMessage = SessionStateMessage | SessionChangeMessage;
 
 /**
- * What the browser sends *back* up the same socket: a viewer moving the Replay's Session clock (#15).
- * The only messages that travel this direction — a Live Session has no controls — so the server can
- * treat anything else on the socket as the close it already knows how to answer.
+ * A viewer moving the Replay's Session clock (#15).
  *
  * `scrub` names an absolute position on the clock's own millisecond axis rather than a delta, so a
  * scrub is idempotent and a dropped message costs nothing: the next one still says exactly where the
@@ -56,11 +61,28 @@ export type ReplayControl =
   | { type: 'replay-control'; action: 'speed'; speed: number };
 
 /**
- * Read a control off an inbound frame's text, or `undefined` when it is not one this server acts on.
- * Defined here beside the type it guards so the shape is stated once: the server parses, the browser
- * builds, and neither restates what a control is.
+ * A viewer opening a Driver, or closing the one that was open (#18). `driver` absent is closed — the
+ * model's own reading of absence, and the reason there is no second message to say so.
+ *
+ * This is what makes the per-second tier affordable: the server sends that tier for the Driver named
+ * here and for no other, so opening is a request for depth rather than a filter over depth already
+ * on the wire. Closing needs no answer to be instant — the browser stops drawing the panel the moment
+ * it is asked to — but it is still sent, so the server stops paying for the trace.
  */
-export function replayControl(text: string): ReplayControl | undefined {
+export type OpenControl = { type: 'open-driver'; driver?: DriverNumber };
+
+/**
+ * Everything the browser sends *back* up the socket. The only messages that travel this direction,
+ * so the server can treat anything else on it as the close it already knows how to answer.
+ */
+export type ClientControl = ReplayControl | OpenControl;
+
+/**
+ * Read a control off an inbound frame's text, or `undefined` when it is not one this server acts on.
+ * Defined here beside the types it guards so the shapes are stated once: the server parses, the
+ * browser builds, and neither restates what a control is.
+ */
+export function clientControl(text: string): ClientControl | undefined {
   let message: unknown;
   try {
     message = JSON.parse(text);
@@ -68,7 +90,18 @@ export function replayControl(text: string): ReplayControl | undefined {
     return undefined;
   }
   if (typeof message !== 'object' || message === null) return undefined;
-  const control = message as { type?: unknown; action?: unknown; position?: unknown; speed?: unknown };
+  const control = message as {
+    type?: unknown;
+    action?: unknown;
+    position?: unknown;
+    speed?: unknown;
+    driver?: unknown;
+  };
+  if (control.type === 'open-driver') {
+    return typeof control.driver === 'number'
+      ? { type: 'open-driver', driver: control.driver }
+      : { type: 'open-driver' };
+  }
   if (control.type !== 'replay-control') return undefined;
   if (control.action === 'play' || control.action === 'pause') {
     return { type: 'replay-control', action: control.action };
@@ -90,9 +123,12 @@ export function replayControl(text: string): ReplayControl | undefined {
  * here, and exercised directly by the tests.
  */
 export function applyChange(state: SessionState, change: SessionChange): SessionState {
-  const { drivers, ...session } = change;
+  const { drivers, removed, ...session } = change;
   const folded: SessionState = { ...state, ...session };
   if (drivers !== undefined) folded.drivers = merge(state.drivers, drivers);
+  // Removed after the overwrite, so a field both moved and removed in one change ends up gone —
+  // which cannot happen, and would be the safer of the two answers if it did.
+  for (const field of removed ?? []) delete folded[field];
   return folded;
 }
 

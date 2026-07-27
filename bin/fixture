@@ -23,6 +23,13 @@ set -euo pipefail
 session_key=9920
 window_from='2025-08-31T13:25:00+00:00'
 window_to='2025-08-31T13:30:00+00:00'
+# The per-second tier is cut from the close of the window rather than the whole of it, and that is
+# the curation the ratio forces: `car_data` runs at around three and a half readings a second per
+# car, so five minutes of the field is a hundred and fifty thousand records and thirty seconds is
+# three thousand. Thirty seconds is what an opened Driver's trace draws (server/openf1/timeline.ts),
+# so it is what the recording has to carry — for every Driver, because "the tier is not sent for a
+# Driver nobody opened" is only worth checking against a recording that could have sent it.
+trace_from='2025-08-31T13:29:30+00:00'
 
 api="${F1_OPENF1_URL:-http://localhost:8000}"
 repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -67,6 +74,11 @@ fetch laps laps.json --data-urlencode "date_start<=$window_to"
 # Stints carry no date — a Stint is a span of laps, not a moment — so the whole strategy is taken and
 # which set is current is read off the laps run by the window's close (the Adapter, and #16).
 fetch stints stints.json
+# The two streams only an opened Driver reads (#18). Radio is discrete and sparse — a handful of
+# clips a Driver in a whole race — so it is taken up to the window's close like the laps; telemetry
+# is the per-second tier and is taken over the trace window alone, for the reason stated above.
+fetch team_radio team_radio.json --data-urlencode "date<=$window_to"
+fetch car_data car_data.json --data-urlencode "date>$trace_from" --data-urlencode "date<=$window_to"
 
 python3 - "$recording" "$repo_root/test/fixtures" "$session_key" "$window_from" "$window_to" <<'PY'
 """Turns the recorded responses into the two fixtures, byte-stable across runs."""
@@ -86,10 +98,23 @@ KEPT = {
     "position": ("driver_number", "date", "position"),
     "intervals": ("driver_number", "date", "gap_to_leader", "interval"),
     # date_start stays on a lap now: the Replay clock needs the moment it completed (#15), and the Gap
-    # trend needs the separation that stood then (#16).
-    "laps": ("driver_number", "lap_number", "lap_duration", "date_start"),
+    # trend needs the separation that stood then (#16). The three sector durations join it for #18:
+    # an opened Driver's laps are read sector by sector, and no other view has width for them.
+    "laps": (
+        "driver_number", "lap_number", "lap_duration", "date_start",
+        "duration_sector_1", "duration_sector_2", "duration_sector_3",
+    ),
     "stints": ("driver_number", "stint_number", "lap_start", "lap_end", "compound", "tyre_age_at_start"),
+    "team_radio": ("driver_number", "date", "recording_url"),
+    # `drs` is not among these on purpose: it is Gated during a Live window and the trace is drawn
+    # without it, so a recording that carried it would prove a channel the screen never draws.
+    "car_data": ("driver_number", "date", "speed", "throttle", "brake", "n_gear", "rpm"),
 }
+
+# The collections written one record to a line rather than pretty-printed. A reviewer reads a diff
+# of three thousand telemetry readings by the line, never by the field, and the compact form is a
+# third of the bytes for the same information.
+PER_LINE = ("car_data",)
 
 
 def read(name, collection):
@@ -114,12 +139,19 @@ def completed_by(record, instant):
     return finished <= datetime.fromisoformat(instant)
 
 
+def rendered(collection, records):
+    if collection not in PER_LINE:
+        return json.dumps(records, indent=2, sort_keys=True) + "\n"
+    lines = ",\n".join(json.dumps(record, sort_keys=True) for record in records)
+    return f"[\n{lines}\n]\n" if records else "[]\n"
+
+
 def write(name, collections):
     directory = fixtures / name
     directory.mkdir(parents=True, exist_ok=True)
     for collection, records in collections.items():
         path = directory / f"{collection}.json"
-        path.write_text(json.dumps(records, indent=2, sort_keys=True) + "\n")
+        path.write_text(rendered(collection, records))
         print(f"  {path.relative_to(fixtures.parent.parent)}  {len(records)} records")
 
 
@@ -141,14 +173,26 @@ laps = sorted(
     key=lambda r: (r["driver_number"], r["lap_number"]),
 )
 stints = sorted(read("stints.json", "stints"), key=lambda r: (r["driver_number"], r["stint_number"]))
+team_radio = sorted(read("team_radio.json", "team_radio"), key=lambda r: (r["date"], r["driver_number"]))
+# By date, then Driver: the trace window is a slice of this list rather than a filter over it
+# (server/openf1/timeline.ts), so the order it is written in is the order the reader relies on.
+car_data = sorted(read("car_data.json", "car_data"), key=lambda r: (r["date"], r["driver_number"]))
 
 print(f"\nThe window, whole — {window_from} to {window_to}")
 write("2025-dutch-race", {
     "drivers": drivers, "position": position, "intervals": intervals, "laps": laps, "stints": stints,
+    "team_radio": team_radio, "car_data": car_data,
 })
 
+# Telemetry is withheld here with the rest of the timed streams. Whether Formula 1 gates the whole
+# car_data stream, only its DRS channel, or none of it is the measurement #42 exists to take
+# (docs/measurements/what-survives-a-live-session-unauthenticated.md) — so this recording is not a
+# claim about which. It is the case the panel has to survive either way: a Driver opened with no
+# trace behind them, and nothing invented to fill it. Radio is not among the Gated streams
+# (CONTEXT.md), so it stays.
 print("\nThe same window with the timed streams Gated")
 write("2025-dutch-race-gated", {
     "drivers": drivers, "position": [], "intervals": [], "laps": [], "stints": [],
+    "team_radio": team_radio, "car_data": [],
 })
 PY

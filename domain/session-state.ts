@@ -172,6 +172,105 @@ export interface Driver {
   lapsCompleted?: number;
 }
 
+/**
+ * One completed Stint of the opened Driver's strategy: which set, and which laps ran on it
+ * (CONTEXT.md, "Stint"). The Driver's row carries only the set they are on now; this is the history
+ * behind it, which is depth and therefore only ever sent for a Driver someone opened.
+ *
+ * `toLap` is the last lap run on the set *so far*, not the last it will be: a Replay standing
+ * mid-Session would otherwise show a Stint ending on a lap the Driver has not reached yet.
+ */
+export interface Stint {
+  /** One-based, in the order the Stints run: a Driver on their first set is on Stint one. */
+  number: number;
+  /** Absent where the feed never named the compound — an unknown set, never a guessed one. */
+  compound?: Compound;
+  fromLap: number;
+  toLap: number;
+  /** The laps already on the rubber when the set was fitted: nought fresh, more scrubbed. */
+  tyreAgeAtStart?: number;
+}
+
+/**
+ * One lap of the opened Driver, sector by sector — the detail the twenty-row screen has no width for
+ * and shows only for the lap in progress. Each sector carries its status against the field, so a
+ * purple sector in a slow lap reads as what it was.
+ */
+export interface LapDetail {
+  number: number;
+  /** The lap's duration in milliseconds. Absent for a lap the feed timed by sector but not whole. */
+  time?: number;
+  /** The sectors the feed timed, in order — at most three, because a Formula 1 lap has three. */
+  sectors: readonly LapSector[];
+}
+
+/**
+ * One sector of one lap. It carries which sector it is rather than being placed by where it sits,
+ * so a sector the feed never timed — a lap that ended in the pit lane, a reading that never came —
+ * is simply not in the list. Absence stays absence, as it is everywhere else in this model, instead
+ * of a hole standing in a list of three.
+ */
+export interface LapSector extends Sector {
+  /** Which sector of the lap: one, two or three. */
+  number: number;
+}
+
+/**
+ * One team radio clip, as the feed published it. `at` is epoch milliseconds — the same axis the
+ * Replay clock stands on, so a clip is placed against the Session rather than against the viewer's
+ * afternoon, and a Replay scrubbed back does not play a message the Session had not sent yet.
+ */
+export interface Radio {
+  at: number;
+  /** Where the recording is. Formula 1's own address: this project mirrors no audio. */
+  url: string;
+}
+
+/**
+ * One reading of the car, and the whole of the per-second tier (CONTEXT.md): around eighty of these
+ * arrive a second across the field, which is why they are held for the opened Driver and for nobody
+ * else. Every channel optional in the model's usual sense — a channel the feed did not send is
+ * absent from the reading, so the trace breaks across it rather than dropping to the floor.
+ */
+export interface Reading {
+  /** When it was taken, epoch milliseconds. */
+  at: number;
+  /** Road speed, km/h. */
+  speed?: number;
+  /** Throttle, as a percentage of full. */
+  throttle?: number;
+  /** Brake, as a percentage of full. */
+  brake?: number;
+  gear?: number;
+  rpm?: number;
+}
+
+/**
+ * The depth behind one Driver, and the only place the per-second tier is ever carried (#18). It is
+ * present for the Driver a viewer has opened and for no other — not sent and discarded, not sent at
+ * all — which is what makes rendering this tier affordable at all (CONTEXT.md, "Per-second tier").
+ *
+ * Everything but the number is optional, and for the usual reason: a Session with no radio in it
+ * carries no radio, rather than an empty list standing in for one nobody sent.
+ */
+export interface OpenedDriver {
+  /** Which Driver is open. The one fact the panel needs before any depth has arrived. */
+  number: DriverNumber;
+  /** Every Stint run so far, oldest first. */
+  stints?: readonly Stint[];
+  /**
+   * Every lap the feed has timed so far, oldest first, sector by sector. In a Replay those are the
+   * laps completed by the moment the clock stands on; a Live Session also carries the lap on the
+   * road, with the sectors it has crossed and no duration, because that is what the feed holds and
+   * neither reading invents anything the other has.
+   */
+  laps?: readonly LapDetail[];
+  /** The clips broadcast so far, newest first: what was just said explains what just happened. */
+  radio?: readonly Radio[];
+  /** The trace: the seconds just gone, oldest first. A window, because the tier is per-second. */
+  telemetry?: readonly Reading[];
+}
+
 /** Which mode the screen is in. Chrome only (#3): no Driver fact ever branches on it. */
 export type Mode = 'live' | 'replay';
 
@@ -264,6 +363,12 @@ export interface SessionState {
   raceControl?: readonly RaceControlMessage[];
   /** The conditions. */
   weather?: Weather;
+  /**
+   * The Driver a viewer has opened, and everything behind them (#18). Absent while none is open —
+   * and absent again the moment one is closed, which is the whole of "the per-second tier is not
+   * sent for unopened Drivers": there is one of these at most, never twenty.
+   */
+  opened?: OpenedDriver;
   /** Live or Replay, for the strip's chrome. The one field the two modes may differ in (#3). */
   mode?: Mode;
   /** Where the Replay's Session clock stands, for the controls. Absent in a Live Session (#15). */

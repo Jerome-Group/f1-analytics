@@ -37,6 +37,12 @@ const REAL: Ticker = {
 export interface Replay {
   /** Apply a control a viewer sent — play, pause, scrub, or a change of speed. */
   control(control: ReplayControl): void;
+  /**
+   * Publish the current moment again, unmoved. For when the log beneath the clock has changed rather
+   * than the position on it — a Driver opened, so frames now carry their depth (#18). The clock is
+   * not what changed, so it does not pretend to have moved.
+   */
+  refresh(): void;
   /** Stop the clock for good, when the server is closing. */
   stop(): void;
 }
@@ -103,6 +109,7 @@ export function replayClock(source: SessionSource, timeline: Timeline, ticker: T
           break;
       }
     },
+    refresh: publish,
     stop: stopTicking,
   };
 }

@@ -16,9 +16,16 @@
 // change logs — position and intervals — key on date and Driver, so every distinct reading is kept
 // and the latest is the current one, which is what the Adapter's time-series reading expects.
 
-import type { SessionState } from '../../domain/index.ts';
-import { sessionStateFrom } from './adapter.ts';
-import type { DriverRecord, IntervalRecord, LapRecord, PositionRecord, StintRecord } from './records.ts';
+import type { DriverNumber, SessionState } from '../../domain/index.ts';
+import { openedDriverFrom, sessionStateFrom } from './adapter.ts';
+import type {
+  DriverRecord,
+  IntervalRecord,
+  LapRecord,
+  PositionRecord,
+  StintRecord,
+  TeamRadioRecord,
+} from './records.ts';
 
 export interface LiveFeed {
   /**
@@ -28,13 +35,22 @@ export interface LiveFeed {
    * upstream's to answer for, and neither should stop the Session.
    */
   ingest(topic: string, payload: string): void;
+  /**
+   * Open a Driver, or close the one that is open (#18). What the Session then carries for them is
+   * whatever this feed has subscribed to: their Stint history, their laps sector by sector, and
+   * their radio. The per-second trace is not among them, because `v1/car_data` is not among the
+   * topics below — adding it is #42, after the measurement says whether it arrives at all.
+   */
+  open(driver: DriverNumber | undefined): void;
   /** The Session as it stands, built through the same Adapter the REST feed uses. */
   state(): SessionState;
 }
 
 /** One document as it arrives — the record fields the Adapter reads, plus the Session key every
  * Ingestor document is stamped with, which the REST feed instead gets from the URL it queried. */
-type LiveRecord = Partial<DriverRecord & PositionRecord & IntervalRecord & LapRecord & StintRecord> & {
+type LiveRecord = Partial<
+  DriverRecord & PositionRecord & IntervalRecord & LapRecord & StintRecord & TeamRadioRecord
+> & {
   session_key?: number;
 };
 
@@ -51,6 +67,10 @@ const COLLECTIONS: Record<string, KeyOf> = {
   'v1/intervals': (record) => `${record.date}|${record.driver_number}`,
   'v1/laps': (record) => `${record.lap_number}|${record.driver_number}`,
   'v1/stints': (record) => `${record.stint_number}|${record.driver_number}`,
+  // Radio is per-Driver depth rather than a column, and it is not a Gated stream (CONTEXT.md), so it
+  // is subscribed to here and read only for the Driver a viewer has opened. A clip is published once,
+  // and two clips of one Driver at one instant would be the same clip.
+  'v1/team_radio': (record) => `${record.date}|${record.driver_number}`,
 };
 
 /** The topics a live subscriber asks for: the keys of the table above, so the two cannot drift. */
@@ -63,6 +83,7 @@ export function liveFeed(): LiveFeed {
   // from the records themselves. Nought until the first document names it — a Session with no records
   // yet has no key to show, and the Adapter carries the nought through as it would a real one.
   let sessionKey = 0;
+  let opened: DriverNumber | undefined;
 
   return {
     ingest(topic, payload) {
@@ -75,15 +96,26 @@ export function liveFeed(): LiveFeed {
       if (record.session_key !== undefined) sessionKey = record.session_key;
       collection.set(keyOf(record), record);
     },
+    open(driver) {
+      opened = driver;
+    },
     state() {
-      return sessionStateFrom(
+      const laps = held<LapRecord>('v1/laps');
+      const stints = held<StintRecord>('v1/stints');
+      const state = sessionStateFrom(
         sessionKey,
         held<DriverRecord>('v1/drivers'),
         held<PositionRecord>('v1/position'),
         held<IntervalRecord>('v1/intervals'),
-        held<LapRecord>('v1/laps'),
-        held<StintRecord>('v1/stints'),
+        laps,
+        stints,
       );
+      if (opened !== undefined) {
+        // No readings, because no `v1/car_data` subscription: the same Adapter builds the same
+        // depth, and the trace is simply a stream this feed has not been given (#42).
+        state.opened = openedDriverFrom(opened, laps, stints, held<TeamRadioRecord>('v1/team_radio'), []);
+      }
+      return state;
     },
   };
 

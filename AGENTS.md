@@ -81,11 +81,18 @@ lines**, in this order:
 
 ### Issue tracker
 
-GitHub Issues on this repository, via the `gh` CLI.
+GitHub Issues on this repository, via the `gh` CLI. See `docs/agents/issue-tracker.md` — it
+carries the operations, not just the choice, including the wayfinding ones (`/wayfinder` reads
+that section and silently falls back to local markdown when it is missing).
+
+### Triage labels
+
+The five canonical roles, label strings unchanged. See `docs/agents/triage-labels.md`. They are
+created here by the hub's Terraform, so they are not editable in this repository.
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` + `docs/adr/` at the repo root.
+Single-context: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
 
 ### Dependency updates
 

@@ -1,15 +1,50 @@
-# AGENTS.md — <repository>
+# AGENTS.md — f1-analytics
 
 > Canonical instruction file for AI agents (Claude Code and others) working in this repo.
 > `CLAUDE.md` is a symlink to this file, so the two can never drift.
 
 ## What this repo is
 
-*(One paragraph: what this repository is for, and what it is not for. Replace this and the
-heading above before the first pull request.)*
+A dashboard for watching a live Formula 1 session — the official timing screen, expanded, with
+all twenty drivers on screen at once and per-driver depth behind a toggle. It runs on one machine
+for one viewer, against a self-hosted OpenF1 pipeline, and replays a past session through the same
+views. It is not a hosted service, not telemetry analysis (that is deferred, `docs/adr/0003`), and
+not affiliated with Formula 1. `README.md` is the long version and `CONTEXT.md` the vocabulary.
 
-- **Visibility:** *(private | public)*
+- **Visibility:** public
 - **Organisation:** [Jerome-Group](https://github.com/Jerome-Group)
+
+## Getting it running
+
+Node runs the TypeScript as written — there is no build step, and the only package here is the
+type checker (`docs/adr/0011`). `.nvmrc` names the Node this repository is run on, and it is the
+same answer `bin/` and CI read.
+
+    bin/up                        # api, live ingestor, MongoDB and Mosquitto, building what is missing
+    bin/down                      # and the virtual machine with them, so the volume can be unplugged
+    bin/compose ps                # the honest check on whether the stack is up
+
+    bin/archive 2025              # mirror a season's raw files; 2025 1267 9920 for one session
+    bin/catalogue 2025            # a season's meetings and sessions — names and clocks
+    bin/backfill 2025 1267 9920   # one past session into the stores, whole
+    bin/fixture                   # re-cut the committed test recording from the running stores
+
+    node server/main.ts 9920      # the picker and replay of backfilled sessions, on :8080
+
+    test/run                      # every test; installs nothing
+    npm ci && npm run typecheck   # the type checker, a check rather than a build step
+    shellcheck -x bin/* test/run test/*.test.sh   # what CI lints, minus bin/lib
+
+The first `bin/up` clones and builds the upstream Ingestor and takes minutes; later runs take
+about thirty seconds. The API is then on `localhost:8000` and the broker on `localhost:1883`.
+Nothing is imported by `bin/up` — a past session arrives only through `bin/backfill`, one at a
+time, and running it again for the same session replaces it (`docs/adr/0008`).
+
+**Where these may be run:** on the machine holding the external volume this repository lives on,
+and nowhere else. The container runtime, its virtual machine and every byte of data are placed
+there by the `bin/` wrappers (`docs/adr/0004`); `.runtime/` and `.archive/` sit beside the working
+tree, outside it and never committed. The Archive is the one thing here that cannot be rebuilt —
+Formula 1 has already removed seasons from its own servers.
 
 ## Conventions
 
@@ -99,3 +134,14 @@ Single-context: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/do
 Surfaced at both ends of any session that touches a pull request. See
 `docs/agents/dependencies.md`. Note its **first** merge condition: this repository auto-merges
 nothing until it has deliberately opted in, and a skeleton CI has not earned that.
+
+## Repository notes
+
+- **This is the Organisation's one public repository.** Anything written here is published — no
+  internal detail, no path that is nobody else's business, no credential. The system needs no
+  Formula 1 account and holds no token at all (`docs/adr/0002`), so a secret appearing here would
+  be one that wandered in from somewhere else.
+- **What the running system costs is measured, not estimated** — `docs/measurements/`, one file
+  per measurement. A number quoted in prose links to the file that took it.
+- **`analysis/` does not exist yet.** `MAP.md` names it so the pull request that creates it is
+  placing it rather than inventing it.

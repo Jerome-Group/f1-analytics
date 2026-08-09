@@ -44,6 +44,34 @@ When your output names a domain concept (in an issue title, a refactor proposal,
 
 If the concept you need isn't in the glossary yet, that's a signal — either you're inventing language the project doesn't use (reconsider) or there's a real gap (note it for `/domain-modeling`).
 
+## House style for an ADR
+
+Three rules about ADRs are **checked**, and CI names them when they fire: a filename is
+`NNNN-hyphenated-title.md`, no two records share a number, and a record that supersedes another
+requires the one superseded to point forward at it — a one-way link leaves the reader who arrives
+at the older record acting on guidance that was overtaken. The reasoning is
+[ADR-0033](https://github.com/Jerome-Group/org/blob/main/docs/adr/0033-decision-records-are-held-to-their-number-and-their-links.md);
+the link is absolute because this file is seeded verbatim into every repository, whose own
+`docs/adr/` has no such record.
+
+Everything below is **guidance, enforced by nothing.** An ADR may be a single paragraph; the value
+is in recording the decision, not in filling out sections. A required section produces records
+whose section reads "None", which passes a check and teaches nobody. So write these because they
+are worth writing:
+
+- **Lead with the decision**, in the title and the first paragraph. A reader who stops after two
+  sentences should still know what was decided.
+- **Argue against the option you rejected**, especially when it was the obvious one. The record is
+  read by someone about to suggest it again.
+- **`## Consequences`** — what this costs, what it makes harder, what now has to be remembered.
+  The honest ones are what make a record worth keeping.
+- **`## Revisit when`** — the conditions under which this should be reopened. It is what turns a
+  record from a headstone into something with a trigger.
+
+Superseding a record is two edits: the new record says what it supersedes, and the superseded one
+gains a line at the top pointing forward. Say what is superseded — a section, a paragraph, the
+whole thing — and what still stands.
+
 ## Flag ADR conflicts
 
 If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:

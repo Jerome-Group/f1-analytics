@@ -2,9 +2,9 @@
 
 This file is what `/code-review`'s **Standards** axis reads. It is layered:
 
-- **The core** (§1–§4) — shared by every repository, seeded from the template. Treat it as
-  fixed; it changes only by an org-level decision (see §6).
-- **Repo-specific standards** (§5) — each repository fills these in and evolves them freely.
+- **The core** (§1–§5) — shared by every repository, seeded from the template. Treat it as
+  fixed; it changes only by an org-level decision (see §7).
+- **Repo-specific standards** (§6) — each repository fills these in and evolves them freely.
 
 ## 1. The principle: the code explains itself
 
@@ -62,7 +62,42 @@ restates what the code already says. Keep it light so it stays true:
 area updates `MAP.md` in the **same** pull request. A stale map is worse than none, so
 `/code-review` treats a drifted `MAP.md` as a Standards finding.
 
-## 5. Repo-specific standards
+## 5. What CI must prove
+
+The core makes one claim about a repository's own checks; everything else about them is §6's
+business. Two obligations:
+
+- **CI proves this repository's own artefact.** From a clean checkout, with no manual step, the
+  run builds what the repository produces and runs one formatter and one linter in check mode,
+  plus the tests. Where the artefact is not code — Terraform, a set of documents, a template
+  tree — the obligation is unchanged and only the commands differ: run whatever would catch that
+  artefact being wrong.
+- **The whole run finishes inside ten minutes.** Past that, developers route around it and a
+  failure stops naming one change. A suite outgrowing the bound is a signal to split the check,
+  not to raise the bound.
+
+How the checks grow forks on **cost**, which is countable, rather than on importance, which is
+not:
+
+- **Structural checks are added on sight** — deterministic, sub-second, needing no judgement.
+- **A behavioural check waits until the mistake has happened three times.** Anything cheaper to
+  write than to be wrong about is already covered by the line above; the rest is a guess until
+  the failure has a history.
+- **A bug fix always carries the check that would have caught it**, whichever kind it is. The
+  mistake has happened, so there is nothing left to estimate.
+
+Two shapes are settled, so no repository re-argues them:
+
+- **One workflow file for the checks, many jobs.** Jobs already give the parallelism and the
+  separate check contexts, so a second file buys neither and splits the place a reader looks. A
+  workflow that is not a check — an automation that acts on a merge — is its own file. So is
+  `conformance.yml`, and for a reason the rule was never about: that file is not this repository's
+  to own. It arrives written, its pin is moved by Dependabot, and folding it into `ci.yml` would
+  make every rule the Organisation agrees an edit to a file this repository owns.
+- **No path filters.** A filtered workflow never reports on a pull request it does not match, so
+  a required check sits pending forever and the merge blocks on a report that will never arrive.
+
+## 6. Repo-specific standards
 
 *(Each repository fills this in and owns it.)* Language and framework conventions, the seams
 where tests are written, naming or layout rules particular to this codebase, and anything the
@@ -139,11 +174,11 @@ row that disagrees is a screen where every column right of the disagreement is q
 **No bind mounts.** Containers get their configuration from a build context; the virtual machine
 sees no host path at all (`docs/adr/0007`).
 
-## 6. Evolution — what is rigid, what moves
+## 7. Evolution — what is rigid, what moves
 
-- **The core (§1–§4) is rigid.** It is identical in every repository and changes only by an
+- **The core (§1–§5) is rigid.** It is identical in every repository and changes only by an
   org-level decision recorded as an ADR in the management hub, then rolled out through the
   template (and to existing repositories as wanted). Do not quietly edit the core in one repo.
-- **§5 moves freely** per repository, through that repository's own pull requests.
+- **§6 moves freely** per repository, through that repository's own pull requests.
 - **`MAP.md` is required everywhere, but its contents are repo-specific** and are updated
   continuously alongside the code they describe.

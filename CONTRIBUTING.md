@@ -56,7 +56,8 @@ with `Closes #123`.
 
 ## Disclosing AI assistance
 
-Every commit message and pull-request body ends with attribution trailers as its **last** lines:
+Every commit **you write**, and your pull-request body, ends with attribution trailers as its
+**last, contiguous** lines:
 
 ```
 Assisted-by: <the exact model that helped>
@@ -69,7 +70,18 @@ is known to be real: Claude (`noreply@anthropic.com`), Codex (`noreply@openai.co
 (`198982749+Copilot@users.noreply.github.com`). Anything else gets `Assisted-by:` alone, because
 a guessed address credits a stranger.
 
-Wrote it yourself? Then there are no trailers to add. This is a disclosure rule, not a ritual.
+Wrote it yourself? Then it is `Assisted-by: none`, and no second trailer. **Every** commit says who
+helped, including the ones where the answer is nobody — because a rule where silence sometimes
+means "a human wrote this" and sometimes means "somebody forgot" discloses nothing either time
+(ADR-0041). It costs a word, and it is the only word this rule has ever asked you to invent.
+
+**The commits GitHub writes are not yours, and the rule does not reach them.** It writes two, both
+after every check has passed and neither editable by anybody: the *squash* commit that lands on
+`main`, where an aggregated `Co-authored-by:` block is appended after a `---------` separator and
+your trailers end up mid-message; and the `Merge branch 'main' into …` commit that the **Update
+branch** button writes when your branch has fallen behind. The check skips a merge commit and is
+never run over `main`, so neither is yours to get right — and neither is a licence to leave a
+trailer off a commit you did write.
 
 ## What gets a change rejected
 

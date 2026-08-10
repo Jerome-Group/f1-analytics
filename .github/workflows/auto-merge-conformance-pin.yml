@@ -18,8 +18,9 @@ name: Auto-merge the conformance pin
 #
 # **Diff-keyed, not author-keyed.** The qualifying test is what the pull request *changes*, never
 # who opened it: an author allowlist is a second list to keep in step, and both authors that
-# matter — Dependabot, and a bump opened by hand from the management hub — are already the only
-# accounts that can open a pull request here that runs with write permissions.
+# matter — Dependabot, and the management hub's own publish, which opens the bump and queues it
+# (ADR-0047) — are already the only accounts that can open a pull request here that runs with
+# write permissions.
 #
 # This file is seeded into every repository and its words are the repository's to rewrite
 # (ADR-0031). A repository that wants none of this deletes the job rather than the file: what it

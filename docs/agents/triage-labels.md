@@ -49,3 +49,15 @@ An issue form's `labels:` key is applied by the web interface and never fires on
 path — `gh issue create --template` supplies starting body text and nothing else — so a form
 cannot label an agent's issue. On that path it is the documented command that carries the labels;
 see `issue-tracker.md`.
+
+## An empty slot is filled for you, and that is not the same as filling it
+
+`.github/workflows/stamp-issue-labels.yml` runs on every issue as it is opened — from a form, from
+`gh issue create`, from the API, from a skill — and adds `needs-triage` if the issue has no state
+and `task` if it has no category. It only ever fills an **empty** slot: an issue that arrives
+carrying an axis keeps exactly what it arrived with, and nothing is replaced or removed.
+
+So the two defaults are the answer for an issue nobody classified. They are not an excuse to stop
+classifying: an issue you know is a `bug` and label `task` by omission reads as a task until
+somebody notices. `bin/audit` in `Jerome-Group/org` reports every open issue that ends up on the
+wrong number of labels on either axis, which is the backstop rather than the mechanism.

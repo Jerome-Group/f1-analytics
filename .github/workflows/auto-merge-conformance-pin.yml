@@ -56,9 +56,14 @@ jobs:
       # file while changing something else there.
       #
       # **Every changed line is the pin.** Not "the pin is among the changes" — a bump that also
-      # rewrote a step's inputs or moved another pin is a change somebody should read. The patch's
-      # own file headers are `+++ ` and `--- ` *with a space*; matched without it, a removed line
-      # that merely began `--` would be counted as a header and hidden from the test.
+      # rewrote a step's inputs or moved another pin is a change somebody should read.
+      #
+      # A plain `gh pr diff`, never `--patch`: the latter is `format-patch` output, which opens
+      # with the commit message and a bare `---` separator, and that line is indistinguishable
+      # from a removed one. Filtering it out by matching `---` without its trailing space would
+      # also hide a removed line beginning `--`, so the fix is to read a diff that has no mail
+      # header rather than to loosen the filter. The unified diff's own headers are `+++ ` and
+      # `--- ` *with* a space, and that is what is dropped here.
       #
       # **The commit it points at is one of the hub's.** Without this the line test would accept a
       # one-line change to any forty characters at all, and the check that gates the merge would
@@ -79,7 +84,7 @@ jobs:
           files=$(gh pr view "$PR_URL" --json files --jq '.files | length')
           path=$(gh pr view "$PR_URL" --json files --jq '.files[0].path // ""')
 
-          changed=$(gh pr diff "$PR_URL" --patch |
+          changed=$(gh pr diff "$PR_URL" |
             grep -E '^[+-]' | grep -vE '^(\+\+\+ |--- )' || true)
 
           reference='uses: Jerome-Group/\.github/\.github/workflows/conformance\.yml@'

@@ -33,9 +33,12 @@ afterwards costs two.
 
 An agent may merge a Dependabot pull request **only** when all five hold:
 
-- **this repository has opted in** — it sets `allow_auto_merge` and carries the auto-merge
-  workflow. A repository that has not opted in auto-merges nothing, and neither does an agent
-  standing in for it;
+- **this repository has opted in** — it carries `dependabot-auto-merge.yml`, the workflow that
+  queues a Dependabot bump on this repository's *own* green tick. A repository that has not opted
+  in auto-merges nothing, and neither does an agent standing in for it. The repository *setting*
+  `allow_auto_merge` is not the opt-in and never was a reliable reading of one: every repository
+  in the Organisation now has it on, because it is the queue a different workflow needs
+  (ADR-0045). What a repository will merge unattended is decided by which workflows it carries;
 - the ecosystem is `github-actions`;
 - the bump is **patch or minor**;
 - the required check is **green**;

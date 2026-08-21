@@ -86,6 +86,22 @@ print(re.search(r'<div class=\"driver-row-header\">.*?</div>', open(sys.argv[1])
 assert_equals "the screen's header is the Driver row's header, to the character" \
   "$(header "$component_row")" "$(header "$screen")"
 
+# The Gated streams are written in three places — the strip that renders them and the two static
+# pages that draw a specimen of it — and which streams are Gated is a measured fact that has already
+# moved once (ADR-0002). A specimen still advertising a stream the running screen no longer names is
+# a design system documenting a screen that does not exist.
+gated_streams() {
+  grep -o '<span class="gated-streams__stream">[^<]*</span>' "$1" | sed 's/<[^>]*>//g' | sort -u
+}
+
+rendered_gated="$(grep -o "^const GATED = \[.*\];" "$here/../web/session-strip.ts" |
+  grep -o "'[^']*'" | tr -d "'" | sort -u)"
+
+for page in "$design/components/session-strip/session-strip.html" "$screen"; do
+  assert_equals "the Gated streams in $(basename "$page") are the ones the strip renders" \
+    "$rendered_gated" "$(gated_streams "$page")"
+done
+
 # --- Values live in tokens/, and nowhere else ---------------------------------------------
 #
 # A literal in a component is the drift the token files exist to prevent: it is invisible in

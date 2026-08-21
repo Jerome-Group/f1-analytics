@@ -86,7 +86,7 @@ function reading(label: string, drawn: string): string {
 }
 
 /**
- * Live or Replay, and — during a Live window only — the four Gated streams listed as unavailable,
+ * Live or Replay, and — during a Live window only — the Gated streams listed as unavailable,
  * because a silently empty stream reads as broken (#3). Once a Session has finished nothing is
  * Gated, so in Replay they are simply gone.
  */
@@ -96,7 +96,11 @@ function modeBlock(mode: Mode | undefined): string {
   return `<div class="session-mode">${badge}${mode === 'live' ? gatedStreams() : ''}</div>`;
 }
 
-const GATED = ['Positions', 'DRS', 'Standings', 'Stop times'];
+// Three, measured rather than announced (ADR-0002). Stop times left the list because they arrive
+// during a Live window after all, and DRS left it because the 2026 regulations abolished DRS —
+// nothing replaces that fourth label, because what replaced DRS on the car is announced in race
+// control, which is not Gated and is drawn above.
+const GATED = ['Positions', 'Telemetry', 'Standings'];
 
 function gatedStreams(): string {
   const streams = GATED.map(

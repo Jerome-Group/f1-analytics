@@ -58,6 +58,10 @@ back door of a scrape whose whole cost is the accumulation this defers.
 - **A pit-lane start has no grid slot**, and its position change reads as level rather than as an
   invented slot. That is correct: a car that started from the pit lane did not start from a place
   on the grid.
+- **The scrape fallback is, for now, a fallback to nothing.** Upstream's `starting_grid` is empty
+  for the 2026 season (#73), so the option this record kept on the table would currently return no
+  rows to parse. That is not an argument this decision made at the time and it is not one it needs
+  — it is a footnote for whoever reaches for the fallback and finds it hollow.
 
 ## Revisit when
 

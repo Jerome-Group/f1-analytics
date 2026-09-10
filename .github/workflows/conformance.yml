@@ -46,4 +46,4 @@ jobs:
     # rule change arrives as one reviewable pull request per repository — Dependabot's
     # `github-actions` ecosystem bumps a reusable-workflow reference the same way it bumps an
     # action (`.github/dependabot.yml`).
-    uses: Jerome-Group/.github/.github/workflows/conformance.yml@6ab8e704c90d439e16d348617084c4eace5f237b
+    uses: Jerome-Group/.github/.github/workflows/conformance.yml@9fb3e0462aa1aac9c5c060dccd246e589fc1a3f6

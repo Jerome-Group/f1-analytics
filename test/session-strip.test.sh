@@ -107,10 +107,22 @@ EOF
   )" \
   "$(weather <<<"$strip")"
 
-# The four Gated streams are listed as unavailable during a Live window, because silently empty
-# reads as broken (#3).
+# The Gated streams are listed as unavailable during a Live window, because silently empty reads as
+# broken (#3). Which streams those are was measured rather than announced, and the list is three
+# (ADR-0002) — so it is named here, where a fourth label creeping back in would be caught.
 assert_contains "during a live Session the Gated streams are listed as unavailable" \
   '<div class="gated-streams">' "$strip"
+
+assert_equals "the Gated streams named are the three that are actually withheld" \
+  "$(
+    cat <<'EOF'
+Positions
+Telemetry
+Standings
+EOF
+  )" \
+  "$(grep -o '<span class="gated-streams__stream">[^<]*</span>' <<<"$strip" |
+    sed 's/<[^>]*>//g')"
 
 # --- Replay: nothing is Gated once a Session has finished ------------------------------------
 

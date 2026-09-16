@@ -36,6 +36,20 @@ services:
       # No username or password: the broker allows anonymous connections, because a credential
       # this project invented is still a credential to store and keep out of a commit (ADR-0002).
       OPENF1_MQTT_NO_TLS: "true"
+      # A switch spelled as a credential, and the value is deliberately not one.
+      #
+      # Formula 1 has closed the legacy SignalR endpoint the recorder used to reach: a negotiate
+      # against `livetiming.formula1.com/signalr` now answers 401 with `WWW-Authenticate: Basic`
+      # and `Bearer`, so the live path receives nothing at all. The replacement,
+      # `livetiming.formula1.com/signalrcore`, still negotiates and subscribes anonymously.
+      #
+      # Upstream chooses between the two by whether `F1_TOKEN` is *set*, not by whether its value
+      # authenticates: unset omits `--auth` and takes the dead endpoint, set passes `--auth` and
+      # takes the live one (`real_time/recording.py`). It is then sent as a bearer, which Formula 1
+      # is expected to ignore — this project holds no F1TV token and is not becoming a system that
+      # does (ADR-0002). Whether the free subset arrives on an unauthenticated connection is the
+      # measurement ADR-0002 leaves outstanding, and #42 settles it against a live Session.
+      F1_TOKEN: unauthenticated
     depends_on:
       - api
 

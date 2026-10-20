@@ -122,10 +122,13 @@ export interface TeamRadioRecord {
  * the largest stream upstream has: a Race carries around seven hundred thousand of these against a
  * thousand-odd laps (docs/measurements/a-race-session-on-disk.md). That ratio is why this record is
  * only ever read for a Driver a viewer has opened, and why the reader takes a window rather than a
- * Session (timeline.ts).
+ * Session (timeline.ts). The whole stream is Gated during a Live window — measured, not assumed
+ * (ADR-0002) — so in Live this record never arrives at all and the trace says its own absence.
  *
- * `drs` is deliberately not read. It is a Gated stream during a Live window (CONTEXT.md) and the
- * trace is drawn without it, so nothing has to be taken away when it is missing.
+ * `drs` is deliberately not read. Upstream's schema still carries the field, but the 2026
+ * regulations abolished DRS and every 2026 reading of it is `null`
+ * (docs/measurements/what-survives-a-live-session-unauthenticated.md). The trace is drawn without
+ * it, so there is nothing to take away.
  */
 export interface CarDataRecord {
   driver_number: number;

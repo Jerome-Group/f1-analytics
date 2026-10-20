@@ -404,7 +404,7 @@ function radioOf(records: readonly TeamRadioRecord[], number: DriverNumber): Rad
 }
 
 /** The trace, oldest first: one reading per document, each channel carried across only where the
- *  feed sent it. Upstream's DRS is deliberately not among them (records.ts). */
+ *  feed sent it. Upstream's DRS field is deliberately not among them (records.ts). */
 function telemetryOf(records: readonly CarDataRecord[], number: DriverNumber): Reading[] {
   return records
     .flatMap((record) => {

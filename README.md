@@ -25,9 +25,9 @@ browser at the other end is not written yet. The decisions are recorded in
 - **Live and replay, through the same views.** A past session is played back in exactly the shapes
   a live one arrives in, so nothing branches on which it is.
 - **Free data only.** No Formula 1 account, no token, no credential anywhere in the system
-  ([ADR-0002](docs/adr/0002-live-data-is-the-free-subset-only.md)). Four streams are withheld
-  during a live session because of this — car positions, DRS, championship standings and pit stop
-  durations — and all four are available in replay, because the gating ends when the session does.
+  ([ADR-0002](docs/adr/0002-live-data-is-the-free-subset-only.md)). Three streams are withheld
+  during a live session because of this — car telemetry, car locations and championship standings —
+  and all three are available in replay, because the gating ends when the session does.
 
 ## What it is not
 

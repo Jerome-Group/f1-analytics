@@ -11,7 +11,7 @@
 //
 // Nothing below the socket knows this is Live rather than Replay: the feed produces a `SessionState`
 // like any other (ADR-0003), and the one thing that differs is the `mode` this stamps on it, which
-// the strip reads to draw the four Gated streams as unavailable rather than leaving them silently
+// the strip reads to draw the Gated streams as unavailable rather than leaving them silently
 // blank (#13, session-strip.ts). That single field is the whole of "Live versus Replay is
 // unmistakable, and no view branches on the mode".
 //

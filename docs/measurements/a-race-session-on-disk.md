@@ -38,9 +38,9 @@ they came apart. Before the indexes existed, `/v1/car_data` and `/v1/location` r
 at five seconds. With the indexes, both answer immediately. Everything else was readable either
 way.
 
-The four streams Formula 1 gates during a Live window
-([ADR-0002](../adr/0002-live-data-is-the-free-subset-only.md)) are all present and all populated,
-which is the point of backfilling this Session in particular:
+The four streams [ADR-0002](../adr/0002-live-data-is-the-free-subset-only.md) named as Gated during
+a Live window are all present and all populated, which is the point of backfilling this Session in
+particular:
 
 | Gated stream | Where it landed | Evidence |
 |---|---|---|
@@ -50,8 +50,11 @@ which is the point of backfilling this Session in particular:
 | Pit stop durations | `pit` | 39 of 40 records carry `stop_duration` |
 
 The DRS row settles half of ADR-0002's outstanding measurement: whatever Formula 1 does to that
-channel during a Session, it is intact in the archive. What happens to it *live* is still
-unanswered and still needs a live Session.
+channel during a Session, it is intact in the archive. The live half was taken a month later, at
+Zandvoort ([what-survives-a-live-session-unauthenticated.md](what-survives-a-live-session-unauthenticated.md)),
+and it answered the question by dissolving it — the whole `car_data` stream is withheld during a
+Live window rather than the DRS channel within it, and a 2026 car has no DRS to gate. So the four
+rows above are the four streams ADR-0002 named at the time, not the four it names now.
 
 Sectors are inside `laps` rather than beside them: 1,359 of 1,365 laps carry all three
 `duration_sector_*` values — the six that do not are in-laps and retirements — and all 1,365 carry

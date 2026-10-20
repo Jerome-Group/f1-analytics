@@ -6,7 +6,8 @@
 #   bin/backfill 2025 1267 9920
 #
 # A job, run once and on purpose, and safe to run again: the Session is replaced rather than
-# added to (ADR-0008).
+# added to (ADR-0008), and replaced only once the records replacing it are in the stores
+# (ADR-0013).
 set -euo pipefail
 
 # shellcheck source=lib/environment.sh
@@ -55,18 +56,48 @@ f1_require_vm
 f1_ensure_compose_plugin
 f1_require_stores
 
-# Before the discard rather than after the ingest: the same index that makes a Session readable is
-# what keeps a re-run's delete from scanning both telemetry collections end to end.
+# Before the ingest rather than after it: the same index that makes a Session readable is what
+# keeps a re-run's mark and discard from scanning both telemetry collections end to end.
 f1_index_telemetry
 
-printf 'Discarding whatever the stores already hold for Session %s\n' "$session_key"
-discarded="$(f1_discard_session "$session_key")"
-printf '%s records discarded\n' "$discarded"
+# What the stores already hold is marked rather than deleted, and discarded only once the records
+# replacing it are in. A Backfill either replaces the Session or leaves it exactly as it was, and
+# there is no moment in between where the Session is neither (ADR-0013).
+held="$(f1_supersede_session "$session_key")"
+
+[ "$held" -eq 0 ] || cat <<EOF
+The stores already hold $held records for Session $session_key, and this replaces every one of
+them. They stay until the ingest has finished, so stopping it before then costs nothing.
+
+EOF
+
+# An ingest that does not finish puts the Session back as it was, the half it wrote included. The
+# trap clears itself, so the restore happens once however the run ends, and the discard below is
+# reached only by a run that got there on its own.
+restore_the_session() {
+  trap - EXIT INT TERM
+  restored="$(f1_restore_superseded "$session_key")"
+  printf '\nThe ingest did not finish. Session %s is as it was, %s records.\n' \
+    "$session_key" "$restored" >&2
+}
+trap restore_the_session EXIT INT TERM
 
 printf 'Ingesting Session %s of Meeting %s, %s\n' "$session_key" "$meeting_key" "$year"
 "$F1_REPO_ROOT/bin/compose" run --rm --entrypoint python backfill \
   -m openf1.services.ingestor_livetiming.historical.main \
   ingest-session "$year" "$meeting_key" "$session_key"
+
+# Upstream's write path logs a failed insert and exits zero all the same — `insert_data_sync`
+# swallows the BulkWriteError — so a command that returned is not evidence that a record arrived,
+# and discarding on that evidence is exactly how a Session becomes nothing at all.
+f1_session_was_ingested "$session_key" || {
+  printf 'The ingest returned without writing a record for Session %s.\n' "$session_key" >&2
+  exit 1
+}
+
+trap - EXIT INT TERM
+discarded="$(f1_discard_superseded "$session_key")"
+[ "$discarded" -eq 0 ] || printf '%s superseded records discarded\n' "$discarded"
 
 printf '\nSession %s in the stores\n\n' "$session_key"
 printf '  %-22s %12s %12s\n' collection records 'on disk'

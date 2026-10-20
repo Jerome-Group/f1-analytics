@@ -10,11 +10,15 @@
 // It lives under the Adapter because it names upstream's collections and unique keys; those names
 // stop here, as they do in every other file in this directory (test/adapter.test.sh).
 //
-// Accumulation mirrors the Stores the Ingestor also writes to (CONTEXT.md): a record is upserted by
-// the same unique key MongoDB keys it on, so a lap re-published as its duration fills in, or a Stint
-// re-published as its last lap moves, replaces the earlier version rather than doubling it. The
-// change logs — position and intervals — key on date and Driver, so every distinct reading is kept
-// and the latest is the current one, which is what the Adapter's time-series reading expects.
+// Accumulation mirrors what the Stores *answer with*, which is not what they hold (#74). The
+// Ingestor publishes a whole record every time it revises one and appends the same to MongoDB, so a
+// Session leaves several rows per lap behind it; the collapsing to one happens in the query API, on
+// read. This feed is handed the revisions and no query API, so it collapses them itself — a lap
+// re-published as its duration fills in, or a Stint re-published as its last lap moves, replaces the
+// earlier version rather than doubling it, and the feed agrees with what `rest-feed.ts` would be
+// given for the same Session. The change logs — position and intervals — key on date and Driver, so
+// every distinct reading is kept and the latest is the current one, which is what the Adapter's
+// time-series reading expects.
 
 import type { DriverNumber, SessionState } from '../../domain/index.ts';
 import { openedDriverFrom, sessionStateFrom } from './adapter.ts';
@@ -54,10 +58,10 @@ type LiveRecord = Partial<
   session_key?: number;
 };
 
-/** The unique key a record of a collection is held by — the same key MongoDB upserts on upstream, so
- * a re-published record replaces rather than accumulates. The change logs key on `date` so each
- * reading is distinct; the discrete streams key on their one-per-Session identity so an update to a
- * lap or a Stint lands on the same record. */
+/** The unique key a record of a collection is held by — the identity that makes a re-published
+ * record a revision of an existing one rather than a new one, so it replaces rather than
+ * accumulates. The change logs key on `date` so each reading is distinct; the discrete streams key
+ * on their one-per-Session identity so an update to a lap or a Stint lands on the same record. */
 type KeyOf = (record: LiveRecord) => string;
 
 /** Every collection the Timing screen is built from, by the topic it is published on. */

@@ -24,6 +24,14 @@ f1_require_stores() {
   return 1
 }
 
+# Every collection a Session's records land in, which is every collection except the catalogue's
+# own two. `meetings` and `sessions` say what a Session *is* rather than what it recorded, and
+# bin/catalogue owns them (ADR-0009) — but the `sessions` document carries the same session_key
+# every record carries, so a sweep by that key alone takes the Session's name away with its data
+# and leaves a Session nothing can even list (ADR-0013).
+F1_SESSION_COLLECTIONS="db.getCollectionNames()
+      .filter((name) => !['meetings', 'sessions'].includes(name))"
+
 # Upstream creates no index on any collection. Everything smaller than the Per-second tier
 # survives that; car_data and location do not — a query for one Driver's telemetry scans seven
 # hundred thousand documents and the query API abandons it at its own five-second limit. So these
@@ -36,16 +44,67 @@ f1_index_telemetry() {
   "
 }
 
-# Everything the named Session put in the stores, gone. Scoped by session_key, which every
-# document a Session produces carries, so a second Session in the same collections is untouched.
-f1_discard_session() {
+# The records the stores already hold for this Session, marked as the ones a Backfill is about to
+# replace, and counted. Nothing is deleted: until the new records exist the old ones are all there
+# is, and a mark can be taken back where a delete cannot (ADR-0013). The field is `_`-prefixed,
+# which is the prefix upstream's query API strips from every document it returns, so no reader
+# above the stores can see it.
+f1_supersede_session() {
+  f1_mongo_eval "
+    const sessionKey = $1;
+    let superseded = 0;
+    for (const name of $F1_SESSION_COLLECTIONS) {
+      superseded += db[name].updateMany(
+        { session_key: sessionKey },
+        { \$set: { _superseded: true } },
+      ).matchedCount;
+    }
+    print(superseded);
+  "
+}
+
+# Whether the ingest wrote anything at all: a record of this Session that is not marked as
+# superseded can only have arrived since the mark. One is enough, so this looks for one rather
+# than counting the million-odd it hopes to find.
+f1_session_was_ingested() {
+  local ingested
+  ingested="$(f1_mongo_eval "
+    const sessionKey = $1;
+    print($F1_SESSION_COLLECTIONS.some((name) =>
+      db[name].findOne({ session_key: sessionKey, _superseded: { \$exists: false } }) !== null,
+    ));
+  ")"
+  [ "$ingested" = "true" ]
+}
+
+# The replace, completed: the superseded records go, now that the ones replacing them are in.
+f1_discard_superseded() {
   f1_mongo_eval "
     const sessionKey = $1;
     let discarded = 0;
-    for (const name of db.getCollectionNames()) {
-      discarded += db[name].deleteMany({ session_key: sessionKey }).deletedCount;
+    for (const name of $F1_SESSION_COLLECTIONS) {
+      discarded += db[name].deleteMany({ session_key: sessionKey, _superseded: true }).deletedCount;
     }
     print(discarded);
+  "
+}
+
+# The replace, abandoned: whatever the ingest managed to write is the unmarked half and goes, and
+# the marked half stops being marked and is the Session again. Prints what it put back. Called
+# once, and only where the ingest did not finish — a second call would read the restored records
+# as an unfinished ingest's work and delete the Session it had just put back.
+f1_restore_superseded() {
+  f1_mongo_eval "
+    const sessionKey = $1;
+    let restored = 0;
+    for (const name of $F1_SESSION_COLLECTIONS) {
+      db[name].deleteMany({ session_key: sessionKey, _superseded: { \$exists: false } });
+      restored += db[name].updateMany(
+        { session_key: sessionKey },
+        { \$unset: { _superseded: '' } },
+      ).matchedCount;
+    }
+    print(restored);
   "
 }
 
@@ -64,11 +123,12 @@ f1_catalogue_records() {
 # One line per collection holding the Session: name, records for this Session, and the bytes the
 # whole collection occupies on disk. The second and third numbers only describe the same thing
 # while the stores hold one Session, which is why they are reported side by side rather than
-# summed into a single figure.
+# summed into a single figure. What the catalogue holds is not counted here — that is the
+# Session's name, and this is what it recorded.
 f1_session_records() {
   f1_mongo_eval "
     const sessionKey = $1;
-    for (const name of db.getCollectionNames().sort()) {
+    for (const name of $F1_SESSION_COLLECTIONS.sort()) {
       const records = db[name].countDocuments({ session_key: sessionKey });
       if (records === 0) continue;
       const stats = db[name].aggregate([{ \$collStats: { storageStats: {} } }]).next();

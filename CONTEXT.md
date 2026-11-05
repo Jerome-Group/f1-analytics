@@ -38,8 +38,9 @@ _Avoid_: public data, open data, unauthenticated feed
 
 **Gated stream**:
 A stream withheld during the Live window unless the connection carries an F1TV token — car
-positions, DRS, championship standings, and pit stop durations. Gated is a property of the Live
-window only: after a Session finishes, every Gated stream is freely available.
+telemetry and car locations, both withheld whole and both measured, plus championship standings,
+which are on Formula 1's word until a race Session measures them (ADR-0002). Gated is a property of
+the Live window only: after a Session finishes, every Gated stream is freely available.
 _Avoid_: premium, paid, restricted
 
 **Ingestor**:

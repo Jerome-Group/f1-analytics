@@ -666,4 +666,53 @@ print(counter.columns)
 assert_equals "a row is twenty-five columns, the whole track list the design system lays out" \
   "25" "$(cells_in_a_row <<<"$spark_screen")"
 
+# --- The header names those columns (#70) -----------------------------------------------------
+#
+# Twenty-five figures a viewer cannot read is twenty-five figures they cannot use. The header is
+# the design system's (docs/adr/0010) and is laid on the same grid as the rows, so the assertion
+# that matters is that it has a cell for every cell a row has: one short, and every label right of
+# the gap names the wrong column while still looking perfectly plausible.
+
+cells_in_the_header() {
+  python3 -c '
+import re, sys
+from html.parser import HTMLParser
+
+class Columns(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.depth = 0
+        self.columns = 0
+
+    def handle_starttag(self, tag, attrs):
+        if self.depth == 1:
+            self.columns += 1
+        self.depth += 1
+
+    def handle_endtag(self, tag):
+        self.depth -= 1
+
+header = re.search(r"<div class=\"driver-row-header\".*?</div>", sys.stdin.read(), re.S).group(0)
+counter = Columns()
+counter.feed(header)
+print(counter.columns)
+'
+}
+
+assert_contains "the screen carries the header that names its columns" \
+  'class="driver-row-header"' "$spark_screen"
+
+assert_equals "the header has a cell for every cell a row has, so no label names the wrong column" \
+  "$(cells_in_a_row <<<"$spark_screen")" "$(cells_in_the_header <<<"$spark_screen")"
+
+assert_contains "Gap and Interval are named apart, which is the pair the screen most confuses" \
+  '>Gap<' "$spark_screen"
+assert_contains "the Interval column is named" '>Int<' "$spark_screen"
+assert_contains "the speed trap column is named" '>Trap<' "$spark_screen"
+
+# The header is not a Driver, so a click on it must not open one — the row handler reaches for
+# [data-driver] and this is what keeps the header out of its way.
+assert_equals "the header carries no data-driver, so clicking it opens nobody" \
+  "0" "$(grep -o 'driver-row-header[^>]*data-driver' <<<"$spark_screen" | wc -l | tr -d ' ')"
+
 finish

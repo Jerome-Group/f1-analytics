@@ -29,13 +29,79 @@ import { tyreBadge } from './tyre.ts';
 import { sparkline, type Plot } from './sparkline.ts';
 
 /**
- * The markup inside the timing table: one row per Driver, and no row that is not a Driver. `opened`
- * is the Driver a viewer has opened (#18), which the rows carry only so the one behind the panel is
- * marked — the twenty rows are rendered identically whether a Driver is open or not, which is what
- * keeps them updating while one is.
+ * The twenty-five columns, in the order `driverRow` fills them: the label the design system gives
+ * each one, and the cell class the figures beneath it wear. The class is what aligns a label to its
+ * column — header and row are laid on the same grid track list, so a header cell wearing the class
+ * of the cell below it cannot drift from it (driver-row.css).
+ *
+ * Four columns are deliberately unlabelled: the position change and the team bar carry no heading in
+ * the design, and the Driver's own best beside each sector is headed `Best` three times because that
+ * is what it is — three separate columns, each naming the sector to its left.
+ *
+ * This list is the header's whole definition, and `test/timing-screen.test.sh` holds it to the same
+ * count as a rendered row, so a column added to `driverRow` without a heading here fails rather than
+ * silently shifting every label right of it.
+ */
+const COLUMNS: readonly { readonly label: string; readonly cell: string }[] = [
+  { label: 'Pos', cell: 'cell--figure' },
+  { label: '', cell: 'cell--figure' },
+  { label: '', cell: 'cell' },
+  { label: 'No', cell: 'cell--figure' },
+  { label: 'Driver', cell: 'cell' },
+  { label: 'State', cell: 'cell' },
+  { label: 'Gap', cell: 'cell--figure' },
+  { label: 'Gap trend', cell: 'cell' },
+  { label: 'Int', cell: 'cell--figure' },
+  { label: 'Last', cell: 'cell--figure' },
+  { label: 'Lap trend', cell: 'cell' },
+  { label: 'Best', cell: 'cell--figure' },
+  { label: 'S1', cell: 'cell--figure' },
+  { label: 'Best', cell: 'cell--figure' },
+  { label: 'S2', cell: 'cell--figure' },
+  { label: 'Best', cell: 'cell--figure' },
+  { label: 'S3', cell: 'cell--figure' },
+  { label: 'Best', cell: 'cell--figure' },
+  { label: 'Trap', cell: 'cell--figure' },
+  { label: 'Tyre', cell: 'cell--centred' },
+  { label: 'Age', cell: 'cell--figure' },
+  { label: 'St', cell: 'cell--figure' },
+  { label: 'Pit', cell: 'cell--figure' },
+  { label: 'Deg trend', cell: 'cell' },
+  { label: 'Laps', cell: 'cell--figure' },
+];
+
+/**
+ * The header that names the columns (#70). Twenty-five figures a viewer cannot read is twenty-five
+ * figures they cannot use — Gap from Interval, Last from Best, and which of the three `Best` columns
+ * belongs to which sector are all unanswerable without it.
+ *
+ * It is drawn here rather than written into `index.html` so that the labels sit beside the row they
+ * name, in one list, instead of twenty-five strings in a second file free to drift from the markup.
+ */
+export function timingHeader(): string {
+  return [
+    '<div class="driver-row-header">',
+    ...COLUMNS.map(({ label, cell }) => `<span class="${cell}">${label}</span>`),
+    '</div>',
+  ].join('');
+}
+
+/**
+ * The markup inside the timing table: the header, then one row per Driver and no row that is not a
+ * Driver. `opened` is the Driver a viewer has opened (#18), which the rows carry only so the one
+ * behind the panel is marked — the twenty rows are rendered identically whether a Driver is open or
+ * not, which is what keeps them updating while one is.
+ *
+ * The header is the table's first child, as the design system lays it out, which is also what the
+ * row striping counts from (`driver-row:nth-child(even)`). A viewer's click reaches a Driver through
+ * `[data-driver]`, which the header does not carry, so it is inert by construction rather than by a
+ * guard in main.ts.
  */
 export function timingScreen(state: SessionState, opened?: DriverNumber): string {
-  return state.drivers.map((driver) => driverRow(driver, driver.number === opened)).join('\n');
+  return [
+    timingHeader(),
+    ...state.drivers.map((driver) => driverRow(driver, driver.number === opened)),
+  ].join('\n');
 }
 
 function driverRow(driver: Driver, isOpen: boolean): string {
